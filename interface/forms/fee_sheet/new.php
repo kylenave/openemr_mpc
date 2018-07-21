@@ -247,6 +247,8 @@ function echoServiceLines() {
     }
 
     echo " </tr>\n";
+    echo " <tr hidden class='validationRow" . $lino . "'>";
+    echo "    <td></td><td colspan='5'><span id='valText" . $lino . "'>Text for val item $lino</span></td></tr>\n";
 
     // If NDC info exists or may be required, add a line for it.
     if (isset($li['ndcnum'])) {
@@ -522,6 +524,81 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
 <script type="text/javascript" src="../../../library/dynarch_calendar.js"></script>
 <script type="text/javascript" src="../../../library/dynarch_calendar_en.js"></script>
 <script type="text/javascript" src="../../../library/dynarch_calendar_setup.js"></script>
+<script src='../../../public/assets/jquery-min-2-2-0/index.js'></script>
+
+<script>
+
+	function jsLineItemValidation()
+	{
+	}
+
+	function lineItemValidation(lineNum, textVal, colorVal)
+	{
+		$(".validationRow" + lineNum).show();
+
+		$("#valText" + lineNum).text(textVal).css( { 'color': colorVal, 'font-size': '95%' });
+	}
+
+	function validateAllRows()
+	{
+		var f = document.forms[0];
+
+	   for (var lino = 0; f['bill['+lino+'][code_type]'] ; ++lino) {
+            var pfx = 'bill[' + lino + ']';
+            if (f[pfx + '[del]'] && f[pfx + '[del]'].checked) continue;
+            
+            var valColor = 'green';
+            var valText = '';
+            
+            var codeVal = f[pfx+'[code]'].value;
+            var modifiers = f[pfx+'[mod]'].value;
+            var units = f[pfx+'[units]'].value;
+            var justify = f[pfx+'[justify]'].value;
+            var price  = f[pfx+'[price]'].value;
+            
+            //valText=codeVal + ":" + modifiers + ":" + units + ":" + justify;
+            
+            if(codeVal==='80307')
+            {
+                valColor = 'orange';
+                valText += 'This is a UDS. Be sure to bill out of Bloomington';
+            }
+            
+            if(modifiers.includes('50') && units>1 )
+            {
+               valText += 'Warning: This code has a 50 modifier and units > 1';
+               valColor = 'orange';
+            }
+            
+            if(justify.length < 1)
+            {
+               valText += 'Error: This item needs a justification. ';
+               valColor = 'red';
+            }
+
+	    if(units > 9)
+	    {
+		valColor = 'orange';
+		valText += 'Warning: This item had a large number or units...verify it is correct.   ';
+	    }
+
+            if(units * price > 15000)
+	    {
+		valColor = 'orange';
+		valText += 'Warning: This item value is $' + (units*price) + ' ... please confirm this is correct.  ';
+	    }
+
+	    if( valText=='')
+	    {
+		valText = 'Looks good!';
+	    }
+            lineItemValidation(lino, valText, valColor);
+        }
+        
+    }
+
+</script>
+	
 
 <script language="JavaScript">
 
@@ -572,7 +649,7 @@ function copayselect() {
  f.submit();
 }
 
-<?php echo $fs->jsLineItemValidation(); ?>
+<?php //echo $fs->jsLineItemValidation(); ?>
 
 function validate(f) {
  if (f.bn_reopen) {
@@ -588,21 +665,25 @@ function validate(f) {
   }
  }
  var refreshing = false;
+
  if (f.bn_refresh) {
   refreshing = f.bn_refresh.clicked ? true : false;
   f.bn_refresh.clicked = false;
  }
+
  if (f.bn_addmore) {
   refreshing = refreshing || f.bn_addmore.clicked;
   f.bn_addmore.clicked = false;
  }
+
  var searching = false;
  if (f.bn_search) {
   searching = f.bn_search.clicked ? true : false;
   f.bn_search.clicked  = false;
  }
+
  if (!refreshing && !searching) {
-  if (!jsLineItemValidation(f)) return false;
+  //if (!jsLineItemValidation(f)) return false;
  }
  top.restoreSession();
  return true;
@@ -1551,6 +1632,8 @@ value='<?php echo xla('Refresh');?>'>
 <input type='button' value='<?php echo xla('Cancel');?>'
  onclick="top.restoreSession();location='<?php echo $GLOBALS['form_exit_url']; ?>'" />
 
+<input type='button' value='Validate' onclick='validateAllRows();'/>
+
 </center>
 
 </form>
@@ -1565,6 +1648,7 @@ if ($alertmsg) {
 }
 ?>
 </script>
+
 
 </body>
 </html>
