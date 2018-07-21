@@ -1,0 +1,4181 @@
+
+
+
+
+
+4248-2293
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2293'
+Found Encounter: 2293
+4248-2506
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2506'
+Found Encounter: 2506
+1425-3027
+SELECT encounter, pid from form_encounter where pid='1425' and encounter='3027'
+Found Encounter: 3027
+4508-3607
+SELECT encounter, pid from form_encounter where pid='4508' and encounter='3607'
+Found Encounter: 3607
+1880-2299
+SELECT encounter, pid from form_encounter where pid='1880' and encounter='2299'
+Found Encounter: 2299
+1886486337
+SELECT encounter, pid from form_encounter where pid='0' and encounter='0'
+Trying my logic... using claim date:20180109 
+1072
+SELECT date, pid, encounter FROM form_encounter where pid = '1072' and DATE_FORMAT(date, '%Y%m%d')='20180109'
+Matching Encounter: 9742
+Matching Encounter: 9924
+SELECT encounter, code FROM billing where encounter='9742' and code='01620'
+Matched billing record: 9742
+SELECT encounter, code FROM billing where encounter='9924' and code='01620'
+Set encounter from billing to: 9742
+
+
+
+
+
+
+
+3571-2206
+SELECT encounter, pid from form_encounter where pid='3571' and encounter='2206'
+Found Encounter: 2206
+4105-1688
+SELECT encounter, pid from form_encounter where pid='4105' and encounter='1688'
+Found Encounter: 1688
+1500-2521
+SELECT encounter, pid from form_encounter where pid='1500' and encounter='2521'
+Found Encounter: 2521
+56-861
+SELECT encounter, pid from form_encounter where pid='56' and encounter='861'
+Found Encounter: 861
+2421-808
+SELECT encounter, pid from form_encounter where pid='2421' and encounter='808'
+Found Encounter: 808
+0528735954-446
+SELECT encounter, pid from form_encounter where pid='0528735954' and encounter='446'
+Trying my logic... using claim date:20171218 
+958
+SELECT date, pid, encounter FROM form_encounter where pid = '958' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6925
+Matching Encounter: 7068
+SELECT encounter, code FROM billing where encounter='6925' and code='27096'
+Matched billing record: 6925
+SELECT encounter, code FROM billing where encounter='7068' and code='27096'
+Set encounter from billing to: 6925
+
+
+
+
+
+
+
+1694399385-191
+SELECT encounter, pid from form_encounter where pid='1694399385' and encounter='191'
+Trying my logic... using claim date:20171228 
+242
+SELECT date, pid, encounter FROM form_encounter where pid = '242' and DATE_FORMAT(date, '%Y%m%d')='20171228'
+Matching Encounter: 8418
+Single encounter found so using that: 242  -  8418
+
+
+
+
+
+
+
+4011-1341
+SELECT encounter, pid from form_encounter where pid='4011' and encounter='1341'
+Found Encounter: 1341
+1393484260-365
+SELECT encounter, pid from form_encounter where pid='1393484260' and encounter='365'
+Trying my logic... using claim date:20171218 
+935
+SELECT date, pid, encounter FROM form_encounter where pid = '935' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6976
+Matching Encounter: 7025
+SELECT encounter, code FROM billing where encounter='6976' and code='64635'
+SELECT encounter, code FROM billing where encounter='7025' and code='64635'
+Matched billing record: 7025
+Set encounter from billing to: 7025
+
+
+
+
+
+
+
+1573-729
+SELECT encounter, pid from form_encounter where pid='1573' and encounter='729'
+Found Encounter: 729
+519-1116
+SELECT encounter, pid from form_encounter where pid='519' and encounter='1116'
+Found Encounter: 1116
+826-1333
+SELECT encounter, pid from form_encounter where pid='826' and encounter='1333'
+Found Encounter: 1333
+2341-1129
+SELECT encounter, pid from form_encounter where pid='2341' and encounter='1129'
+Found Encounter: 1129
+1139-653
+SELECT encounter, pid from form_encounter where pid='1139' and encounter='653'
+Found Encounter: 653
+3993-1255
+SELECT encounter, pid from form_encounter where pid='3993' and encounter='1255'
+Found Encounter: 1255
+1254-766
+SELECT encounter, pid from form_encounter where pid='1254' and encounter='766'
+Found Encounter: 766
+3617-1258
+SELECT encounter, pid from form_encounter where pid='3617' and encounter='1258'
+Found Encounter: 1258
+2524-1149
+SELECT encounter, pid from form_encounter where pid='2524' and encounter='1149'
+Found Encounter: 1149
+0518406453-473
+SELECT encounter, pid from form_encounter where pid='0518406453' and encounter='473'
+Trying my logic... using claim date:20171205 
+379
+SELECT date, pid, encounter FROM form_encounter where pid = '379' and DATE_FORMAT(date, '%Y%m%d')='20171205'
+Matching Encounter: 4795
+Single encounter found so using that: 379  -  4795
+
+
+
+
+
+
+
+3088-874
+SELECT encounter, pid from form_encounter where pid='3088' and encounter='874'
+Found Encounter: 874
+3410-1399
+SELECT encounter, pid from form_encounter where pid='3410' and encounter='1399'
+Found Encounter: 1399
+2884-1143
+SELECT encounter, pid from form_encounter where pid='2884' and encounter='1143'
+Found Encounter: 1143
+3579-1244
+SELECT encounter, pid from form_encounter where pid='3579' and encounter='1244'
+Found Encounter: 1244
+2522-873
+SELECT encounter, pid from form_encounter where pid='2522' and encounter='873'
+Found Encounter: 873
+0933193486-766
+SELECT encounter, pid from form_encounter where pid='0933193486' and encounter='766'
+Trying my logic... using claim date:20180111 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180111'
+Matching Encounter: 10496
+Single encounter found so using that: 1699  -  10496
+
+
+
+
+
+
+
+1410115088-766
+SELECT encounter, pid from form_encounter where pid='1410115088' and encounter='766'
+Trying my logic... using claim date:20180221 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180221'
+Matching Encounter: 16188
+Single encounter found so using that: 1699  -  16188
+
+
+
+
+
+
+
+1607368965-766
+SELECT encounter, pid from form_encounter where pid='1607368965' and encounter='766'
+Trying my logic... using claim date:20171218 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 7044
+Single encounter found so using that: 1699  -  7044
+
+
+
+
+
+
+
+2465-1122
+SELECT encounter, pid from form_encounter where pid='2465' and encounter='1122'
+Found Encounter: 1122
+1611-887
+SELECT encounter, pid from form_encounter where pid='1611' and encounter='887'
+Found Encounter: 887
+4019-1389
+SELECT encounter, pid from form_encounter where pid='4019' and encounter='1389'
+Found Encounter: 1389
+1800-751
+SELECT encounter, pid from form_encounter where pid='1800' and encounter='751'
+Found Encounter: 751
+3873-813
+SELECT encounter, pid from form_encounter where pid='3873' and encounter='813'
+Found Encounter: 813
+2646-865
+SELECT encounter, pid from form_encounter where pid='2646' and encounter='865'
+Found Encounter: 865
+3615-888
+SELECT encounter, pid from form_encounter where pid='3615' and encounter='888'
+Found Encounter: 888
+MPC-15061610
+SELECT encounter, pid from form_encounter where pid='MPC' and encounter='15061610'
+Trying my logic... using claim date:20171106 
+418
+SELECT date, pid, encounter FROM form_encounter where pid = '418' and DATE_FORMAT(date, '%Y%m%d')='20171106'
+NOT FOUND
+
+
+
+
+
+
+
+NOT FOUND
+0886765045-562
+SELECT encounter, pid from form_encounter where pid='0886765045' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='01992'
+Matched billing record: 11409
+SELECT encounter, code FROM billing where encounter='11424' and code='01992'
+Set encounter from billing to: 11409
+
+
+
+
+
+
+
+0996270013-562
+SELECT encounter, pid from form_encounter where pid='0996270013' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='62322'
+SELECT encounter, code FROM billing where encounter='11424' and code='62322'
+Matched billing record: 11424
+Set encounter from billing to: 11424
+
+
+
+
+
+
+
+1769052121-562
+SELECT encounter, pid from form_encounter where pid='1769052121' and encounter='562'
+Trying my logic... using claim date:20171227 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171227'
+Matching Encounter: 8236
+Single encounter found so using that: 1341  -  8236
+
+
+
+
+
+
+
+1817959711-562
+SELECT encounter, pid from form_encounter where pid='1817959711' and encounter='562'
+Trying my logic... using claim date:20171213 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6351
+Single encounter found so using that: 1341  -  6351
+
+
+
+
+
+
+
+0502608435-1739
+SELECT encounter, pid from form_encounter where pid='0502608435' and encounter='1739'
+Trying my logic... using claim date:20180219 
+1445
+SELECT date, pid, encounter FROM form_encounter where pid = '1445' and DATE_FORMAT(date, '%Y%m%d')='20180219'
+Matching Encounter: 15907
+Single encounter found so using that: 1445  -  15907
+
+
+
+
+
+
+
+315-1145
+SELECT encounter, pid from form_encounter where pid='315' and encounter='1145'
+Found Encounter: 1145
+1384890795-283
+SELECT encounter, pid from form_encounter where pid='1384890795' and encounter='283'
+Trying my logic... using claim date:20171206 
+648
+SELECT date, pid, encounter FROM form_encounter where pid = '648' and DATE_FORMAT(date, '%Y%m%d')='20171206'
+Matching Encounter: 5198
+Single encounter found so using that: 648  -  5198
+
+
+
+
+
+
+
+417-1247
+SELECT encounter, pid from form_encounter where pid='417' and encounter='1247'
+Found Encounter: 1247
+2144953278-580
+SELECT encounter, pid from form_encounter where pid='2144953278' and encounter='580'
+Trying my logic... using claim date:20180122 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20180122'
+Matching Encounter: 12166
+Single encounter found so using that: 1291  -  12166
+
+
+
+
+
+
+
+1085550370-580
+SELECT encounter, pid from form_encounter where pid='1085550370' and encounter='580'
+Trying my logic... using claim date:20171213 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6274
+Single encounter found so using that: 1291  -  6274
+
+
+
+
+
+
+
+1003-1124
+SELECT encounter, pid from form_encounter where pid='1003' and encounter='1124'
+Found Encounter: 1124
+3886-866
+SELECT encounter, pid from form_encounter where pid='3886' and encounter='866'
+Found Encounter: 866
+799-753
+SELECT encounter, pid from form_encounter where pid='799' and encounter='753'
+Found Encounter: 753
+3171-1153
+SELECT encounter, pid from form_encounter where pid='3171' and encounter='1153'
+Found Encounter: 1153
+3898-886
+SELECT encounter, pid from form_encounter where pid='3898' and encounter='886'
+Found Encounter: 886
+4020-1423
+SELECT encounter, pid from form_encounter where pid='4020' and encounter='1423'
+Found Encounter: 1423
+1230287732-2167
+SELECT encounter, pid from form_encounter where pid='1230287732' and encounter='2167'
+Trying my logic... using claim date:20180216 
+2565
+SELECT date, pid, encounter FROM form_encounter where pid = '2565' and DATE_FORMAT(date, '%Y%m%d')='20180216'
+Matching Encounter: 15839
+Single encounter found so using that: 2565  -  15839
+
+
+
+
+
+
+
+0108591579-KARVID000
+SELECT encounter, pid from form_encounter where pid='0108591579' and encounter='KARVID000'
+Trying my logic... using claim date:20180207 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180207'
+Matching Encounter: 14589
+Single encounter found so using that: 1447  -  14589
+
+
+
+
+
+
+
+1108105772-KARVID000
+SELECT encounter, pid from form_encounter where pid='1108105772' and encounter='KARVID000'
+Trying my logic... using claim date:20171214 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20171214'
+Matching Encounter: 6567
+Single encounter found so using that: 1447  -  6567
+
+
+
+
+
+
+
+1129677875-KARVID000
+SELECT encounter, pid from form_encounter where pid='1129677875' and encounter='KARVID000'
+Trying my logic... using claim date:20180108 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180108'
+Matching Encounter: 9527
+Matching Encounter: 9557
+SELECT encounter, code FROM billing where encounter='9527' and code='62320'
+SELECT encounter, code FROM billing where encounter='9557' and code='62320'
+Matched billing record: 9557
+Set encounter from billing to: 9557
+
+
+
+
+
+
+
+3896-877
+SELECT encounter, pid from form_encounter where pid='3896' and encounter='877'
+Found Encounter: 877
+2760-1112
+SELECT encounter, pid from form_encounter where pid='2760' and encounter='1112'
+Found Encounter: 1112
+735-1254
+SELECT encounter, pid from form_encounter where pid='735' and encounter='1254'
+Found Encounter: 1254
+764-1253
+SELECT encounter, pid from form_encounter where pid='764' and encounter='1253'
+Found Encounter: 1253
+1335953653-602
+SELECT encounter, pid from form_encounter where pid='1335953653' and encounter='602'
+Trying my logic... using claim date:20171213 
+1305
+SELECT date, pid, encounter FROM form_encounter where pid = '1305' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6301
+Single encounter found so using that: 1305  -  6301
+
+
+
+
+
+
+
+4248-2293
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2293'
+Found Encounter: 2293
+4248-2506
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2506'
+Found Encounter: 2506
+1425-3027
+SELECT encounter, pid from form_encounter where pid='1425' and encounter='3027'
+Found Encounter: 3027
+4508-3607
+SELECT encounter, pid from form_encounter where pid='4508' and encounter='3607'
+Found Encounter: 3607
+1880-2299
+SELECT encounter, pid from form_encounter where pid='1880' and encounter='2299'
+Found Encounter: 2299
+1886486337
+SELECT encounter, pid from form_encounter where pid='0' and encounter='0'
+Trying my logic... using claim date:20180109 
+1072
+SELECT date, pid, encounter FROM form_encounter where pid = '1072' and DATE_FORMAT(date, '%Y%m%d')='20180109'
+Matching Encounter: 9742
+Matching Encounter: 9924
+SELECT encounter, code FROM billing where encounter='9742' and code='01620'
+Matched billing record: 9742
+SELECT encounter, code FROM billing where encounter='9924' and code='01620'
+Set encounter from billing to: 9742
+
+
+
+
+
+
+
+3571-2206
+SELECT encounter, pid from form_encounter where pid='3571' and encounter='2206'
+Found Encounter: 2206
+4105-1688
+SELECT encounter, pid from form_encounter where pid='4105' and encounter='1688'
+Found Encounter: 1688
+1500-2521
+SELECT encounter, pid from form_encounter where pid='1500' and encounter='2521'
+Found Encounter: 2521
+56-861
+SELECT encounter, pid from form_encounter where pid='56' and encounter='861'
+Found Encounter: 861
+2421-808
+SELECT encounter, pid from form_encounter where pid='2421' and encounter='808'
+Found Encounter: 808
+0528735954-446
+SELECT encounter, pid from form_encounter where pid='0528735954' and encounter='446'
+Trying my logic... using claim date:20171218 
+958
+SELECT date, pid, encounter FROM form_encounter where pid = '958' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6925
+Matching Encounter: 7068
+SELECT encounter, code FROM billing where encounter='6925' and code='27096'
+Matched billing record: 6925
+SELECT encounter, code FROM billing where encounter='7068' and code='27096'
+Set encounter from billing to: 6925
+
+
+
+
+
+
+
+1694399385-191
+SELECT encounter, pid from form_encounter where pid='1694399385' and encounter='191'
+Trying my logic... using claim date:20171228 
+242
+SELECT date, pid, encounter FROM form_encounter where pid = '242' and DATE_FORMAT(date, '%Y%m%d')='20171228'
+Matching Encounter: 8418
+Single encounter found so using that: 242  -  8418
+
+
+
+
+
+
+
+4011-1341
+SELECT encounter, pid from form_encounter where pid='4011' and encounter='1341'
+Found Encounter: 1341
+1393484260-365
+SELECT encounter, pid from form_encounter where pid='1393484260' and encounter='365'
+Trying my logic... using claim date:20171218 
+935
+SELECT date, pid, encounter FROM form_encounter where pid = '935' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6976
+Matching Encounter: 7025
+SELECT encounter, code FROM billing where encounter='6976' and code='64635'
+SELECT encounter, code FROM billing where encounter='7025' and code='64635'
+Matched billing record: 7025
+Set encounter from billing to: 7025
+
+
+
+
+
+
+
+1573-729
+SELECT encounter, pid from form_encounter where pid='1573' and encounter='729'
+Found Encounter: 729
+519-1116
+SELECT encounter, pid from form_encounter where pid='519' and encounter='1116'
+Found Encounter: 1116
+826-1333
+SELECT encounter, pid from form_encounter where pid='826' and encounter='1333'
+Found Encounter: 1333
+2341-1129
+SELECT encounter, pid from form_encounter where pid='2341' and encounter='1129'
+Found Encounter: 1129
+1139-653
+SELECT encounter, pid from form_encounter where pid='1139' and encounter='653'
+Found Encounter: 653
+3993-1255
+SELECT encounter, pid from form_encounter where pid='3993' and encounter='1255'
+Found Encounter: 1255
+1254-766
+SELECT encounter, pid from form_encounter where pid='1254' and encounter='766'
+Found Encounter: 766
+3617-1258
+SELECT encounter, pid from form_encounter where pid='3617' and encounter='1258'
+Found Encounter: 1258
+2524-1149
+SELECT encounter, pid from form_encounter where pid='2524' and encounter='1149'
+Found Encounter: 1149
+0518406453-473
+SELECT encounter, pid from form_encounter where pid='0518406453' and encounter='473'
+Trying my logic... using claim date:20171205 
+379
+SELECT date, pid, encounter FROM form_encounter where pid = '379' and DATE_FORMAT(date, '%Y%m%d')='20171205'
+Matching Encounter: 4795
+Single encounter found so using that: 379  -  4795
+
+
+
+
+
+
+
+3088-874
+SELECT encounter, pid from form_encounter where pid='3088' and encounter='874'
+Found Encounter: 874
+3410-1399
+SELECT encounter, pid from form_encounter where pid='3410' and encounter='1399'
+Found Encounter: 1399
+2884-1143
+SELECT encounter, pid from form_encounter where pid='2884' and encounter='1143'
+Found Encounter: 1143
+3579-1244
+SELECT encounter, pid from form_encounter where pid='3579' and encounter='1244'
+Found Encounter: 1244
+2522-873
+SELECT encounter, pid from form_encounter where pid='2522' and encounter='873'
+Found Encounter: 873
+0933193486-766
+SELECT encounter, pid from form_encounter where pid='0933193486' and encounter='766'
+Trying my logic... using claim date:20180111 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180111'
+Matching Encounter: 10496
+Single encounter found so using that: 1699  -  10496
+
+
+
+
+
+
+
+1410115088-766
+SELECT encounter, pid from form_encounter where pid='1410115088' and encounter='766'
+Trying my logic... using claim date:20180221 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180221'
+Matching Encounter: 16188
+Single encounter found so using that: 1699  -  16188
+
+
+
+
+
+
+
+1607368965-766
+SELECT encounter, pid from form_encounter where pid='1607368965' and encounter='766'
+Trying my logic... using claim date:20171218 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 7044
+Single encounter found so using that: 1699  -  7044
+
+
+
+
+
+
+
+2465-1122
+SELECT encounter, pid from form_encounter where pid='2465' and encounter='1122'
+Found Encounter: 1122
+1611-887
+SELECT encounter, pid from form_encounter where pid='1611' and encounter='887'
+Found Encounter: 887
+4019-1389
+SELECT encounter, pid from form_encounter where pid='4019' and encounter='1389'
+Found Encounter: 1389
+1800-751
+SELECT encounter, pid from form_encounter where pid='1800' and encounter='751'
+Found Encounter: 751
+3873-813
+SELECT encounter, pid from form_encounter where pid='3873' and encounter='813'
+Found Encounter: 813
+2646-865
+SELECT encounter, pid from form_encounter where pid='2646' and encounter='865'
+Found Encounter: 865
+3615-888
+SELECT encounter, pid from form_encounter where pid='3615' and encounter='888'
+Found Encounter: 888
+MPC-15061610
+SELECT encounter, pid from form_encounter where pid='MPC' and encounter='15061610'
+Trying my logic... using claim date:20171106 
+418
+SELECT date, pid, encounter FROM form_encounter where pid = '418' and DATE_FORMAT(date, '%Y%m%d')='20171106'
+NOT FOUND
+
+
+
+
+
+
+
+NOT FOUND
+0886765045-562
+SELECT encounter, pid from form_encounter where pid='0886765045' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='01992'
+Matched billing record: 11409
+SELECT encounter, code FROM billing where encounter='11424' and code='01992'
+Set encounter from billing to: 11409
+
+
+
+
+
+
+
+0996270013-562
+SELECT encounter, pid from form_encounter where pid='0996270013' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='62322'
+SELECT encounter, code FROM billing where encounter='11424' and code='62322'
+Matched billing record: 11424
+Set encounter from billing to: 11424
+
+
+
+
+
+
+
+1769052121-562
+SELECT encounter, pid from form_encounter where pid='1769052121' and encounter='562'
+Trying my logic... using claim date:20171227 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171227'
+Matching Encounter: 8236
+Single encounter found so using that: 1341  -  8236
+
+
+
+
+
+
+
+1817959711-562
+SELECT encounter, pid from form_encounter where pid='1817959711' and encounter='562'
+Trying my logic... using claim date:20171213 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6351
+Single encounter found so using that: 1341  -  6351
+
+
+
+
+
+
+
+0502608435-1739
+SELECT encounter, pid from form_encounter where pid='0502608435' and encounter='1739'
+Trying my logic... using claim date:20180219 
+1445
+SELECT date, pid, encounter FROM form_encounter where pid = '1445' and DATE_FORMAT(date, '%Y%m%d')='20180219'
+Matching Encounter: 15907
+Single encounter found so using that: 1445  -  15907
+
+
+
+
+
+
+
+315-1145
+SELECT encounter, pid from form_encounter where pid='315' and encounter='1145'
+Found Encounter: 1145
+1384890795-283
+SELECT encounter, pid from form_encounter where pid='1384890795' and encounter='283'
+Trying my logic... using claim date:20171206 
+648
+SELECT date, pid, encounter FROM form_encounter where pid = '648' and DATE_FORMAT(date, '%Y%m%d')='20171206'
+Matching Encounter: 5198
+Single encounter found so using that: 648  -  5198
+
+
+
+
+
+
+
+417-1247
+SELECT encounter, pid from form_encounter where pid='417' and encounter='1247'
+Found Encounter: 1247
+2144953278-580
+SELECT encounter, pid from form_encounter where pid='2144953278' and encounter='580'
+Trying my logic... using claim date:20180122 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20180122'
+Matching Encounter: 12166
+Single encounter found so using that: 1291  -  12166
+
+
+
+
+
+
+
+1085550370-580
+SELECT encounter, pid from form_encounter where pid='1085550370' and encounter='580'
+Trying my logic... using claim date:20171213 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6274
+Single encounter found so using that: 1291  -  6274
+
+
+
+
+
+
+
+1003-1124
+SELECT encounter, pid from form_encounter where pid='1003' and encounter='1124'
+Found Encounter: 1124
+3886-866
+SELECT encounter, pid from form_encounter where pid='3886' and encounter='866'
+Found Encounter: 866
+799-753
+SELECT encounter, pid from form_encounter where pid='799' and encounter='753'
+Found Encounter: 753
+3171-1153
+SELECT encounter, pid from form_encounter where pid='3171' and encounter='1153'
+Found Encounter: 1153
+3898-886
+SELECT encounter, pid from form_encounter where pid='3898' and encounter='886'
+Found Encounter: 886
+4020-1423
+SELECT encounter, pid from form_encounter where pid='4020' and encounter='1423'
+Found Encounter: 1423
+1230287732-2167
+SELECT encounter, pid from form_encounter where pid='1230287732' and encounter='2167'
+Trying my logic... using claim date:20180216 
+2565
+SELECT date, pid, encounter FROM form_encounter where pid = '2565' and DATE_FORMAT(date, '%Y%m%d')='20180216'
+Matching Encounter: 15839
+Single encounter found so using that: 2565  -  15839
+
+
+
+
+
+
+
+0108591579-KARVID000
+SELECT encounter, pid from form_encounter where pid='0108591579' and encounter='KARVID000'
+Trying my logic... using claim date:20180207 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180207'
+Matching Encounter: 14589
+Single encounter found so using that: 1447  -  14589
+
+
+
+
+
+
+
+1108105772-KARVID000
+SELECT encounter, pid from form_encounter where pid='1108105772' and encounter='KARVID000'
+Trying my logic... using claim date:20171214 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20171214'
+Matching Encounter: 6567
+Single encounter found so using that: 1447  -  6567
+
+
+
+
+
+
+
+1129677875-KARVID000
+SELECT encounter, pid from form_encounter where pid='1129677875' and encounter='KARVID000'
+Trying my logic... using claim date:20180108 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180108'
+Matching Encounter: 9527
+Matching Encounter: 9557
+SELECT encounter, code FROM billing where encounter='9527' and code='62320'
+SELECT encounter, code FROM billing where encounter='9557' and code='62320'
+Matched billing record: 9557
+Set encounter from billing to: 9557
+
+
+
+
+
+
+
+3896-877
+SELECT encounter, pid from form_encounter where pid='3896' and encounter='877'
+Found Encounter: 877
+2760-1112
+SELECT encounter, pid from form_encounter where pid='2760' and encounter='1112'
+Found Encounter: 1112
+735-1254
+SELECT encounter, pid from form_encounter where pid='735' and encounter='1254'
+Found Encounter: 1254
+764-1253
+SELECT encounter, pid from form_encounter where pid='764' and encounter='1253'
+Found Encounter: 1253
+1335953653-602
+SELECT encounter, pid from form_encounter where pid='1335953653' and encounter='602'
+Trying my logic... using claim date:20171213 
+1305
+SELECT date, pid, encounter FROM form_encounter where pid = '1305' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6301
+Single encounter found so using that: 1305  -  6301
+
+
+
+
+
+
+
+4248-2293
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2293'
+Found Encounter: 2293
+4248-2506
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2506'
+Found Encounter: 2506
+1425-3027
+SELECT encounter, pid from form_encounter where pid='1425' and encounter='3027'
+Found Encounter: 3027
+4508-3607
+SELECT encounter, pid from form_encounter where pid='4508' and encounter='3607'
+Found Encounter: 3607
+1880-2299
+SELECT encounter, pid from form_encounter where pid='1880' and encounter='2299'
+Found Encounter: 2299
+1886486337
+SELECT encounter, pid from form_encounter where pid='0' and encounter='0'
+Trying my logic... using claim date:20180109 
+1072
+SELECT date, pid, encounter FROM form_encounter where pid = '1072' and DATE_FORMAT(date, '%Y%m%d')='20180109'
+Matching Encounter: 9742
+Matching Encounter: 9924
+SELECT encounter, code FROM billing where encounter='9742' and code='01620'
+Matched billing record: 9742
+SELECT encounter, code FROM billing where encounter='9924' and code='01620'
+Set encounter from billing to: 9742
+
+
+
+
+
+
+
+3571-2206
+SELECT encounter, pid from form_encounter where pid='3571' and encounter='2206'
+Found Encounter: 2206
+4105-1688
+SELECT encounter, pid from form_encounter where pid='4105' and encounter='1688'
+Found Encounter: 1688
+1500-2521
+SELECT encounter, pid from form_encounter where pid='1500' and encounter='2521'
+Found Encounter: 2521
+56-861
+SELECT encounter, pid from form_encounter where pid='56' and encounter='861'
+Found Encounter: 861
+2421-808
+SELECT encounter, pid from form_encounter where pid='2421' and encounter='808'
+Found Encounter: 808
+0528735954-446
+SELECT encounter, pid from form_encounter where pid='0528735954' and encounter='446'
+Trying my logic... using claim date:20171218 
+958
+SELECT date, pid, encounter FROM form_encounter where pid = '958' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6925
+Matching Encounter: 7068
+SELECT encounter, code FROM billing where encounter='6925' and code='27096'
+Matched billing record: 6925
+SELECT encounter, code FROM billing where encounter='7068' and code='27096'
+Set encounter from billing to: 6925
+
+
+
+
+
+
+
+1694399385-191
+SELECT encounter, pid from form_encounter where pid='1694399385' and encounter='191'
+Trying my logic... using claim date:20171228 
+242
+SELECT date, pid, encounter FROM form_encounter where pid = '242' and DATE_FORMAT(date, '%Y%m%d')='20171228'
+Matching Encounter: 8418
+Single encounter found so using that: 242  -  8418
+
+
+
+
+
+
+
+4011-1341
+SELECT encounter, pid from form_encounter where pid='4011' and encounter='1341'
+Found Encounter: 1341
+1393484260-365
+SELECT encounter, pid from form_encounter where pid='1393484260' and encounter='365'
+Trying my logic... using claim date:20171218 
+935
+SELECT date, pid, encounter FROM form_encounter where pid = '935' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6976
+Matching Encounter: 7025
+SELECT encounter, code FROM billing where encounter='6976' and code='64635'
+SELECT encounter, code FROM billing where encounter='7025' and code='64635'
+Matched billing record: 7025
+Set encounter from billing to: 7025
+
+
+
+
+
+
+
+1573-729
+SELECT encounter, pid from form_encounter where pid='1573' and encounter='729'
+Found Encounter: 729
+519-1116
+SELECT encounter, pid from form_encounter where pid='519' and encounter='1116'
+Found Encounter: 1116
+826-1333
+SELECT encounter, pid from form_encounter where pid='826' and encounter='1333'
+Found Encounter: 1333
+2341-1129
+SELECT encounter, pid from form_encounter where pid='2341' and encounter='1129'
+Found Encounter: 1129
+1139-653
+SELECT encounter, pid from form_encounter where pid='1139' and encounter='653'
+Found Encounter: 653
+3993-1255
+SELECT encounter, pid from form_encounter where pid='3993' and encounter='1255'
+Found Encounter: 1255
+1254-766
+SELECT encounter, pid from form_encounter where pid='1254' and encounter='766'
+Found Encounter: 766
+3617-1258
+SELECT encounter, pid from form_encounter where pid='3617' and encounter='1258'
+Found Encounter: 1258
+2524-1149
+SELECT encounter, pid from form_encounter where pid='2524' and encounter='1149'
+Found Encounter: 1149
+0518406453-473
+SELECT encounter, pid from form_encounter where pid='0518406453' and encounter='473'
+Trying my logic... using claim date:20171205 
+379
+SELECT date, pid, encounter FROM form_encounter where pid = '379' and DATE_FORMAT(date, '%Y%m%d')='20171205'
+Matching Encounter: 4795
+Single encounter found so using that: 379  -  4795
+
+
+
+
+
+
+
+3088-874
+SELECT encounter, pid from form_encounter where pid='3088' and encounter='874'
+Found Encounter: 874
+3410-1399
+SELECT encounter, pid from form_encounter where pid='3410' and encounter='1399'
+Found Encounter: 1399
+2884-1143
+SELECT encounter, pid from form_encounter where pid='2884' and encounter='1143'
+Found Encounter: 1143
+3579-1244
+SELECT encounter, pid from form_encounter where pid='3579' and encounter='1244'
+Found Encounter: 1244
+2522-873
+SELECT encounter, pid from form_encounter where pid='2522' and encounter='873'
+Found Encounter: 873
+0933193486-766
+SELECT encounter, pid from form_encounter where pid='0933193486' and encounter='766'
+Trying my logic... using claim date:20180111 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180111'
+Matching Encounter: 10496
+Single encounter found so using that: 1699  -  10496
+
+
+
+
+
+
+
+1410115088-766
+SELECT encounter, pid from form_encounter where pid='1410115088' and encounter='766'
+Trying my logic... using claim date:20180221 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180221'
+Matching Encounter: 16188
+Single encounter found so using that: 1699  -  16188
+
+
+
+
+
+
+
+1607368965-766
+SELECT encounter, pid from form_encounter where pid='1607368965' and encounter='766'
+Trying my logic... using claim date:20171218 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 7044
+Single encounter found so using that: 1699  -  7044
+
+
+
+
+
+
+
+2465-1122
+SELECT encounter, pid from form_encounter where pid='2465' and encounter='1122'
+Found Encounter: 1122
+1611-887
+SELECT encounter, pid from form_encounter where pid='1611' and encounter='887'
+Found Encounter: 887
+4019-1389
+SELECT encounter, pid from form_encounter where pid='4019' and encounter='1389'
+Found Encounter: 1389
+1800-751
+SELECT encounter, pid from form_encounter where pid='1800' and encounter='751'
+Found Encounter: 751
+3873-813
+SELECT encounter, pid from form_encounter where pid='3873' and encounter='813'
+Found Encounter: 813
+2646-865
+SELECT encounter, pid from form_encounter where pid='2646' and encounter='865'
+Found Encounter: 865
+3615-888
+SELECT encounter, pid from form_encounter where pid='3615' and encounter='888'
+Found Encounter: 888
+MPC-15061610
+SELECT encounter, pid from form_encounter where pid='MPC' and encounter='15061610'
+Trying my logic... using claim date:20171106 
+418
+SELECT date, pid, encounter FROM form_encounter where pid = '418' and DATE_FORMAT(date, '%Y%m%d')='20171106'
+NOT FOUND
+
+
+
+
+
+
+
+NOT FOUND
+0886765045-562
+SELECT encounter, pid from form_encounter where pid='0886765045' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='01992'
+Matched billing record: 11409
+SELECT encounter, code FROM billing where encounter='11424' and code='01992'
+Set encounter from billing to: 11409
+
+
+
+
+
+
+
+0996270013-562
+SELECT encounter, pid from form_encounter where pid='0996270013' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='62322'
+SELECT encounter, code FROM billing where encounter='11424' and code='62322'
+Matched billing record: 11424
+Set encounter from billing to: 11424
+
+
+
+
+
+
+
+1769052121-562
+SELECT encounter, pid from form_encounter where pid='1769052121' and encounter='562'
+Trying my logic... using claim date:20171227 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171227'
+Matching Encounter: 8236
+Single encounter found so using that: 1341  -  8236
+
+
+
+
+
+
+
+1817959711-562
+SELECT encounter, pid from form_encounter where pid='1817959711' and encounter='562'
+Trying my logic... using claim date:20171213 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6351
+Single encounter found so using that: 1341  -  6351
+
+
+
+
+
+
+
+0502608435-1739
+SELECT encounter, pid from form_encounter where pid='0502608435' and encounter='1739'
+Trying my logic... using claim date:20180219 
+1445
+SELECT date, pid, encounter FROM form_encounter where pid = '1445' and DATE_FORMAT(date, '%Y%m%d')='20180219'
+Matching Encounter: 15907
+Single encounter found so using that: 1445  -  15907
+
+
+
+
+
+
+
+315-1145
+SELECT encounter, pid from form_encounter where pid='315' and encounter='1145'
+Found Encounter: 1145
+1384890795-283
+SELECT encounter, pid from form_encounter where pid='1384890795' and encounter='283'
+Trying my logic... using claim date:20171206 
+648
+SELECT date, pid, encounter FROM form_encounter where pid = '648' and DATE_FORMAT(date, '%Y%m%d')='20171206'
+Matching Encounter: 5198
+Single encounter found so using that: 648  -  5198
+
+
+
+
+
+
+
+417-1247
+SELECT encounter, pid from form_encounter where pid='417' and encounter='1247'
+Found Encounter: 1247
+2144953278-580
+SELECT encounter, pid from form_encounter where pid='2144953278' and encounter='580'
+Trying my logic... using claim date:20180122 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20180122'
+Matching Encounter: 12166
+Single encounter found so using that: 1291  -  12166
+
+
+
+
+
+
+
+1085550370-580
+SELECT encounter, pid from form_encounter where pid='1085550370' and encounter='580'
+Trying my logic... using claim date:20171213 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6274
+Single encounter found so using that: 1291  -  6274
+
+
+
+
+
+
+
+1003-1124
+SELECT encounter, pid from form_encounter where pid='1003' and encounter='1124'
+Found Encounter: 1124
+3886-866
+SELECT encounter, pid from form_encounter where pid='3886' and encounter='866'
+Found Encounter: 866
+799-753
+SELECT encounter, pid from form_encounter where pid='799' and encounter='753'
+Found Encounter: 753
+3171-1153
+SELECT encounter, pid from form_encounter where pid='3171' and encounter='1153'
+Found Encounter: 1153
+3898-886
+SELECT encounter, pid from form_encounter where pid='3898' and encounter='886'
+Found Encounter: 886
+4020-1423
+SELECT encounter, pid from form_encounter where pid='4020' and encounter='1423'
+Found Encounter: 1423
+1230287732-2167
+SELECT encounter, pid from form_encounter where pid='1230287732' and encounter='2167'
+Trying my logic... using claim date:20180216 
+2565
+SELECT date, pid, encounter FROM form_encounter where pid = '2565' and DATE_FORMAT(date, '%Y%m%d')='20180216'
+Matching Encounter: 15839
+Single encounter found so using that: 2565  -  15839
+
+
+
+
+
+
+
+0108591579-KARVID000
+SELECT encounter, pid from form_encounter where pid='0108591579' and encounter='KARVID000'
+Trying my logic... using claim date:20180207 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180207'
+Matching Encounter: 14589
+Single encounter found so using that: 1447  -  14589
+
+
+
+
+
+
+
+1108105772-KARVID000
+SELECT encounter, pid from form_encounter where pid='1108105772' and encounter='KARVID000'
+Trying my logic... using claim date:20171214 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20171214'
+Matching Encounter: 6567
+Single encounter found so using that: 1447  -  6567
+
+
+
+
+
+
+
+1129677875-KARVID000
+SELECT encounter, pid from form_encounter where pid='1129677875' and encounter='KARVID000'
+Trying my logic... using claim date:20180108 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180108'
+Matching Encounter: 9527
+Matching Encounter: 9557
+SELECT encounter, code FROM billing where encounter='9527' and code='62320'
+SELECT encounter, code FROM billing where encounter='9557' and code='62320'
+Matched billing record: 9557
+Set encounter from billing to: 9557
+
+
+
+
+
+
+
+3896-877
+SELECT encounter, pid from form_encounter where pid='3896' and encounter='877'
+Found Encounter: 877
+2760-1112
+SELECT encounter, pid from form_encounter where pid='2760' and encounter='1112'
+Found Encounter: 1112
+735-1254
+SELECT encounter, pid from form_encounter where pid='735' and encounter='1254'
+Found Encounter: 1254
+764-1253
+SELECT encounter, pid from form_encounter where pid='764' and encounter='1253'
+Found Encounter: 1253
+1335953653-602
+SELECT encounter, pid from form_encounter where pid='1335953653' and encounter='602'
+Trying my logic... using claim date:20171213 
+1305
+SELECT date, pid, encounter FROM form_encounter where pid = '1305' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6301
+Single encounter found so using that: 1305  -  6301
+
+
+
+
+
+
+
+4248-2293
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2293'
+Found Encounter: 2293
+4248-2506
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2506'
+Found Encounter: 2506
+1425-3027
+SELECT encounter, pid from form_encounter where pid='1425' and encounter='3027'
+Found Encounter: 3027
+4508-3607
+SELECT encounter, pid from form_encounter where pid='4508' and encounter='3607'
+Found Encounter: 3607
+1880-2299
+SELECT encounter, pid from form_encounter where pid='1880' and encounter='2299'
+Found Encounter: 2299
+1886486337
+SELECT encounter, pid from form_encounter where pid='0' and encounter='0'
+Trying my logic... using claim date:20180109 
+1072
+SELECT date, pid, encounter FROM form_encounter where pid = '1072' and DATE_FORMAT(date, '%Y%m%d')='20180109'
+Matching Encounter: 9742
+Matching Encounter: 9924
+SELECT encounter, code FROM billing where encounter='9742' and code='01620'
+Matched billing record: 9742
+SELECT encounter, code FROM billing where encounter='9924' and code='01620'
+Set encounter from billing to: 9742
+
+
+
+
+
+
+
+3571-2206
+SELECT encounter, pid from form_encounter where pid='3571' and encounter='2206'
+Found Encounter: 2206
+4105-1688
+SELECT encounter, pid from form_encounter where pid='4105' and encounter='1688'
+Found Encounter: 1688
+1500-2521
+SELECT encounter, pid from form_encounter where pid='1500' and encounter='2521'
+Found Encounter: 2521
+56-861
+SELECT encounter, pid from form_encounter where pid='56' and encounter='861'
+Found Encounter: 861
+2421-808
+SELECT encounter, pid from form_encounter where pid='2421' and encounter='808'
+Found Encounter: 808
+0528735954-446
+SELECT encounter, pid from form_encounter where pid='0528735954' and encounter='446'
+Trying my logic... using claim date:20171218 
+958
+SELECT date, pid, encounter FROM form_encounter where pid = '958' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6925
+Matching Encounter: 7068
+SELECT encounter, code FROM billing where encounter='6925' and code='27096'
+Matched billing record: 6925
+SELECT encounter, code FROM billing where encounter='7068' and code='27096'
+Set encounter from billing to: 6925
+
+
+
+
+
+
+
+1694399385-191
+SELECT encounter, pid from form_encounter where pid='1694399385' and encounter='191'
+Trying my logic... using claim date:20171228 
+242
+SELECT date, pid, encounter FROM form_encounter where pid = '242' and DATE_FORMAT(date, '%Y%m%d')='20171228'
+Matching Encounter: 8418
+Single encounter found so using that: 242  -  8418
+
+
+
+
+
+
+
+4011-1341
+SELECT encounter, pid from form_encounter where pid='4011' and encounter='1341'
+Found Encounter: 1341
+1393484260-365
+SELECT encounter, pid from form_encounter where pid='1393484260' and encounter='365'
+Trying my logic... using claim date:20171218 
+935
+SELECT date, pid, encounter FROM form_encounter where pid = '935' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6976
+Matching Encounter: 7025
+SELECT encounter, code FROM billing where encounter='6976' and code='64635'
+SELECT encounter, code FROM billing where encounter='7025' and code='64635'
+Matched billing record: 7025
+Set encounter from billing to: 7025
+
+
+
+
+
+
+
+1573-729
+SELECT encounter, pid from form_encounter where pid='1573' and encounter='729'
+Found Encounter: 729
+519-1116
+SELECT encounter, pid from form_encounter where pid='519' and encounter='1116'
+Found Encounter: 1116
+826-1333
+SELECT encounter, pid from form_encounter where pid='826' and encounter='1333'
+Found Encounter: 1333
+2341-1129
+SELECT encounter, pid from form_encounter where pid='2341' and encounter='1129'
+Found Encounter: 1129
+1139-653
+SELECT encounter, pid from form_encounter where pid='1139' and encounter='653'
+Found Encounter: 653
+3993-1255
+SELECT encounter, pid from form_encounter where pid='3993' and encounter='1255'
+Found Encounter: 1255
+1254-766
+SELECT encounter, pid from form_encounter where pid='1254' and encounter='766'
+Found Encounter: 766
+3617-1258
+SELECT encounter, pid from form_encounter where pid='3617' and encounter='1258'
+Found Encounter: 1258
+2524-1149
+SELECT encounter, pid from form_encounter where pid='2524' and encounter='1149'
+Found Encounter: 1149
+0518406453-473
+SELECT encounter, pid from form_encounter where pid='0518406453' and encounter='473'
+Trying my logic... using claim date:20171205 
+379
+SELECT date, pid, encounter FROM form_encounter where pid = '379' and DATE_FORMAT(date, '%Y%m%d')='20171205'
+Matching Encounter: 4795
+Single encounter found so using that: 379  -  4795
+
+
+
+
+
+
+
+3088-874
+SELECT encounter, pid from form_encounter where pid='3088' and encounter='874'
+Found Encounter: 874
+3410-1399
+SELECT encounter, pid from form_encounter where pid='3410' and encounter='1399'
+Found Encounter: 1399
+2884-1143
+SELECT encounter, pid from form_encounter where pid='2884' and encounter='1143'
+Found Encounter: 1143
+3579-1244
+SELECT encounter, pid from form_encounter where pid='3579' and encounter='1244'
+Found Encounter: 1244
+2522-873
+SELECT encounter, pid from form_encounter where pid='2522' and encounter='873'
+Found Encounter: 873
+0933193486-766
+SELECT encounter, pid from form_encounter where pid='0933193486' and encounter='766'
+Trying my logic... using claim date:20180111 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180111'
+Matching Encounter: 10496
+Single encounter found so using that: 1699  -  10496
+
+
+
+
+
+
+
+1410115088-766
+SELECT encounter, pid from form_encounter where pid='1410115088' and encounter='766'
+Trying my logic... using claim date:20180221 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180221'
+Matching Encounter: 16188
+Single encounter found so using that: 1699  -  16188
+
+
+
+
+
+
+
+1607368965-766
+SELECT encounter, pid from form_encounter where pid='1607368965' and encounter='766'
+Trying my logic... using claim date:20171218 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 7044
+Single encounter found so using that: 1699  -  7044
+
+
+
+
+
+
+
+2465-1122
+SELECT encounter, pid from form_encounter where pid='2465' and encounter='1122'
+Found Encounter: 1122
+1611-887
+SELECT encounter, pid from form_encounter where pid='1611' and encounter='887'
+Found Encounter: 887
+4019-1389
+SELECT encounter, pid from form_encounter where pid='4019' and encounter='1389'
+Found Encounter: 1389
+1800-751
+SELECT encounter, pid from form_encounter where pid='1800' and encounter='751'
+Found Encounter: 751
+3873-813
+SELECT encounter, pid from form_encounter where pid='3873' and encounter='813'
+Found Encounter: 813
+2646-865
+SELECT encounter, pid from form_encounter where pid='2646' and encounter='865'
+Found Encounter: 865
+3615-888
+SELECT encounter, pid from form_encounter where pid='3615' and encounter='888'
+Found Encounter: 888
+MPC-15061610
+SELECT encounter, pid from form_encounter where pid='MPC' and encounter='15061610'
+Trying my logic... using claim date:20171106 
+418
+SELECT date, pid, encounter FROM form_encounter where pid = '418' and DATE_FORMAT(date, '%Y%m%d')='20171106'
+NOT FOUND
+
+
+
+
+
+
+
+NOT FOUND
+0886765045-562
+SELECT encounter, pid from form_encounter where pid='0886765045' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='01992'
+Matched billing record: 11409
+SELECT encounter, code FROM billing where encounter='11424' and code='01992'
+Set encounter from billing to: 11409
+
+
+
+
+
+
+
+0996270013-562
+SELECT encounter, pid from form_encounter where pid='0996270013' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='62322'
+SELECT encounter, code FROM billing where encounter='11424' and code='62322'
+Matched billing record: 11424
+Set encounter from billing to: 11424
+
+
+
+
+
+
+
+1769052121-562
+SELECT encounter, pid from form_encounter where pid='1769052121' and encounter='562'
+Trying my logic... using claim date:20171227 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171227'
+Matching Encounter: 8236
+Single encounter found so using that: 1341  -  8236
+
+
+
+
+
+
+
+1817959711-562
+SELECT encounter, pid from form_encounter where pid='1817959711' and encounter='562'
+Trying my logic... using claim date:20171213 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6351
+Single encounter found so using that: 1341  -  6351
+
+
+
+
+
+
+
+0502608435-1739
+SELECT encounter, pid from form_encounter where pid='0502608435' and encounter='1739'
+Trying my logic... using claim date:20180219 
+1445
+SELECT date, pid, encounter FROM form_encounter where pid = '1445' and DATE_FORMAT(date, '%Y%m%d')='20180219'
+Matching Encounter: 15907
+Single encounter found so using that: 1445  -  15907
+
+
+
+
+
+
+
+315-1145
+SELECT encounter, pid from form_encounter where pid='315' and encounter='1145'
+Found Encounter: 1145
+1384890795-283
+SELECT encounter, pid from form_encounter where pid='1384890795' and encounter='283'
+Trying my logic... using claim date:20171206 
+648
+SELECT date, pid, encounter FROM form_encounter where pid = '648' and DATE_FORMAT(date, '%Y%m%d')='20171206'
+Matching Encounter: 5198
+Single encounter found so using that: 648  -  5198
+
+
+
+
+
+
+
+417-1247
+SELECT encounter, pid from form_encounter where pid='417' and encounter='1247'
+Found Encounter: 1247
+2144953278-580
+SELECT encounter, pid from form_encounter where pid='2144953278' and encounter='580'
+Trying my logic... using claim date:20180122 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20180122'
+Matching Encounter: 12166
+Single encounter found so using that: 1291  -  12166
+
+
+
+
+
+
+
+1085550370-580
+SELECT encounter, pid from form_encounter where pid='1085550370' and encounter='580'
+Trying my logic... using claim date:20171213 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6274
+Single encounter found so using that: 1291  -  6274
+
+
+
+
+
+
+
+1003-1124
+SELECT encounter, pid from form_encounter where pid='1003' and encounter='1124'
+Found Encounter: 1124
+3886-866
+SELECT encounter, pid from form_encounter where pid='3886' and encounter='866'
+Found Encounter: 866
+799-753
+SELECT encounter, pid from form_encounter where pid='799' and encounter='753'
+Found Encounter: 753
+3171-1153
+SELECT encounter, pid from form_encounter where pid='3171' and encounter='1153'
+Found Encounter: 1153
+3898-886
+SELECT encounter, pid from form_encounter where pid='3898' and encounter='886'
+Found Encounter: 886
+4020-1423
+SELECT encounter, pid from form_encounter where pid='4020' and encounter='1423'
+Found Encounter: 1423
+1230287732-2167
+SELECT encounter, pid from form_encounter where pid='1230287732' and encounter='2167'
+Trying my logic... using claim date:20180216 
+2565
+SELECT date, pid, encounter FROM form_encounter where pid = '2565' and DATE_FORMAT(date, '%Y%m%d')='20180216'
+Matching Encounter: 15839
+Single encounter found so using that: 2565  -  15839
+
+
+
+
+
+
+
+0108591579-KARVID000
+SELECT encounter, pid from form_encounter where pid='0108591579' and encounter='KARVID000'
+Trying my logic... using claim date:20180207 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180207'
+Matching Encounter: 14589
+Single encounter found so using that: 1447  -  14589
+
+
+
+
+
+
+
+1108105772-KARVID000
+SELECT encounter, pid from form_encounter where pid='1108105772' and encounter='KARVID000'
+Trying my logic... using claim date:20171214 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20171214'
+Matching Encounter: 6567
+Single encounter found so using that: 1447  -  6567
+
+
+
+
+
+
+
+1129677875-KARVID000
+SELECT encounter, pid from form_encounter where pid='1129677875' and encounter='KARVID000'
+Trying my logic... using claim date:20180108 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180108'
+Matching Encounter: 9527
+Matching Encounter: 9557
+SELECT encounter, code FROM billing where encounter='9527' and code='62320'
+SELECT encounter, code FROM billing where encounter='9557' and code='62320'
+Matched billing record: 9557
+Set encounter from billing to: 9557
+
+
+
+
+
+
+
+3896-877
+SELECT encounter, pid from form_encounter where pid='3896' and encounter='877'
+Found Encounter: 877
+2760-1112
+SELECT encounter, pid from form_encounter where pid='2760' and encounter='1112'
+Found Encounter: 1112
+735-1254
+SELECT encounter, pid from form_encounter where pid='735' and encounter='1254'
+Found Encounter: 1254
+764-1253
+SELECT encounter, pid from form_encounter where pid='764' and encounter='1253'
+Found Encounter: 1253
+1335953653-602
+SELECT encounter, pid from form_encounter where pid='1335953653' and encounter='602'
+Trying my logic... using claim date:20171213 
+1305
+SELECT date, pid, encounter FROM form_encounter where pid = '1305' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6301
+Single encounter found so using that: 1305  -  6301
+
+
+
+
+
+
+
+4248-2293
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2293'
+Found Encounter: 2293
+4248-2506
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2506'
+Found Encounter: 2506
+1425-3027
+SELECT encounter, pid from form_encounter where pid='1425' and encounter='3027'
+Found Encounter: 3027
+4508-3607
+SELECT encounter, pid from form_encounter where pid='4508' and encounter='3607'
+Found Encounter: 3607
+1880-2299
+SELECT encounter, pid from form_encounter where pid='1880' and encounter='2299'
+Found Encounter: 2299
+1886486337
+SELECT encounter, pid from form_encounter where pid='0' and encounter='0'
+Trying my logic... using claim date:20180109 
+1072
+SELECT date, pid, encounter FROM form_encounter where pid = '1072' and DATE_FORMAT(date, '%Y%m%d')='20180109'
+Matching Encounter: 9742
+Matching Encounter: 9924
+SELECT encounter, code FROM billing where encounter='9742' and code='01620'
+Matched billing record: 9742
+SELECT encounter, code FROM billing where encounter='9924' and code='01620'
+Set encounter from billing to: 9742
+
+
+
+
+
+
+
+3571-2206
+SELECT encounter, pid from form_encounter where pid='3571' and encounter='2206'
+Found Encounter: 2206
+4105-1688
+SELECT encounter, pid from form_encounter where pid='4105' and encounter='1688'
+Found Encounter: 1688
+1500-2521
+SELECT encounter, pid from form_encounter where pid='1500' and encounter='2521'
+Found Encounter: 2521
+56-861
+SELECT encounter, pid from form_encounter where pid='56' and encounter='861'
+Found Encounter: 861
+2421-808
+SELECT encounter, pid from form_encounter where pid='2421' and encounter='808'
+Found Encounter: 808
+0528735954-446
+SELECT encounter, pid from form_encounter where pid='0528735954' and encounter='446'
+Trying my logic... using claim date:20171218 
+958
+SELECT date, pid, encounter FROM form_encounter where pid = '958' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6925
+Matching Encounter: 7068
+SELECT encounter, code FROM billing where encounter='6925' and code='27096'
+Matched billing record: 6925
+SELECT encounter, code FROM billing where encounter='7068' and code='27096'
+Set encounter from billing to: 6925
+
+
+
+
+
+
+
+1694399385-191
+SELECT encounter, pid from form_encounter where pid='1694399385' and encounter='191'
+Trying my logic... using claim date:20171228 
+242
+SELECT date, pid, encounter FROM form_encounter where pid = '242' and DATE_FORMAT(date, '%Y%m%d')='20171228'
+Matching Encounter: 8418
+Single encounter found so using that: 242  -  8418
+
+
+
+
+
+
+
+4011-1341
+SELECT encounter, pid from form_encounter where pid='4011' and encounter='1341'
+Found Encounter: 1341
+1393484260-365
+SELECT encounter, pid from form_encounter where pid='1393484260' and encounter='365'
+Trying my logic... using claim date:20171218 
+935
+SELECT date, pid, encounter FROM form_encounter where pid = '935' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6976
+Matching Encounter: 7025
+SELECT encounter, code FROM billing where encounter='6976' and code='64635'
+SELECT encounter, code FROM billing where encounter='7025' and code='64635'
+Matched billing record: 7025
+Set encounter from billing to: 7025
+
+
+
+
+
+
+
+1573-729
+SELECT encounter, pid from form_encounter where pid='1573' and encounter='729'
+Found Encounter: 729
+519-1116
+SELECT encounter, pid from form_encounter where pid='519' and encounter='1116'
+Found Encounter: 1116
+826-1333
+SELECT encounter, pid from form_encounter where pid='826' and encounter='1333'
+Found Encounter: 1333
+2341-1129
+SELECT encounter, pid from form_encounter where pid='2341' and encounter='1129'
+Found Encounter: 1129
+1139-653
+SELECT encounter, pid from form_encounter where pid='1139' and encounter='653'
+Found Encounter: 653
+3993-1255
+SELECT encounter, pid from form_encounter where pid='3993' and encounter='1255'
+Found Encounter: 1255
+1254-766
+SELECT encounter, pid from form_encounter where pid='1254' and encounter='766'
+Found Encounter: 766
+3617-1258
+SELECT encounter, pid from form_encounter where pid='3617' and encounter='1258'
+Found Encounter: 1258
+2524-1149
+SELECT encounter, pid from form_encounter where pid='2524' and encounter='1149'
+Found Encounter: 1149
+0518406453-473
+SELECT encounter, pid from form_encounter where pid='0518406453' and encounter='473'
+Trying my logic... using claim date:20171205 
+379
+SELECT date, pid, encounter FROM form_encounter where pid = '379' and DATE_FORMAT(date, '%Y%m%d')='20171205'
+Matching Encounter: 4795
+Single encounter found so using that: 379  -  4795
+
+
+
+
+
+
+
+3088-874
+SELECT encounter, pid from form_encounter where pid='3088' and encounter='874'
+Found Encounter: 874
+3410-1399
+SELECT encounter, pid from form_encounter where pid='3410' and encounter='1399'
+Found Encounter: 1399
+2884-1143
+SELECT encounter, pid from form_encounter where pid='2884' and encounter='1143'
+Found Encounter: 1143
+3579-1244
+SELECT encounter, pid from form_encounter where pid='3579' and encounter='1244'
+Found Encounter: 1244
+2522-873
+SELECT encounter, pid from form_encounter where pid='2522' and encounter='873'
+Found Encounter: 873
+0933193486-766
+SELECT encounter, pid from form_encounter where pid='0933193486' and encounter='766'
+Trying my logic... using claim date:20180111 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180111'
+Matching Encounter: 10496
+Single encounter found so using that: 1699  -  10496
+
+
+
+
+
+
+
+1410115088-766
+SELECT encounter, pid from form_encounter where pid='1410115088' and encounter='766'
+Trying my logic... using claim date:20180221 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180221'
+Matching Encounter: 16188
+Single encounter found so using that: 1699  -  16188
+
+
+
+
+
+
+
+1607368965-766
+SELECT encounter, pid from form_encounter where pid='1607368965' and encounter='766'
+Trying my logic... using claim date:20171218 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 7044
+Single encounter found so using that: 1699  -  7044
+
+
+
+
+
+
+
+2465-1122
+SELECT encounter, pid from form_encounter where pid='2465' and encounter='1122'
+Found Encounter: 1122
+1611-887
+SELECT encounter, pid from form_encounter where pid='1611' and encounter='887'
+Found Encounter: 887
+4019-1389
+SELECT encounter, pid from form_encounter where pid='4019' and encounter='1389'
+Found Encounter: 1389
+1800-751
+SELECT encounter, pid from form_encounter where pid='1800' and encounter='751'
+Found Encounter: 751
+3873-813
+SELECT encounter, pid from form_encounter where pid='3873' and encounter='813'
+Found Encounter: 813
+2646-865
+SELECT encounter, pid from form_encounter where pid='2646' and encounter='865'
+Found Encounter: 865
+3615-888
+SELECT encounter, pid from form_encounter where pid='3615' and encounter='888'
+Found Encounter: 888
+MPC-15061610
+SELECT encounter, pid from form_encounter where pid='MPC' and encounter='15061610'
+Trying my logic... using claim date:20171106 
+418
+SELECT date, pid, encounter FROM form_encounter where pid = '418' and DATE_FORMAT(date, '%Y%m%d')='20171106'
+NOT FOUND
+
+
+
+
+
+
+
+NOT FOUND
+0886765045-562
+SELECT encounter, pid from form_encounter where pid='0886765045' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='01992'
+Matched billing record: 11409
+SELECT encounter, code FROM billing where encounter='11424' and code='01992'
+Set encounter from billing to: 11409
+
+
+
+
+
+
+
+0996270013-562
+SELECT encounter, pid from form_encounter where pid='0996270013' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='62322'
+SELECT encounter, code FROM billing where encounter='11424' and code='62322'
+Matched billing record: 11424
+Set encounter from billing to: 11424
+
+
+
+
+
+
+
+1769052121-562
+SELECT encounter, pid from form_encounter where pid='1769052121' and encounter='562'
+Trying my logic... using claim date:20171227 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171227'
+Matching Encounter: 8236
+Single encounter found so using that: 1341  -  8236
+
+
+
+
+
+
+
+1817959711-562
+SELECT encounter, pid from form_encounter where pid='1817959711' and encounter='562'
+Trying my logic... using claim date:20171213 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6351
+Single encounter found so using that: 1341  -  6351
+
+
+
+
+
+
+
+0502608435-1739
+SELECT encounter, pid from form_encounter where pid='0502608435' and encounter='1739'
+Trying my logic... using claim date:20180219 
+1445
+SELECT date, pid, encounter FROM form_encounter where pid = '1445' and DATE_FORMAT(date, '%Y%m%d')='20180219'
+Matching Encounter: 15907
+Single encounter found so using that: 1445  -  15907
+
+
+
+
+
+
+
+315-1145
+SELECT encounter, pid from form_encounter where pid='315' and encounter='1145'
+Found Encounter: 1145
+1384890795-283
+SELECT encounter, pid from form_encounter where pid='1384890795' and encounter='283'
+Trying my logic... using claim date:20171206 
+648
+SELECT date, pid, encounter FROM form_encounter where pid = '648' and DATE_FORMAT(date, '%Y%m%d')='20171206'
+Matching Encounter: 5198
+Single encounter found so using that: 648  -  5198
+
+
+
+
+
+
+
+417-1247
+SELECT encounter, pid from form_encounter where pid='417' and encounter='1247'
+Found Encounter: 1247
+2144953278-580
+SELECT encounter, pid from form_encounter where pid='2144953278' and encounter='580'
+Trying my logic... using claim date:20180122 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20180122'
+Matching Encounter: 12166
+Single encounter found so using that: 1291  -  12166
+
+
+
+
+
+
+
+1085550370-580
+SELECT encounter, pid from form_encounter where pid='1085550370' and encounter='580'
+Trying my logic... using claim date:20171213 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6274
+Single encounter found so using that: 1291  -  6274
+
+
+
+
+
+
+
+1003-1124
+SELECT encounter, pid from form_encounter where pid='1003' and encounter='1124'
+Found Encounter: 1124
+3886-866
+SELECT encounter, pid from form_encounter where pid='3886' and encounter='866'
+Found Encounter: 866
+799-753
+SELECT encounter, pid from form_encounter where pid='799' and encounter='753'
+Found Encounter: 753
+3171-1153
+SELECT encounter, pid from form_encounter where pid='3171' and encounter='1153'
+Found Encounter: 1153
+3898-886
+SELECT encounter, pid from form_encounter where pid='3898' and encounter='886'
+Found Encounter: 886
+4020-1423
+SELECT encounter, pid from form_encounter where pid='4020' and encounter='1423'
+Found Encounter: 1423
+1230287732-2167
+SELECT encounter, pid from form_encounter where pid='1230287732' and encounter='2167'
+Trying my logic... using claim date:20180216 
+2565
+SELECT date, pid, encounter FROM form_encounter where pid = '2565' and DATE_FORMAT(date, '%Y%m%d')='20180216'
+Matching Encounter: 15839
+Single encounter found so using that: 2565  -  15839
+
+
+
+
+
+
+
+0108591579-KARVID000
+SELECT encounter, pid from form_encounter where pid='0108591579' and encounter='KARVID000'
+Trying my logic... using claim date:20180207 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180207'
+Matching Encounter: 14589
+Single encounter found so using that: 1447  -  14589
+
+
+
+
+
+
+
+1108105772-KARVID000
+SELECT encounter, pid from form_encounter where pid='1108105772' and encounter='KARVID000'
+Trying my logic... using claim date:20171214 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20171214'
+Matching Encounter: 6567
+Single encounter found so using that: 1447  -  6567
+
+
+
+
+
+
+
+1129677875-KARVID000
+SELECT encounter, pid from form_encounter where pid='1129677875' and encounter='KARVID000'
+Trying my logic... using claim date:20180108 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180108'
+Matching Encounter: 9527
+Matching Encounter: 9557
+SELECT encounter, code FROM billing where encounter='9527' and code='62320'
+SELECT encounter, code FROM billing where encounter='9557' and code='62320'
+Matched billing record: 9557
+Set encounter from billing to: 9557
+
+
+
+
+
+
+
+3896-877
+SELECT encounter, pid from form_encounter where pid='3896' and encounter='877'
+Found Encounter: 877
+2760-1112
+SELECT encounter, pid from form_encounter where pid='2760' and encounter='1112'
+Found Encounter: 1112
+735-1254
+SELECT encounter, pid from form_encounter where pid='735' and encounter='1254'
+Found Encounter: 1254
+764-1253
+SELECT encounter, pid from form_encounter where pid='764' and encounter='1253'
+Found Encounter: 1253
+1335953653-602
+SELECT encounter, pid from form_encounter where pid='1335953653' and encounter='602'
+Trying my logic... using claim date:20171213 
+1305
+SELECT date, pid, encounter FROM form_encounter where pid = '1305' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6301
+Single encounter found so using that: 1305  -  6301
+
+
+
+
+
+
+
+4248-2293
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2293'
+Found Encounter: 2293
+4248-2506
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2506'
+Found Encounter: 2506
+1425-3027
+SELECT encounter, pid from form_encounter where pid='1425' and encounter='3027'
+Found Encounter: 3027
+4508-3607
+SELECT encounter, pid from form_encounter where pid='4508' and encounter='3607'
+Found Encounter: 3607
+1880-2299
+SELECT encounter, pid from form_encounter where pid='1880' and encounter='2299'
+Found Encounter: 2299
+1886486337
+SELECT encounter, pid from form_encounter where pid='0' and encounter='0'
+Trying my logic... using claim date:20180109 
+1072
+SELECT date, pid, encounter FROM form_encounter where pid = '1072' and DATE_FORMAT(date, '%Y%m%d')='20180109'
+Matching Encounter: 9742
+Matching Encounter: 9924
+SELECT encounter, code FROM billing where encounter='9742' and code='01620'
+Matched billing record: 9742
+SELECT encounter, code FROM billing where encounter='9924' and code='01620'
+Set encounter from billing to: 9742
+
+
+
+
+
+
+
+3571-2206
+SELECT encounter, pid from form_encounter where pid='3571' and encounter='2206'
+Found Encounter: 2206
+4105-1688
+SELECT encounter, pid from form_encounter where pid='4105' and encounter='1688'
+Found Encounter: 1688
+1500-2521
+SELECT encounter, pid from form_encounter where pid='1500' and encounter='2521'
+Found Encounter: 2521
+56-861
+SELECT encounter, pid from form_encounter where pid='56' and encounter='861'
+Found Encounter: 861
+2421-808
+SELECT encounter, pid from form_encounter where pid='2421' and encounter='808'
+Found Encounter: 808
+0528735954-446
+SELECT encounter, pid from form_encounter where pid='0528735954' and encounter='446'
+Trying my logic... using claim date:20171218 
+958
+SELECT date, pid, encounter FROM form_encounter where pid = '958' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6925
+Matching Encounter: 7068
+SELECT encounter, code FROM billing where encounter='6925' and code='27096'
+Matched billing record: 6925
+SELECT encounter, code FROM billing where encounter='7068' and code='27096'
+Set encounter from billing to: 6925
+
+
+
+
+
+
+
+1694399385-191
+SELECT encounter, pid from form_encounter where pid='1694399385' and encounter='191'
+Trying my logic... using claim date:20171228 
+242
+SELECT date, pid, encounter FROM form_encounter where pid = '242' and DATE_FORMAT(date, '%Y%m%d')='20171228'
+Matching Encounter: 8418
+Single encounter found so using that: 242  -  8418
+
+
+
+
+
+
+
+4011-1341
+SELECT encounter, pid from form_encounter where pid='4011' and encounter='1341'
+Found Encounter: 1341
+1393484260-365
+SELECT encounter, pid from form_encounter where pid='1393484260' and encounter='365'
+Trying my logic... using claim date:20171218 
+935
+SELECT date, pid, encounter FROM form_encounter where pid = '935' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6976
+Matching Encounter: 7025
+SELECT encounter, code FROM billing where encounter='6976' and code='64635'
+SELECT encounter, code FROM billing where encounter='7025' and code='64635'
+Matched billing record: 7025
+Set encounter from billing to: 7025
+
+
+
+
+
+
+
+1573-729
+SELECT encounter, pid from form_encounter where pid='1573' and encounter='729'
+Found Encounter: 729
+519-1116
+SELECT encounter, pid from form_encounter where pid='519' and encounter='1116'
+Found Encounter: 1116
+826-1333
+SELECT encounter, pid from form_encounter where pid='826' and encounter='1333'
+Found Encounter: 1333
+2341-1129
+SELECT encounter, pid from form_encounter where pid='2341' and encounter='1129'
+Found Encounter: 1129
+1139-653
+SELECT encounter, pid from form_encounter where pid='1139' and encounter='653'
+Found Encounter: 653
+3993-1255
+SELECT encounter, pid from form_encounter where pid='3993' and encounter='1255'
+Found Encounter: 1255
+1254-766
+SELECT encounter, pid from form_encounter where pid='1254' and encounter='766'
+Found Encounter: 766
+3617-1258
+SELECT encounter, pid from form_encounter where pid='3617' and encounter='1258'
+Found Encounter: 1258
+2524-1149
+SELECT encounter, pid from form_encounter where pid='2524' and encounter='1149'
+Found Encounter: 1149
+0518406453-473
+SELECT encounter, pid from form_encounter where pid='0518406453' and encounter='473'
+Trying my logic... using claim date:20171205 
+379
+SELECT date, pid, encounter FROM form_encounter where pid = '379' and DATE_FORMAT(date, '%Y%m%d')='20171205'
+Matching Encounter: 4795
+Single encounter found so using that: 379  -  4795
+
+
+
+
+
+
+
+3088-874
+SELECT encounter, pid from form_encounter where pid='3088' and encounter='874'
+Found Encounter: 874
+3410-1399
+SELECT encounter, pid from form_encounter where pid='3410' and encounter='1399'
+Found Encounter: 1399
+2884-1143
+SELECT encounter, pid from form_encounter where pid='2884' and encounter='1143'
+Found Encounter: 1143
+3579-1244
+SELECT encounter, pid from form_encounter where pid='3579' and encounter='1244'
+Found Encounter: 1244
+2522-873
+SELECT encounter, pid from form_encounter where pid='2522' and encounter='873'
+Found Encounter: 873
+0933193486-766
+SELECT encounter, pid from form_encounter where pid='0933193486' and encounter='766'
+Trying my logic... using claim date:20180111 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180111'
+Matching Encounter: 10496
+Single encounter found so using that: 1699  -  10496
+
+
+
+
+
+
+
+1410115088-766
+SELECT encounter, pid from form_encounter where pid='1410115088' and encounter='766'
+Trying my logic... using claim date:20180221 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180221'
+Matching Encounter: 16188
+Single encounter found so using that: 1699  -  16188
+
+
+
+
+
+
+
+1607368965-766
+SELECT encounter, pid from form_encounter where pid='1607368965' and encounter='766'
+Trying my logic... using claim date:20171218 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 7044
+Single encounter found so using that: 1699  -  7044
+
+
+
+
+
+
+
+2465-1122
+SELECT encounter, pid from form_encounter where pid='2465' and encounter='1122'
+Found Encounter: 1122
+1611-887
+SELECT encounter, pid from form_encounter where pid='1611' and encounter='887'
+Found Encounter: 887
+4019-1389
+SELECT encounter, pid from form_encounter where pid='4019' and encounter='1389'
+Found Encounter: 1389
+1800-751
+SELECT encounter, pid from form_encounter where pid='1800' and encounter='751'
+Found Encounter: 751
+3873-813
+SELECT encounter, pid from form_encounter where pid='3873' and encounter='813'
+Found Encounter: 813
+2646-865
+SELECT encounter, pid from form_encounter where pid='2646' and encounter='865'
+Found Encounter: 865
+3615-888
+SELECT encounter, pid from form_encounter where pid='3615' and encounter='888'
+Found Encounter: 888
+MPC-15061610
+SELECT encounter, pid from form_encounter where pid='MPC' and encounter='15061610'
+Trying my logic... using claim date:20171106 
+418
+SELECT date, pid, encounter FROM form_encounter where pid = '418' and DATE_FORMAT(date, '%Y%m%d')='20171106'
+NOT FOUND
+
+
+
+
+
+
+
+NOT FOUND
+0886765045-562
+SELECT encounter, pid from form_encounter where pid='0886765045' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='01992'
+Matched billing record: 11409
+SELECT encounter, code FROM billing where encounter='11424' and code='01992'
+Set encounter from billing to: 11409
+
+
+
+
+
+
+
+0996270013-562
+SELECT encounter, pid from form_encounter where pid='0996270013' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='62322'
+SELECT encounter, code FROM billing where encounter='11424' and code='62322'
+Matched billing record: 11424
+Set encounter from billing to: 11424
+
+
+
+
+
+
+
+1769052121-562
+SELECT encounter, pid from form_encounter where pid='1769052121' and encounter='562'
+Trying my logic... using claim date:20171227 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171227'
+Matching Encounter: 8236
+Single encounter found so using that: 1341  -  8236
+
+
+
+
+
+
+
+1817959711-562
+SELECT encounter, pid from form_encounter where pid='1817959711' and encounter='562'
+Trying my logic... using claim date:20171213 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6351
+Single encounter found so using that: 1341  -  6351
+
+
+
+
+
+
+
+0502608435-1739
+SELECT encounter, pid from form_encounter where pid='0502608435' and encounter='1739'
+Trying my logic... using claim date:20180219 
+1445
+SELECT date, pid, encounter FROM form_encounter where pid = '1445' and DATE_FORMAT(date, '%Y%m%d')='20180219'
+Matching Encounter: 15907
+Single encounter found so using that: 1445  -  15907
+
+
+
+
+
+
+
+315-1145
+SELECT encounter, pid from form_encounter where pid='315' and encounter='1145'
+Found Encounter: 1145
+1384890795-283
+SELECT encounter, pid from form_encounter where pid='1384890795' and encounter='283'
+Trying my logic... using claim date:20171206 
+648
+SELECT date, pid, encounter FROM form_encounter where pid = '648' and DATE_FORMAT(date, '%Y%m%d')='20171206'
+Matching Encounter: 5198
+Single encounter found so using that: 648  -  5198
+
+
+
+
+
+
+
+417-1247
+SELECT encounter, pid from form_encounter where pid='417' and encounter='1247'
+Found Encounter: 1247
+2144953278-580
+SELECT encounter, pid from form_encounter where pid='2144953278' and encounter='580'
+Trying my logic... using claim date:20180122 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20180122'
+Matching Encounter: 12166
+Single encounter found so using that: 1291  -  12166
+
+
+
+
+
+
+
+1085550370-580
+SELECT encounter, pid from form_encounter where pid='1085550370' and encounter='580'
+Trying my logic... using claim date:20171213 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6274
+Single encounter found so using that: 1291  -  6274
+
+
+
+
+
+
+
+1003-1124
+SELECT encounter, pid from form_encounter where pid='1003' and encounter='1124'
+Found Encounter: 1124
+3886-866
+SELECT encounter, pid from form_encounter where pid='3886' and encounter='866'
+Found Encounter: 866
+799-753
+SELECT encounter, pid from form_encounter where pid='799' and encounter='753'
+Found Encounter: 753
+3171-1153
+SELECT encounter, pid from form_encounter where pid='3171' and encounter='1153'
+Found Encounter: 1153
+3898-886
+SELECT encounter, pid from form_encounter where pid='3898' and encounter='886'
+Found Encounter: 886
+4020-1423
+SELECT encounter, pid from form_encounter where pid='4020' and encounter='1423'
+Found Encounter: 1423
+1230287732-2167
+SELECT encounter, pid from form_encounter where pid='1230287732' and encounter='2167'
+Trying my logic... using claim date:20180216 
+2565
+SELECT date, pid, encounter FROM form_encounter where pid = '2565' and DATE_FORMAT(date, '%Y%m%d')='20180216'
+Matching Encounter: 15839
+Single encounter found so using that: 2565  -  15839
+
+
+
+
+
+
+
+0108591579-KARVID000
+SELECT encounter, pid from form_encounter where pid='0108591579' and encounter='KARVID000'
+Trying my logic... using claim date:20180207 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180207'
+Matching Encounter: 14589
+Single encounter found so using that: 1447  -  14589
+
+
+
+
+
+
+
+1108105772-KARVID000
+SELECT encounter, pid from form_encounter where pid='1108105772' and encounter='KARVID000'
+Trying my logic... using claim date:20171214 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20171214'
+Matching Encounter: 6567
+Single encounter found so using that: 1447  -  6567
+
+
+
+
+
+
+
+1129677875-KARVID000
+SELECT encounter, pid from form_encounter where pid='1129677875' and encounter='KARVID000'
+Trying my logic... using claim date:20180108 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180108'
+Matching Encounter: 9527
+Matching Encounter: 9557
+SELECT encounter, code FROM billing where encounter='9527' and code='62320'
+SELECT encounter, code FROM billing where encounter='9557' and code='62320'
+Matched billing record: 9557
+Set encounter from billing to: 9557
+
+
+
+
+
+
+
+3896-877
+SELECT encounter, pid from form_encounter where pid='3896' and encounter='877'
+Found Encounter: 877
+2760-1112
+SELECT encounter, pid from form_encounter where pid='2760' and encounter='1112'
+Found Encounter: 1112
+735-1254
+SELECT encounter, pid from form_encounter where pid='735' and encounter='1254'
+Found Encounter: 1254
+764-1253
+SELECT encounter, pid from form_encounter where pid='764' and encounter='1253'
+Found Encounter: 1253
+1335953653-602
+SELECT encounter, pid from form_encounter where pid='1335953653' and encounter='602'
+Trying my logic... using claim date:20171213 
+1305
+SELECT date, pid, encounter FROM form_encounter where pid = '1305' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6301
+Single encounter found so using that: 1305  -  6301
+
+
+
+
+
+
+
+4248-2293
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2293'
+Found Encounter: 2293
+4248-2506
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2506'
+Found Encounter: 2506
+1425-3027
+SELECT encounter, pid from form_encounter where pid='1425' and encounter='3027'
+Found Encounter: 3027
+4508-3607
+SELECT encounter, pid from form_encounter where pid='4508' and encounter='3607'
+Found Encounter: 3607
+1880-2299
+SELECT encounter, pid from form_encounter where pid='1880' and encounter='2299'
+Found Encounter: 2299
+1886486337
+SELECT encounter, pid from form_encounter where pid='0' and encounter='0'
+Trying my logic... using claim date:20180109 
+1072
+SELECT date, pid, encounter FROM form_encounter where pid = '1072' and DATE_FORMAT(date, '%Y%m%d')='20180109'
+Matching Encounter: 9742
+Matching Encounter: 9924
+SELECT encounter, code FROM billing where encounter='9742' and code='01620'
+Matched billing record: 9742
+SELECT encounter, code FROM billing where encounter='9924' and code='01620'
+Set encounter from billing to: 9742
+
+
+
+
+
+
+
+3571-2206
+SELECT encounter, pid from form_encounter where pid='3571' and encounter='2206'
+Found Encounter: 2206
+4105-1688
+SELECT encounter, pid from form_encounter where pid='4105' and encounter='1688'
+Found Encounter: 1688
+1500-2521
+SELECT encounter, pid from form_encounter where pid='1500' and encounter='2521'
+Found Encounter: 2521
+56-861
+SELECT encounter, pid from form_encounter where pid='56' and encounter='861'
+Found Encounter: 861
+2421-808
+SELECT encounter, pid from form_encounter where pid='2421' and encounter='808'
+Found Encounter: 808
+0528735954-446
+SELECT encounter, pid from form_encounter where pid='0528735954' and encounter='446'
+Trying my logic... using claim date:20171218 
+958
+SELECT date, pid, encounter FROM form_encounter where pid = '958' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6925
+Matching Encounter: 7068
+SELECT encounter, code FROM billing where encounter='6925' and code='27096'
+Matched billing record: 6925
+SELECT encounter, code FROM billing where encounter='7068' and code='27096'
+Set encounter from billing to: 6925
+
+
+
+
+
+
+
+1694399385-191
+SELECT encounter, pid from form_encounter where pid='1694399385' and encounter='191'
+Trying my logic... using claim date:20171228 
+242
+SELECT date, pid, encounter FROM form_encounter where pid = '242' and DATE_FORMAT(date, '%Y%m%d')='20171228'
+Matching Encounter: 8418
+Single encounter found so using that: 242  -  8418
+
+
+
+
+
+
+
+4011-1341
+SELECT encounter, pid from form_encounter where pid='4011' and encounter='1341'
+Found Encounter: 1341
+1393484260-365
+SELECT encounter, pid from form_encounter where pid='1393484260' and encounter='365'
+Trying my logic... using claim date:20171218 
+935
+SELECT date, pid, encounter FROM form_encounter where pid = '935' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6976
+Matching Encounter: 7025
+SELECT encounter, code FROM billing where encounter='6976' and code='64635'
+SELECT encounter, code FROM billing where encounter='7025' and code='64635'
+Matched billing record: 7025
+Set encounter from billing to: 7025
+
+
+
+
+
+
+
+1573-729
+SELECT encounter, pid from form_encounter where pid='1573' and encounter='729'
+Found Encounter: 729
+519-1116
+SELECT encounter, pid from form_encounter where pid='519' and encounter='1116'
+Found Encounter: 1116
+826-1333
+SELECT encounter, pid from form_encounter where pid='826' and encounter='1333'
+Found Encounter: 1333
+2341-1129
+SELECT encounter, pid from form_encounter where pid='2341' and encounter='1129'
+Found Encounter: 1129
+1139-653
+SELECT encounter, pid from form_encounter where pid='1139' and encounter='653'
+Found Encounter: 653
+3993-1255
+SELECT encounter, pid from form_encounter where pid='3993' and encounter='1255'
+Found Encounter: 1255
+1254-766
+SELECT encounter, pid from form_encounter where pid='1254' and encounter='766'
+Found Encounter: 766
+3617-1258
+SELECT encounter, pid from form_encounter where pid='3617' and encounter='1258'
+Found Encounter: 1258
+2524-1149
+SELECT encounter, pid from form_encounter where pid='2524' and encounter='1149'
+Found Encounter: 1149
+0518406453-473
+SELECT encounter, pid from form_encounter where pid='0518406453' and encounter='473'
+Trying my logic... using claim date:20171205 
+379
+SELECT date, pid, encounter FROM form_encounter where pid = '379' and DATE_FORMAT(date, '%Y%m%d')='20171205'
+Matching Encounter: 4795
+Single encounter found so using that: 379  -  4795
+
+
+
+
+
+
+
+3088-874
+SELECT encounter, pid from form_encounter where pid='3088' and encounter='874'
+Found Encounter: 874
+3410-1399
+SELECT encounter, pid from form_encounter where pid='3410' and encounter='1399'
+Found Encounter: 1399
+2884-1143
+SELECT encounter, pid from form_encounter where pid='2884' and encounter='1143'
+Found Encounter: 1143
+3579-1244
+SELECT encounter, pid from form_encounter where pid='3579' and encounter='1244'
+Found Encounter: 1244
+2522-873
+SELECT encounter, pid from form_encounter where pid='2522' and encounter='873'
+Found Encounter: 873
+0933193486-766
+SELECT encounter, pid from form_encounter where pid='0933193486' and encounter='766'
+Trying my logic... using claim date:20180111 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180111'
+Matching Encounter: 10496
+Single encounter found so using that: 1699  -  10496
+
+
+
+
+
+
+
+1410115088-766
+SELECT encounter, pid from form_encounter where pid='1410115088' and encounter='766'
+Trying my logic... using claim date:20180221 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180221'
+Matching Encounter: 16188
+Single encounter found so using that: 1699  -  16188
+
+
+
+
+
+
+
+1607368965-766
+SELECT encounter, pid from form_encounter where pid='1607368965' and encounter='766'
+Trying my logic... using claim date:20171218 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 7044
+Single encounter found so using that: 1699  -  7044
+
+
+
+
+
+
+
+2465-1122
+SELECT encounter, pid from form_encounter where pid='2465' and encounter='1122'
+Found Encounter: 1122
+1611-887
+SELECT encounter, pid from form_encounter where pid='1611' and encounter='887'
+Found Encounter: 887
+4019-1389
+SELECT encounter, pid from form_encounter where pid='4019' and encounter='1389'
+Found Encounter: 1389
+1800-751
+SELECT encounter, pid from form_encounter where pid='1800' and encounter='751'
+Found Encounter: 751
+3873-813
+SELECT encounter, pid from form_encounter where pid='3873' and encounter='813'
+Found Encounter: 813
+2646-865
+SELECT encounter, pid from form_encounter where pid='2646' and encounter='865'
+Found Encounter: 865
+3615-888
+SELECT encounter, pid from form_encounter where pid='3615' and encounter='888'
+Found Encounter: 888
+MPC-15061610
+SELECT encounter, pid from form_encounter where pid='MPC' and encounter='15061610'
+Trying my logic... using claim date:20171106 
+418
+SELECT date, pid, encounter FROM form_encounter where pid = '418' and DATE_FORMAT(date, '%Y%m%d')='20171106'
+NOT FOUND
+
+
+
+
+
+
+
+NOT FOUND
+0886765045-562
+SELECT encounter, pid from form_encounter where pid='0886765045' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='01992'
+Matched billing record: 11409
+SELECT encounter, code FROM billing where encounter='11424' and code='01992'
+Set encounter from billing to: 11409
+
+
+
+
+
+
+
+0996270013-562
+SELECT encounter, pid from form_encounter where pid='0996270013' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='62322'
+SELECT encounter, code FROM billing where encounter='11424' and code='62322'
+Matched billing record: 11424
+Set encounter from billing to: 11424
+
+
+
+
+
+
+
+1769052121-562
+SELECT encounter, pid from form_encounter where pid='1769052121' and encounter='562'
+Trying my logic... using claim date:20171227 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171227'
+Matching Encounter: 8236
+Single encounter found so using that: 1341  -  8236
+
+
+
+
+
+
+
+1817959711-562
+SELECT encounter, pid from form_encounter where pid='1817959711' and encounter='562'
+Trying my logic... using claim date:20171213 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6351
+Single encounter found so using that: 1341  -  6351
+
+
+
+
+
+
+
+0502608435-1739
+SELECT encounter, pid from form_encounter where pid='0502608435' and encounter='1739'
+Trying my logic... using claim date:20180219 
+1445
+SELECT date, pid, encounter FROM form_encounter where pid = '1445' and DATE_FORMAT(date, '%Y%m%d')='20180219'
+Matching Encounter: 15907
+Single encounter found so using that: 1445  -  15907
+
+
+
+
+
+
+
+315-1145
+SELECT encounter, pid from form_encounter where pid='315' and encounter='1145'
+Found Encounter: 1145
+1384890795-283
+SELECT encounter, pid from form_encounter where pid='1384890795' and encounter='283'
+Trying my logic... using claim date:20171206 
+648
+SELECT date, pid, encounter FROM form_encounter where pid = '648' and DATE_FORMAT(date, '%Y%m%d')='20171206'
+Matching Encounter: 5198
+Single encounter found so using that: 648  -  5198
+
+
+
+
+
+
+
+417-1247
+SELECT encounter, pid from form_encounter where pid='417' and encounter='1247'
+Found Encounter: 1247
+2144953278-580
+SELECT encounter, pid from form_encounter where pid='2144953278' and encounter='580'
+Trying my logic... using claim date:20180122 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20180122'
+Matching Encounter: 12166
+Single encounter found so using that: 1291  -  12166
+
+
+
+
+
+
+
+1085550370-580
+SELECT encounter, pid from form_encounter where pid='1085550370' and encounter='580'
+Trying my logic... using claim date:20171213 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6274
+Single encounter found so using that: 1291  -  6274
+
+
+
+
+
+
+
+1003-1124
+SELECT encounter, pid from form_encounter where pid='1003' and encounter='1124'
+Found Encounter: 1124
+3886-866
+SELECT encounter, pid from form_encounter where pid='3886' and encounter='866'
+Found Encounter: 866
+799-753
+SELECT encounter, pid from form_encounter where pid='799' and encounter='753'
+Found Encounter: 753
+3171-1153
+SELECT encounter, pid from form_encounter where pid='3171' and encounter='1153'
+Found Encounter: 1153
+3898-886
+SELECT encounter, pid from form_encounter where pid='3898' and encounter='886'
+Found Encounter: 886
+4020-1423
+SELECT encounter, pid from form_encounter where pid='4020' and encounter='1423'
+Found Encounter: 1423
+1230287732-2167
+SELECT encounter, pid from form_encounter where pid='1230287732' and encounter='2167'
+Trying my logic... using claim date:20180216 
+2565
+SELECT date, pid, encounter FROM form_encounter where pid = '2565' and DATE_FORMAT(date, '%Y%m%d')='20180216'
+Matching Encounter: 15839
+Single encounter found so using that: 2565  -  15839
+
+
+
+
+
+
+
+0108591579-KARVID000
+SELECT encounter, pid from form_encounter where pid='0108591579' and encounter='KARVID000'
+Trying my logic... using claim date:20180207 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180207'
+Matching Encounter: 14589
+Single encounter found so using that: 1447  -  14589
+
+
+
+
+
+
+
+1108105772-KARVID000
+SELECT encounter, pid from form_encounter where pid='1108105772' and encounter='KARVID000'
+Trying my logic... using claim date:20171214 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20171214'
+Matching Encounter: 6567
+Single encounter found so using that: 1447  -  6567
+
+
+
+
+
+
+
+1129677875-KARVID000
+SELECT encounter, pid from form_encounter where pid='1129677875' and encounter='KARVID000'
+Trying my logic... using claim date:20180108 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180108'
+Matching Encounter: 9527
+Matching Encounter: 9557
+SELECT encounter, code FROM billing where encounter='9527' and code='62320'
+SELECT encounter, code FROM billing where encounter='9557' and code='62320'
+Matched billing record: 9557
+Set encounter from billing to: 9557
+
+
+
+
+
+
+
+3896-877
+SELECT encounter, pid from form_encounter where pid='3896' and encounter='877'
+Found Encounter: 877
+2760-1112
+SELECT encounter, pid from form_encounter where pid='2760' and encounter='1112'
+Found Encounter: 1112
+735-1254
+SELECT encounter, pid from form_encounter where pid='735' and encounter='1254'
+Found Encounter: 1254
+764-1253
+SELECT encounter, pid from form_encounter where pid='764' and encounter='1253'
+Found Encounter: 1253
+1335953653-602
+SELECT encounter, pid from form_encounter where pid='1335953653' and encounter='602'
+Trying my logic... using claim date:20171213 
+1305
+SELECT date, pid, encounter FROM form_encounter where pid = '1305' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6301
+Single encounter found so using that: 1305  -  6301
+
+
+
+
+
+
+
+4248-2293
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2293'
+Found Encounter: 2293
+4248-2506
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2506'
+Found Encounter: 2506
+1425-3027
+SELECT encounter, pid from form_encounter where pid='1425' and encounter='3027'
+Found Encounter: 3027
+4508-3607
+SELECT encounter, pid from form_encounter where pid='4508' and encounter='3607'
+Found Encounter: 3607
+1880-2299
+SELECT encounter, pid from form_encounter where pid='1880' and encounter='2299'
+Found Encounter: 2299
+1886486337
+SELECT encounter, pid from form_encounter where pid='0' and encounter='0'
+Trying my logic... using claim date:20180109 
+1072
+SELECT date, pid, encounter FROM form_encounter where pid = '1072' and DATE_FORMAT(date, '%Y%m%d')='20180109'
+Matching Encounter: 9742
+Matching Encounter: 9924
+SELECT encounter, code FROM billing where encounter='9742' and code='01620'
+Matched billing record: 9742
+SELECT encounter, code FROM billing where encounter='9924' and code='01620'
+Set encounter from billing to: 9742
+
+
+
+
+
+
+
+3571-2206
+SELECT encounter, pid from form_encounter where pid='3571' and encounter='2206'
+Found Encounter: 2206
+4105-1688
+SELECT encounter, pid from form_encounter where pid='4105' and encounter='1688'
+Found Encounter: 1688
+1500-2521
+SELECT encounter, pid from form_encounter where pid='1500' and encounter='2521'
+Found Encounter: 2521
+56-861
+SELECT encounter, pid from form_encounter where pid='56' and encounter='861'
+Found Encounter: 861
+2421-808
+SELECT encounter, pid from form_encounter where pid='2421' and encounter='808'
+Found Encounter: 808
+0528735954-446
+SELECT encounter, pid from form_encounter where pid='0528735954' and encounter='446'
+Trying my logic... using claim date:20171218 
+958
+SELECT date, pid, encounter FROM form_encounter where pid = '958' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6925
+Matching Encounter: 7068
+SELECT encounter, code FROM billing where encounter='6925' and code='27096'
+Matched billing record: 6925
+SELECT encounter, code FROM billing where encounter='7068' and code='27096'
+Set encounter from billing to: 6925
+
+
+
+
+
+
+
+1694399385-191
+SELECT encounter, pid from form_encounter where pid='1694399385' and encounter='191'
+Trying my logic... using claim date:20171228 
+242
+SELECT date, pid, encounter FROM form_encounter where pid = '242' and DATE_FORMAT(date, '%Y%m%d')='20171228'
+Matching Encounter: 8418
+Single encounter found so using that: 242  -  8418
+
+
+
+
+
+
+
+4011-1341
+SELECT encounter, pid from form_encounter where pid='4011' and encounter='1341'
+Found Encounter: 1341
+1393484260-365
+SELECT encounter, pid from form_encounter where pid='1393484260' and encounter='365'
+Trying my logic... using claim date:20171218 
+935
+SELECT date, pid, encounter FROM form_encounter where pid = '935' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6976
+Matching Encounter: 7025
+SELECT encounter, code FROM billing where encounter='6976' and code='64635'
+SELECT encounter, code FROM billing where encounter='7025' and code='64635'
+Matched billing record: 7025
+Set encounter from billing to: 7025
+
+
+
+
+
+
+
+1573-729
+SELECT encounter, pid from form_encounter where pid='1573' and encounter='729'
+Found Encounter: 729
+519-1116
+SELECT encounter, pid from form_encounter where pid='519' and encounter='1116'
+Found Encounter: 1116
+826-1333
+SELECT encounter, pid from form_encounter where pid='826' and encounter='1333'
+Found Encounter: 1333
+2341-1129
+SELECT encounter, pid from form_encounter where pid='2341' and encounter='1129'
+Found Encounter: 1129
+1139-653
+SELECT encounter, pid from form_encounter where pid='1139' and encounter='653'
+Found Encounter: 653
+3993-1255
+SELECT encounter, pid from form_encounter where pid='3993' and encounter='1255'
+Found Encounter: 1255
+1254-766
+SELECT encounter, pid from form_encounter where pid='1254' and encounter='766'
+Found Encounter: 766
+3617-1258
+SELECT encounter, pid from form_encounter where pid='3617' and encounter='1258'
+Found Encounter: 1258
+2524-1149
+SELECT encounter, pid from form_encounter where pid='2524' and encounter='1149'
+Found Encounter: 1149
+0518406453-473
+SELECT encounter, pid from form_encounter where pid='0518406453' and encounter='473'
+Trying my logic... using claim date:20171205 
+379
+SELECT date, pid, encounter FROM form_encounter where pid = '379' and DATE_FORMAT(date, '%Y%m%d')='20171205'
+Matching Encounter: 4795
+Single encounter found so using that: 379  -  4795
+
+
+
+
+
+
+
+3088-874
+SELECT encounter, pid from form_encounter where pid='3088' and encounter='874'
+Found Encounter: 874
+3410-1399
+SELECT encounter, pid from form_encounter where pid='3410' and encounter='1399'
+Found Encounter: 1399
+2884-1143
+SELECT encounter, pid from form_encounter where pid='2884' and encounter='1143'
+Found Encounter: 1143
+3579-1244
+SELECT encounter, pid from form_encounter where pid='3579' and encounter='1244'
+Found Encounter: 1244
+2522-873
+SELECT encounter, pid from form_encounter where pid='2522' and encounter='873'
+Found Encounter: 873
+0933193486-766
+SELECT encounter, pid from form_encounter where pid='0933193486' and encounter='766'
+Trying my logic... using claim date:20180111 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180111'
+Matching Encounter: 10496
+Single encounter found so using that: 1699  -  10496
+
+
+
+
+
+
+
+1410115088-766
+SELECT encounter, pid from form_encounter where pid='1410115088' and encounter='766'
+Trying my logic... using claim date:20180221 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180221'
+Matching Encounter: 16188
+Single encounter found so using that: 1699  -  16188
+
+
+
+
+
+
+
+1607368965-766
+SELECT encounter, pid from form_encounter where pid='1607368965' and encounter='766'
+Trying my logic... using claim date:20171218 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 7044
+Single encounter found so using that: 1699  -  7044
+
+
+
+
+
+
+
+2465-1122
+SELECT encounter, pid from form_encounter where pid='2465' and encounter='1122'
+Found Encounter: 1122
+1611-887
+SELECT encounter, pid from form_encounter where pid='1611' and encounter='887'
+Found Encounter: 887
+4019-1389
+SELECT encounter, pid from form_encounter where pid='4019' and encounter='1389'
+Found Encounter: 1389
+1800-751
+SELECT encounter, pid from form_encounter where pid='1800' and encounter='751'
+Found Encounter: 751
+3873-813
+SELECT encounter, pid from form_encounter where pid='3873' and encounter='813'
+Found Encounter: 813
+2646-865
+SELECT encounter, pid from form_encounter where pid='2646' and encounter='865'
+Found Encounter: 865
+3615-888
+SELECT encounter, pid from form_encounter where pid='3615' and encounter='888'
+Found Encounter: 888
+MPC-15061610
+SELECT encounter, pid from form_encounter where pid='MPC' and encounter='15061610'
+Trying my logic... using claim date:20171106 
+418
+SELECT date, pid, encounter FROM form_encounter where pid = '418' and DATE_FORMAT(date, '%Y%m%d')='20171106'
+NOT FOUND
+
+
+
+
+
+
+
+NOT FOUND
+0886765045-562
+SELECT encounter, pid from form_encounter where pid='0886765045' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='01992'
+Matched billing record: 11409
+SELECT encounter, code FROM billing where encounter='11424' and code='01992'
+Set encounter from billing to: 11409
+
+
+
+
+
+
+
+0996270013-562
+SELECT encounter, pid from form_encounter where pid='0996270013' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='62322'
+SELECT encounter, code FROM billing where encounter='11424' and code='62322'
+Matched billing record: 11424
+Set encounter from billing to: 11424
+
+
+
+
+
+
+
+1769052121-562
+SELECT encounter, pid from form_encounter where pid='1769052121' and encounter='562'
+Trying my logic... using claim date:20171227 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171227'
+Matching Encounter: 8236
+Single encounter found so using that: 1341  -  8236
+
+
+
+
+
+
+
+1817959711-562
+SELECT encounter, pid from form_encounter where pid='1817959711' and encounter='562'
+Trying my logic... using claim date:20171213 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6351
+Single encounter found so using that: 1341  -  6351
+
+
+
+
+
+
+
+0502608435-1739
+SELECT encounter, pid from form_encounter where pid='0502608435' and encounter='1739'
+Trying my logic... using claim date:20180219 
+1445
+SELECT date, pid, encounter FROM form_encounter where pid = '1445' and DATE_FORMAT(date, '%Y%m%d')='20180219'
+Matching Encounter: 15907
+Single encounter found so using that: 1445  -  15907
+
+
+
+
+
+
+
+315-1145
+SELECT encounter, pid from form_encounter where pid='315' and encounter='1145'
+Found Encounter: 1145
+1384890795-283
+SELECT encounter, pid from form_encounter where pid='1384890795' and encounter='283'
+Trying my logic... using claim date:20171206 
+648
+SELECT date, pid, encounter FROM form_encounter where pid = '648' and DATE_FORMAT(date, '%Y%m%d')='20171206'
+Matching Encounter: 5198
+Single encounter found so using that: 648  -  5198
+
+
+
+
+
+
+
+417-1247
+SELECT encounter, pid from form_encounter where pid='417' and encounter='1247'
+Found Encounter: 1247
+2144953278-580
+SELECT encounter, pid from form_encounter where pid='2144953278' and encounter='580'
+Trying my logic... using claim date:20180122 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20180122'
+Matching Encounter: 12166
+Single encounter found so using that: 1291  -  12166
+
+
+
+
+
+
+
+1085550370-580
+SELECT encounter, pid from form_encounter where pid='1085550370' and encounter='580'
+Trying my logic... using claim date:20171213 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6274
+Single encounter found so using that: 1291  -  6274
+
+
+
+
+
+
+
+1003-1124
+SELECT encounter, pid from form_encounter where pid='1003' and encounter='1124'
+Found Encounter: 1124
+3886-866
+SELECT encounter, pid from form_encounter where pid='3886' and encounter='866'
+Found Encounter: 866
+799-753
+SELECT encounter, pid from form_encounter where pid='799' and encounter='753'
+Found Encounter: 753
+3171-1153
+SELECT encounter, pid from form_encounter where pid='3171' and encounter='1153'
+Found Encounter: 1153
+3898-886
+SELECT encounter, pid from form_encounter where pid='3898' and encounter='886'
+Found Encounter: 886
+4020-1423
+SELECT encounter, pid from form_encounter where pid='4020' and encounter='1423'
+Found Encounter: 1423
+1230287732-2167
+SELECT encounter, pid from form_encounter where pid='1230287732' and encounter='2167'
+Trying my logic... using claim date:20180216 
+2565
+SELECT date, pid, encounter FROM form_encounter where pid = '2565' and DATE_FORMAT(date, '%Y%m%d')='20180216'
+Matching Encounter: 15839
+Single encounter found so using that: 2565  -  15839
+
+
+
+
+
+
+
+0108591579-KARVID000
+SELECT encounter, pid from form_encounter where pid='0108591579' and encounter='KARVID000'
+Trying my logic... using claim date:20180207 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180207'
+Matching Encounter: 14589
+Single encounter found so using that: 1447  -  14589
+
+
+
+
+
+
+
+1108105772-KARVID000
+SELECT encounter, pid from form_encounter where pid='1108105772' and encounter='KARVID000'
+Trying my logic... using claim date:20171214 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20171214'
+Matching Encounter: 6567
+Single encounter found so using that: 1447  -  6567
+
+
+
+
+
+
+
+1129677875-KARVID000
+SELECT encounter, pid from form_encounter where pid='1129677875' and encounter='KARVID000'
+Trying my logic... using claim date:20180108 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180108'
+Matching Encounter: 9527
+Matching Encounter: 9557
+SELECT encounter, code FROM billing where encounter='9527' and code='62320'
+SELECT encounter, code FROM billing where encounter='9557' and code='62320'
+Matched billing record: 9557
+Set encounter from billing to: 9557
+
+
+
+
+
+
+
+3896-877
+SELECT encounter, pid from form_encounter where pid='3896' and encounter='877'
+Found Encounter: 877
+2760-1112
+SELECT encounter, pid from form_encounter where pid='2760' and encounter='1112'
+Found Encounter: 1112
+735-1254
+SELECT encounter, pid from form_encounter where pid='735' and encounter='1254'
+Found Encounter: 1254
+764-1253
+SELECT encounter, pid from form_encounter where pid='764' and encounter='1253'
+Found Encounter: 1253
+1335953653-602
+SELECT encounter, pid from form_encounter where pid='1335953653' and encounter='602'
+Trying my logic... using claim date:20171213 
+1305
+SELECT date, pid, encounter FROM form_encounter where pid = '1305' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6301
+Single encounter found so using that: 1305  -  6301
+
+
+
+
+
+
+
+4248-2293
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2293'
+Found Encounter: 2293
+4248-2506
+SELECT encounter, pid from form_encounter where pid='4248' and encounter='2506'
+Found Encounter: 2506
+1425-3027
+SELECT encounter, pid from form_encounter where pid='1425' and encounter='3027'
+Found Encounter: 3027
+4508-3607
+SELECT encounter, pid from form_encounter where pid='4508' and encounter='3607'
+Found Encounter: 3607
+1880-2299
+SELECT encounter, pid from form_encounter where pid='1880' and encounter='2299'
+Found Encounter: 2299
+1886486337
+SELECT encounter, pid from form_encounter where pid='0' and encounter='0'
+Trying my logic... using claim date:20180109 
+1072
+SELECT date, pid, encounter FROM form_encounter where pid = '1072' and DATE_FORMAT(date, '%Y%m%d')='20180109'
+Matching Encounter: 9742
+Matching Encounter: 9924
+SELECT encounter, code FROM billing where encounter='9742' and code='01620'
+Matched billing record: 9742
+SELECT encounter, code FROM billing where encounter='9924' and code='01620'
+Set encounter from billing to: 9742
+
+
+
+
+
+
+
+3571-2206
+SELECT encounter, pid from form_encounter where pid='3571' and encounter='2206'
+Found Encounter: 2206
+4105-1688
+SELECT encounter, pid from form_encounter where pid='4105' and encounter='1688'
+Found Encounter: 1688
+1500-2521
+SELECT encounter, pid from form_encounter where pid='1500' and encounter='2521'
+Found Encounter: 2521
+56-861
+SELECT encounter, pid from form_encounter where pid='56' and encounter='861'
+Found Encounter: 861
+2421-808
+SELECT encounter, pid from form_encounter where pid='2421' and encounter='808'
+Found Encounter: 808
+0528735954-446
+SELECT encounter, pid from form_encounter where pid='0528735954' and encounter='446'
+Trying my logic... using claim date:20171218 
+958
+SELECT date, pid, encounter FROM form_encounter where pid = '958' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6925
+Matching Encounter: 7068
+SELECT encounter, code FROM billing where encounter='6925' and code='27096'
+Matched billing record: 6925
+SELECT encounter, code FROM billing where encounter='7068' and code='27096'
+Set encounter from billing to: 6925
+
+
+
+
+
+
+
+1694399385-191
+SELECT encounter, pid from form_encounter where pid='1694399385' and encounter='191'
+Trying my logic... using claim date:20171228 
+242
+SELECT date, pid, encounter FROM form_encounter where pid = '242' and DATE_FORMAT(date, '%Y%m%d')='20171228'
+Matching Encounter: 8418
+Single encounter found so using that: 242  -  8418
+
+
+
+
+
+
+
+4011-1341
+SELECT encounter, pid from form_encounter where pid='4011' and encounter='1341'
+Found Encounter: 1341
+1393484260-365
+SELECT encounter, pid from form_encounter where pid='1393484260' and encounter='365'
+Trying my logic... using claim date:20171218 
+935
+SELECT date, pid, encounter FROM form_encounter where pid = '935' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 6976
+Matching Encounter: 7025
+SELECT encounter, code FROM billing where encounter='6976' and code='64635'
+SELECT encounter, code FROM billing where encounter='7025' and code='64635'
+Matched billing record: 7025
+Set encounter from billing to: 7025
+
+
+
+
+
+
+
+1573-729
+SELECT encounter, pid from form_encounter where pid='1573' and encounter='729'
+Found Encounter: 729
+519-1116
+SELECT encounter, pid from form_encounter where pid='519' and encounter='1116'
+Found Encounter: 1116
+826-1333
+SELECT encounter, pid from form_encounter where pid='826' and encounter='1333'
+Found Encounter: 1333
+2341-1129
+SELECT encounter, pid from form_encounter where pid='2341' and encounter='1129'
+Found Encounter: 1129
+1139-653
+SELECT encounter, pid from form_encounter where pid='1139' and encounter='653'
+Found Encounter: 653
+3993-1255
+SELECT encounter, pid from form_encounter where pid='3993' and encounter='1255'
+Found Encounter: 1255
+1254-766
+SELECT encounter, pid from form_encounter where pid='1254' and encounter='766'
+Found Encounter: 766
+3617-1258
+SELECT encounter, pid from form_encounter where pid='3617' and encounter='1258'
+Found Encounter: 1258
+2524-1149
+SELECT encounter, pid from form_encounter where pid='2524' and encounter='1149'
+Found Encounter: 1149
+0518406453-473
+SELECT encounter, pid from form_encounter where pid='0518406453' and encounter='473'
+Trying my logic... using claim date:20171205 
+379
+SELECT date, pid, encounter FROM form_encounter where pid = '379' and DATE_FORMAT(date, '%Y%m%d')='20171205'
+Matching Encounter: 4795
+Single encounter found so using that: 379  -  4795
+
+
+
+
+
+
+
+3088-874
+SELECT encounter, pid from form_encounter where pid='3088' and encounter='874'
+Found Encounter: 874
+3410-1399
+SELECT encounter, pid from form_encounter where pid='3410' and encounter='1399'
+Found Encounter: 1399
+2884-1143
+SELECT encounter, pid from form_encounter where pid='2884' and encounter='1143'
+Found Encounter: 1143
+3579-1244
+SELECT encounter, pid from form_encounter where pid='3579' and encounter='1244'
+Found Encounter: 1244
+2522-873
+SELECT encounter, pid from form_encounter where pid='2522' and encounter='873'
+Found Encounter: 873
+0933193486-766
+SELECT encounter, pid from form_encounter where pid='0933193486' and encounter='766'
+Trying my logic... using claim date:20180111 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180111'
+Matching Encounter: 10496
+Single encounter found so using that: 1699  -  10496
+
+
+
+
+
+
+
+1410115088-766
+SELECT encounter, pid from form_encounter where pid='1410115088' and encounter='766'
+Trying my logic... using claim date:20180221 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20180221'
+Matching Encounter: 16188
+Single encounter found so using that: 1699  -  16188
+
+
+
+
+
+
+
+1607368965-766
+SELECT encounter, pid from form_encounter where pid='1607368965' and encounter='766'
+Trying my logic... using claim date:20171218 
+1699
+SELECT date, pid, encounter FROM form_encounter where pid = '1699' and DATE_FORMAT(date, '%Y%m%d')='20171218'
+Matching Encounter: 7044
+Single encounter found so using that: 1699  -  7044
+
+
+
+
+
+
+
+2465-1122
+SELECT encounter, pid from form_encounter where pid='2465' and encounter='1122'
+Found Encounter: 1122
+1611-887
+SELECT encounter, pid from form_encounter where pid='1611' and encounter='887'
+Found Encounter: 887
+4019-1389
+SELECT encounter, pid from form_encounter where pid='4019' and encounter='1389'
+Found Encounter: 1389
+1800-751
+SELECT encounter, pid from form_encounter where pid='1800' and encounter='751'
+Found Encounter: 751
+3873-813
+SELECT encounter, pid from form_encounter where pid='3873' and encounter='813'
+Found Encounter: 813
+2646-865
+SELECT encounter, pid from form_encounter where pid='2646' and encounter='865'
+Found Encounter: 865
+3615-888
+SELECT encounter, pid from form_encounter where pid='3615' and encounter='888'
+Found Encounter: 888
+MPC-15061610
+SELECT encounter, pid from form_encounter where pid='MPC' and encounter='15061610'
+Trying my logic... using claim date:20171106 
+418
+SELECT date, pid, encounter FROM form_encounter where pid = '418' and DATE_FORMAT(date, '%Y%m%d')='20171106'
+NOT FOUND
+
+
+
+
+
+
+
+NOT FOUND
+0886765045-562
+SELECT encounter, pid from form_encounter where pid='0886765045' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='01992'
+Matched billing record: 11409
+SELECT encounter, code FROM billing where encounter='11424' and code='01992'
+Set encounter from billing to: 11409
+
+
+
+
+
+
+
+0996270013-562
+SELECT encounter, pid from form_encounter where pid='0996270013' and encounter='562'
+Trying my logic... using claim date:20180117 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20180117'
+Matching Encounter: 11409
+Matching Encounter: 11424
+SELECT encounter, code FROM billing where encounter='11409' and code='62322'
+SELECT encounter, code FROM billing where encounter='11424' and code='62322'
+Matched billing record: 11424
+Set encounter from billing to: 11424
+
+
+
+
+
+
+
+1769052121-562
+SELECT encounter, pid from form_encounter where pid='1769052121' and encounter='562'
+Trying my logic... using claim date:20171227 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171227'
+Matching Encounter: 8236
+Single encounter found so using that: 1341  -  8236
+
+
+
+
+
+
+
+1817959711-562
+SELECT encounter, pid from form_encounter where pid='1817959711' and encounter='562'
+Trying my logic... using claim date:20171213 
+1341
+SELECT date, pid, encounter FROM form_encounter where pid = '1341' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6351
+Single encounter found so using that: 1341  -  6351
+
+
+
+
+
+
+
+0502608435-1739
+SELECT encounter, pid from form_encounter where pid='0502608435' and encounter='1739'
+Trying my logic... using claim date:20180219 
+1445
+SELECT date, pid, encounter FROM form_encounter where pid = '1445' and DATE_FORMAT(date, '%Y%m%d')='20180219'
+Matching Encounter: 15907
+Single encounter found so using that: 1445  -  15907
+
+
+
+
+
+
+
+315-1145
+SELECT encounter, pid from form_encounter where pid='315' and encounter='1145'
+Found Encounter: 1145
+1384890795-283
+SELECT encounter, pid from form_encounter where pid='1384890795' and encounter='283'
+Trying my logic... using claim date:20171206 
+648
+SELECT date, pid, encounter FROM form_encounter where pid = '648' and DATE_FORMAT(date, '%Y%m%d')='20171206'
+Matching Encounter: 5198
+Single encounter found so using that: 648  -  5198
+
+
+
+
+
+
+
+417-1247
+SELECT encounter, pid from form_encounter where pid='417' and encounter='1247'
+Found Encounter: 1247
+2144953278-580
+SELECT encounter, pid from form_encounter where pid='2144953278' and encounter='580'
+Trying my logic... using claim date:20180122 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20180122'
+Matching Encounter: 12166
+Single encounter found so using that: 1291  -  12166
+
+
+
+
+
+
+
+1085550370-580
+SELECT encounter, pid from form_encounter where pid='1085550370' and encounter='580'
+Trying my logic... using claim date:20171213 
+1291
+SELECT date, pid, encounter FROM form_encounter where pid = '1291' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6274
+Single encounter found so using that: 1291  -  6274
+
+
+
+
+
+
+
+1003-1124
+SELECT encounter, pid from form_encounter where pid='1003' and encounter='1124'
+Found Encounter: 1124
+3886-866
+SELECT encounter, pid from form_encounter where pid='3886' and encounter='866'
+Found Encounter: 866
+799-753
+SELECT encounter, pid from form_encounter where pid='799' and encounter='753'
+Found Encounter: 753
+3171-1153
+SELECT encounter, pid from form_encounter where pid='3171' and encounter='1153'
+Found Encounter: 1153
+3898-886
+SELECT encounter, pid from form_encounter where pid='3898' and encounter='886'
+Found Encounter: 886
+4020-1423
+SELECT encounter, pid from form_encounter where pid='4020' and encounter='1423'
+Found Encounter: 1423
+1230287732-2167
+SELECT encounter, pid from form_encounter where pid='1230287732' and encounter='2167'
+Trying my logic... using claim date:20180216 
+2565
+SELECT date, pid, encounter FROM form_encounter where pid = '2565' and DATE_FORMAT(date, '%Y%m%d')='20180216'
+Matching Encounter: 15839
+Single encounter found so using that: 2565  -  15839
+
+
+
+
+
+
+
+0108591579-KARVID000
+SELECT encounter, pid from form_encounter where pid='0108591579' and encounter='KARVID000'
+Trying my logic... using claim date:20180207 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180207'
+Matching Encounter: 14589
+Single encounter found so using that: 1447  -  14589
+
+
+
+
+
+
+
+1108105772-KARVID000
+SELECT encounter, pid from form_encounter where pid='1108105772' and encounter='KARVID000'
+Trying my logic... using claim date:20171214 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20171214'
+Matching Encounter: 6567
+Single encounter found so using that: 1447  -  6567
+
+
+
+
+
+
+
+1129677875-KARVID000
+SELECT encounter, pid from form_encounter where pid='1129677875' and encounter='KARVID000'
+Trying my logic... using claim date:20180108 
+1447
+SELECT date, pid, encounter FROM form_encounter where pid = '1447' and DATE_FORMAT(date, '%Y%m%d')='20180108'
+Matching Encounter: 9527
+Matching Encounter: 9557
+SELECT encounter, code FROM billing where encounter='9527' and code='62320'
+SELECT encounter, code FROM billing where encounter='9557' and code='62320'
+Matched billing record: 9557
+Set encounter from billing to: 9557
+
+
+
+
+
+
+
+3896-877
+SELECT encounter, pid from form_encounter where pid='3896' and encounter='877'
+Found Encounter: 877
+2760-1112
+SELECT encounter, pid from form_encounter where pid='2760' and encounter='1112'
+Found Encounter: 1112
+735-1254
+SELECT encounter, pid from form_encounter where pid='735' and encounter='1254'
+Found Encounter: 1254
+764-1253
+SELECT encounter, pid from form_encounter where pid='764' and encounter='1253'
+Found Encounter: 1253
+1335953653-602
+SELECT encounter, pid from form_encounter where pid='1335953653' and encounter='602'
+Trying my logic... using claim date:20171213 
+1305
+SELECT date, pid, encounter FROM form_encounter where pid = '1305' and DATE_FORMAT(date, '%Y%m%d')='20171213'
+Matching Encounter: 6301
+Single encounter found so using that: 1305  -  6301
+
+
+
+
+
+
+
