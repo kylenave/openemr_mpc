@@ -50,6 +50,7 @@ $is_ins_summary = $_POST['form_category'] == 'Ins Summary';
 $is_due_ins     = ($_POST['form_category'] == 'Due Ins') || $is_ins_summary;
 $is_due_pt      = $_POST['form_category'] == 'Due Pt';
 $is_all         = $_POST['form_category'] == 'All';
+$is_denied      = $_POST['form_category'] == 'Denied';
 $is_ageby_lad   = strpos($_POST['form_ageby'], 'Last') !== false;
 $form_facility  = $_POST['form_facility'];
 $form_provider  = $_POST['form_provider'];
@@ -422,7 +423,7 @@ function checkAll(checked) {
 						<td>
 						   <select name='form_category'>
 						<?php
-						 foreach (array('Open' => xl('Open'),'Due Pt' => xl('Due Pt'),'Due Ins' => xl('Due Ins'),'Ins Summary' => xl('Ins Summary'),'Credits' => xl('Credits'),'All' => xl('All')) as $key => $value) {
+						 foreach (array('Open' => xl('Open'),'Due Pt' => xl('Due Pt'),'Due Ins' => xl('Due Ins'),'Ins Summary' => xl('Ins Summary'),'Credits' => xl('Credits'),'Denied' => xl('Denied'),'All' => xl('All')) as $key => $value) {
 						  echo "    <option value='" . attr($key) . "'";
 						  if ($_POST['form_category'] == $key) echo " selected";
 						  echo ">" . text($value) . "</option>\n";
@@ -612,7 +613,7 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
     }
     # added provider from encounter to the query (TLH)
     $query = "SELECT f.id, f.date, f.pid, CONCAT(w.lname, ', ', w.fname) AS provider_id, f.encounter, f.last_level_billed, fac.name as facility, " .
-      "f.last_level_closed, f.last_stmt_date, f.stmt_count, f.invoice_refno, " .
+      "f.last_level_closed, f.last_stmt_date, f.stmt_count, f.invoice_refno, f.external_id, " .
       "p.fname, p.mname, p.lname, p.street, p.city, p.state, " .
       "p.postal_code, p.phone_home, p.ss, p.billing_note, " .
       "p.pubpid, p.DOB, CONCAT(u.lname, ', ', u.fname) AS referrer, " .
@@ -639,6 +640,7 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
     $eres = sqlStatement($query, $sqlArray);
     
     while ($erow = sqlFetchArray($eres)) {
+      $encounterDenied = ($erow['external_id']=='1');
       $patient_id = $erow['pid'];
       $encounter_id = $erow['encounter'];
       $pt_balance = $erow['charges'] + $erow['sales'] + $erow['copays'] - $erow['payments'] - $erow['adjustments'];
@@ -681,6 +683,7 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
       //
       if ($is_due_ins && $duncount >= 0) continue;
       if ($is_due_pt  && $duncount <  0) continue;
+      if ($is_denied && !$encounterDenied) continue;
 
       // echo "<!-- " . $erow['encounter'] . ': ' . $erow['charges'] . ' + ' . $erow['sales'] . ' + ' . $erow['copays'] . ' - ' . $erow['payments'] . ' - ' . $erow['adjustments'] . "  -->\n"; // debugging
 

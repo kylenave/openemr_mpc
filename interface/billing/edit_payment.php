@@ -399,6 +399,8 @@ if (isset($_POST["mode"]))
 //==============================================================================================================================
 		  if (isset($_POST["FollowUp$CountRow"]) && $_POST["FollowUp$CountRow"]=='y')
 		   {
+arSetDeniedFlag(trim(formData("HiddenPId$CountRow")), trim(formData("HiddenEncounter$CountRow")));
+
 				$resPayment = sqlStatement("SELECT  * from ar_activity " .
 					" where  session_id ='$payment_id' and pid ='" . trim(formData("HiddenPId$CountRow"   ))  .
 					"' and  encounter  ='" . trim(formData("HiddenEncounter$CountRow"   ))  .

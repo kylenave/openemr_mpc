@@ -397,4 +397,14 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
 
     return xl("Encounter ") . $encounter . xl(" is ready for re-billing.");
   }
+
+//Clear the denied flag and store the date for tracing purposes
+function arClearDeniedFlag($patient_id, $encounter_id)
+{
+   sqlStatement("UPDATE form_encounter set external_id='0' where encounter='$encounter_id' and pid='$patient_id'");   
+}
+function arSetDeniedFlag($patient_id, $encounter_id)
+{
+   sqlStatement("UPDATE form_encounter set external_id='1' where encounter='$encounter_id' and pid='$patient_id'");   
+}
 ?>

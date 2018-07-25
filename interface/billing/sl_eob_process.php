@@ -181,21 +181,26 @@ require_once("$srcdir/billing.inc");
         // Get details, if we have them, for the invoice.
         $inverror = true;
         $codes = array();
-        if ($pid && $encounter) {
+
+if ($pid && $encounter) 
+{
             // Get invoice data into $arrow or $ferow.
         $ferow = sqlQuery("SELECT e.*, p.fname, p.mname, p.lname " .
           "FROM form_encounter AS e, patient_data AS p WHERE " .
           "e.pid = '$pid' AND e.encounter = '$encounter' AND ".
           "p.pid = e.pid");
-        if (empty($ferow)) {
+
+        if (empty($ferow)) 
+	{
           $pid = $encounter = 0;
           $invnumber = $out['our_claim_id'];
-        } else {
+        } else 
+	{
           $inverror = false;
           $codes = ar_get_invoice_summary($pid, $encounter, true);
           // $svcdate = substr($ferow['date'], 0, 10);
         }
-        }
+}
 
         // Show the claim status.
         $csc = $out['claim_status_code'];
@@ -204,15 +209,16 @@ require_once("$srcdir/billing.inc");
         if ($csc == '2' || $csc == '20') $inslabel = 'Ins2';
         if ($csc == '3' || $csc == '21') $inslabel = 'Ins3';
         $primary = ($inslabel == 'Ins1');
-        writeMessageLine($bgcolor, 'infdetail',
-            "Claim status $csc: " . $claim_status_codes[$csc]);
+
+        writeMessageLine($bgcolor, 'infdetail', "Claim status $csc: " . $claim_status_codes[$csc]);
 
         // Show an error message if the claim is missing or already posted.
-        if ($inverror) {
+        if ($inverror) 
+	{
             writeMessageLine($bgcolor, 'errdetail',
                 "The following claim is not in our database");
-        }
-        else {
+        } else 
+	{
             // Skip this test. Claims can get multiple CLPs from the same payer!
             //
             // $insdone = strtolower($arrow['shipvia']);
@@ -224,36 +230,57 @@ require_once("$srcdir/billing.inc");
         }
 
         $hasPayment=false;
-        if($csc == '1'){
-            foreach ($out['svc'] as $svc) {
+
+        if($csc == '1')
+	{
+            foreach ($out['svc'] as $svc) 
+	    {
                 if($svc['paid'] !=  0) $hasPayment=true;
+
                 //if( ($svc['adj']['amount'] > 0) && ($svc['adj']['amount'] < $svc['chg'])) $hasPayment=true;
+
                 if($svc['allowed']) $hasPayment=true;
+
                 foreach ($svc['adj'] as $adj) 
                 {//Per code and modifier the reason will be showed in the billing manager.
-                      if($adj['reason_code']=='45' ||$adj['reason_code']=='16' ) $hasPayment=true;
+			//45 is a contractual adjustment
+		        //16 means some information is missing
+                      if($adj['reason_code']=='45' || $adj['reason_code']=='16' ) $hasPayment=true;
                 }
 
             }
         }
 
 
-        if ($csc == '4' || ($csc=='1' && !$hasPayment)) {//Denial case, code is stored in the claims table for display in the billing manager screen with reason explained.
+        if ($csc == '4' || ($csc=='1' && !$hasPayment)) 
+{
+     //Denial case, code is stored in the claims table for display in the billing manager screen with reason explained.
             
             $inverror = true;
-            if (!$debug) {
-                if ($pid && $encounter) {
+            if (!$debug) 
+	    {
+                if ($pid && $encounter) 
+		{
                     $code_value = '';
-                    foreach ($out['svc'] as $svc) {
+		    $billing_id_handled=array();
 
-          $billing_row = sqlQuery("SELECT id FROM billing WHERE pid = '$pid' AND encounter = '$encounter' AND code='" . $svc['code'] . "' LIMIT 1");
+                    foreach ($out['svc'] as $svc) 
+		    {
+
+			   // THIS ASSUMES A SINGLE INSTANCE OF A CODE PER ENCOUNTER WHICH IS WRONG
+          		   $billing_row = sqlQuery(
+				"SELECT id FROM billing WHERE pid = '$pid' " .
+				"AND encounter = '$encounter' AND code='" . $svc['code'] . " AND modifier='" .$svc['mod'] . 
+				"' LIMIT 1");
+
                            $billing_id = $billing_row['id'];
+
+			   //cycle through results until one is found that was not already handled.
                            
                            foreach ($svc['adj'] as $adj) 
                            {
-                                 //Per code and modifier the reason will be showed in the billing manager.
+                                 //Per code and modifier the reason will be shown in the billing manager.
                                  $code_value .= $svc['code'].'_'.$svc['mod'].'_'.$adj['group_code'].'_'.$adj['reason_code'].',';
-
                                  $current_date= date("Ymd");
 
                                  sqlStatement("insert into claim_denials (encounter, billing_id, date, reason, group_code) VALUES " .
@@ -261,7 +288,10 @@ require_once("$srcdir/billing.inc");
                                  
                             }
                     }
+
+		    //This next line returns all but the last character (i.e. removes the last comma)
                     $code_value = substr($code_value,0,-1);
+
                     //We store the reason code to display it with description in the billing manager screen.
                     //process_file is used as for the denial case file name will not be there, and extra field(to store reason) can be avoided.
                     if($csc=='4') {
@@ -269,18 +299,20 @@ require_once("$srcdir/billing.inc");
                     }else{
                       updateClaim(true, $pid, $encounter, $_REQUEST['InsId'], substr($inslabel,3),-1,-1,$code_value);
                     }
+		    arSetDeniedFlag($pid,$encounter);
                 }
             }
-            writeMessageLine($bgcolor, 'errdetail',
-                "Not posting adjustments for denied claims, please follow up manually!");
-        } // END OF DENIAL CASE
-        else if ($csc == '22') {
+            writeMessageLine($bgcolor, 'errdetail', "Not posting adjustments for denied claims, please follow up manually!");
+} // END OF DENIAL CASE
+        else if ($csc == '22') 
+{
             $inverror = true;
-            writeMessageLine($bgcolor, 'errdetail',
-                "Payment reversals are not automated, please enter manually!");
-        }
+            writeMessageLine($bgcolor, 'errdetail', "Payment reversals are not automated, please enter manually!");
+                      updateClaim(true, $pid, $encounter, $_REQUEST['InsId'], substr($inslabel,3),7,0,"Payment Reversal");
+}
 
-        if ($out['warnings']) {
+        if ($out['warnings']) 
+	{
             writeMessageLine($bgcolor, 'infdetail', nl2br(rtrim($out['warnings'])));
         }
 
@@ -298,8 +330,24 @@ require_once("$srcdir/billing.inc");
 
       $error = $inverror;
 
+	$billing_id = 0;
+	$billing_ids_handled = array();
+
         // This loops once for each service item in this claim.
-      foreach ($out['svc'] as $svc) {
+foreach ($out['svc'] as $svc) 
+{
+
+	$billing_row = sqlStatement(
+				"SELECT id FROM billing WHERE pid = '$pid' " .
+				"AND encounter = '$encounter' AND code='" . $svc['code'] . " AND modifier='" .$svc['mod'] .  "' ");
+	while($billing_data = sqlFetchArray($billing_row))
+	{
+		if(!in_array($billing_data['id'], $billing_ids_handled)
+		{
+			$billing_ids_handled[] = $billing_data['id'];
+			$billing_id = $billing_data['id'];
+		}
+	}
 
       // Treat a modifier in the remit data as part of the procedure key.
       // This key will then make its way into SQL-Ledger.
@@ -319,7 +367,8 @@ require_once("$srcdir/billing.inc");
       $codetype = ''; //will hold code type, if exists
 
       // This reports detail lines already on file for this service item.
-      if ($prev) {
+      if ($prev) 
+	{
 
                 if($csc=='2' or $csc=='20')
                 {

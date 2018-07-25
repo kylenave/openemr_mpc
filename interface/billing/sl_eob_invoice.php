@@ -98,6 +98,7 @@ function writeoff(code) {
 
 // Onsubmit handler.  A good excuse to write some JavaScript.
 function validate(f) {
+top.restoreSession();
  var delcount = 0;
  for (var i = 0; i < f.elements.length; ++i) {
   var ename = f.elements[i].name;
@@ -199,6 +200,7 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
     if (empty($ferow)) die("There is no encounter with form_encounter.id = '$trans_id'.");
     $patient_id        = 0 + $ferow['pid'];
     $encounter_id      = 0 + $ferow['encounter'];
+    $denied_state      = $ferow['external_id'];
     $svcdate           = substr($ferow['date'], 0, 10);
     $form_payer_id     = 0 + $_POST['form_payer_id'];
     $form_reference    = $_POST['form_reference'];
@@ -322,6 +324,17 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
           arSetupSecondary($patient_id, $encounter_id, $debug);
         }
 
+     // Clear Denied if needed... 
+      if(!$_POST['isDenied'] and ($denied_state=='1'))
+      {
+          arClearDeniedFlag($patient_id, $encounter_id);
+      }
+      
+      if($_POST['isDenied'] and ($denied_state!= '1'))
+      {
+          arSetDeniedFlag($patient_id, $encounter_id);
+      }
+
       echo "<script language='JavaScript'>\n";
       echo " if (opener.document.forms[0].form_amount) {\n";
       echo "  var tmp = opener.document.forms[0].form_amount.value - $paytotal;\n";
@@ -331,9 +344,9 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
       echo "<script language='JavaScript'>\n";
     }
     if ($info_msg) echo " alert('" . addslashes($info_msg) . "');\n";
-    if (! $debug) echo " window.close();\n";
+    //if (! $debug) echo " window.close();\n";
     echo "</script></body></html>\n";
-    exit();
+    //exit();
   }
 
     // Get invoice charge details.
@@ -347,7 +360,8 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
 <form method='post' action='sl_eob_invoice.php?id=<?php echo $trans_id ?>'
  onsubmit='return validate(this)'>
 
-<table border='0' cellpadding='3'>
+<center><h3>Note: This form doesn't automatically refresh when saved. You can hit F5 to refresh the data.</h3></center>
+<table border='1' cellpadding='3'>
  <tr>
   <td>
    <?php xl('Patient:','e')?>
@@ -357,7 +371,7 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
     echo $ferow['fname'] . ' ' . $ferow['mname'] . ' ' . $ferow['lname'];
 ?>
   </td>
-  <td colspan="2" rowspan="3">
+  <td colspan="2" rowspan="2">
 <?php
     for ($i = 1; $i <= 3; ++$i) {
       $payerid = arGetPayerID($patient_id, $svcdate, $i);
@@ -403,6 +417,7 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
     echo "$patient_id.$encounter_id";
 ?>
   </td>
+<td <?php if($denied_state=='1') echo 'bgcolor="#ffcccc"'; ?>><label><input type="checkbox" name="isDenied" <?php if($denied_state=='1') echo "checked=true" ?> >Claim is Denied</label></td>
  </tr>
 
  <tr>

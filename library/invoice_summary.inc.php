@@ -42,7 +42,7 @@ function ar_get_invoice_summary($patient_id, $encounter_id, $with_detail = false
 
   // Get charges from services.
   $res = sqlStatement("SELECT " .
-    "date, code_type, code, modifier, code_text, fee " .
+    "id, date, code_type, code, modifier, code_text, fee " .
     "FROM billing WHERE " .
     "pid = ? AND encounter = ? AND " .
     "activity = 1 AND fee != 0.00 ORDER BY id", array($patient_id,$encounter_id) );
@@ -61,7 +61,7 @@ function ar_get_invoice_summary($patient_id, $encounter_id, $with_detail = false
       if($codes[$code])
       {
          //This code is duplicated which is allowable
-         $code.='-2';
+         //$code.='-2';
       }
       $codes[$code]['chg'] += $amount;
       $codes[$code]['bal'] += $amount;

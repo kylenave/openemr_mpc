@@ -1402,6 +1402,7 @@ if (!empty($reg)) {
           <?php genMiscLink('RTop','rep','0',xl('Coding Errors'),'reports/code_error_report.php'); ?>
           <?php genMiscLink('RTop','rep','0',xl('Demographic Errors'),'reports/demographic_error_report.php'); ?>
           <?php genMiscLink('RTop','rep','0',xl('Denied Claims'),'reports/denied_claims.php'); ?>
+          <?php genMiscLink('RTop','rep','0',xl('New Denied Claims'),'reports/denied_claims_2.php'); ?>
           <?php genMiscLink('RTop','rep','0',xl('Follow Up Claims'),'reports/follow_up_claims.php'); ?>
           <?php genMiscLink('RTop','rep','0',xl('AR Summary'),'reports/ar_summary_report.php'); ?>
           <?php genMiscLink('RTop','rep','0',xl('AR Summary w/Patient Balance'),'reports/ar_summary_report_patient.php'); ?>
