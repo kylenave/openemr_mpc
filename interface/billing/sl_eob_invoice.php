@@ -213,6 +213,8 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
     $payer_type = $matches[1];
   }
 
+   $payer_claim_id = arGetPayerClaimId($encounter_id);
+
   if ($_POST['form_save'] || $_POST['form_cancel']) {
     if ($_POST['form_save']) {
       if ($debug) {
@@ -417,7 +419,7 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
     echo "$patient_id.$encounter_id";
 ?>
   </td>
-<td <?php if($denied_state=='1') echo 'bgcolor="#ffcccc"'; ?>><label><input type="checkbox" name="isDenied" <?php if($denied_state=='1') echo "checked=true" ?> >Claim is Denied</label></td>
+<td <?php if($denied_state=='1') echo 'bgcolor="#ffcccc"'; ?>><label><input type="checkbox" name="isDenied" <?php if($denied_state=='1') echo "checked=true" ?> >Claim is Denied <?php echo "(Payer ClmID: $payer_claim_id )" ?></label></td>
  </tr>
 
  <tr>

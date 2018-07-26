@@ -30,6 +30,7 @@ $sanitize_all_escapes=true;
 require_once("../../globals.php");
 require_once("$srcdir/options.inc.php");
 require_once("$srcdir/api.inc");
+require_once("$srcdir/sl_eob.inc.php");
 require_once("$srcdir/formdata.inc.php");
 require_once("date_qualifier_options.php");
 
@@ -39,7 +40,15 @@ if (! $encounter) { // comes from globals.php
 }
 
 $formid   = 0 + formData('id', 'G');
-$obj = $formid ? formFetch("form_misc_billing_options", $formid) : array();
+
+if($formid)
+{
+   $obj = formFetch("form_misc_billing_options", $formid);
+}else
+{
+   $obj = array();
+   $obj{"icn_resubmission_number"} = arGetPayerClaimId($encounter);
+}
 
 formHeader("Form: misc_billing_options");
 function generateDateQualifierSelect($name,$options,$obj)

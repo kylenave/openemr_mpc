@@ -84,7 +84,7 @@ function clearBilling($id)
 // payers.  That logic will tailor the payer choices to the encounter date.
 //
 function updateClaim($newversion, $patient_id, $encounter_id, $payer_id=-1, $payer_type=-1,
-  $status=-1, $bill_process=-1, $process_file='', $target='', $partner_id=-1,$crossover=0)
+  $status=-1, $bill_process=-1, $process_file='', $target='', $partner_id=-1,$crossover=0,$payer_name='', $payer_claim_id='')
 {
   if (!$newversion) {
     $sql = "SELECT * FROM claims WHERE patient_id = '$patient_id' AND " .
@@ -180,7 +180,9 @@ function updateClaim($newversion, $patient_id, $encounter_id, $payer_id=-1, $pay
           "patient_id = $patient_id, " .
           "encounter_id = $encounter_id, " .
           "bill_time = NOW() $claimset ," .
-          "version = " . $version['increment'];
+          "version = " . $version['increment'] . ", " .
+	  "payer_name='$payer_name', " .
+          "payer_claim_id='$payer_claim_id'";
     }
     else
     {//Claim automatic forward case.startTra
@@ -188,7 +190,9 @@ function updateClaim($newversion, $patient_id, $encounter_id, $payer_id=-1, $pay
           "patient_id = $patient_id, " .
           "encounter_id = $encounter_id, " .
           "bill_time = NOW(), status=$status ," .
-          "version = " . $version['increment'];
+          "version = " . $version['increment'] .", " .
+	  "payer_name='$payer_name', " .
+          "payer_claim_id='$payer_claim_id'";
     }
     sqlStatement($sql);
     sqlCommitTrans();

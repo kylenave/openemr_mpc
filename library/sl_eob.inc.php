@@ -407,4 +407,13 @@ function arSetDeniedFlag($patient_id, $encounter_id)
 {
    sqlStatement("UPDATE form_encounter set external_id='1' where encounter='$encounter_id' and pid='$patient_id'");   
 }
+
+function arGetPayerClaimId($encounter_id)
+{
+   $res = sqlQuery("Select c.payer_claim_id from claims c where c.encounter_id='$encounter_id' and c.version = " .
+            "  (select version from claims where encounter_id=c.encounter_id and not payer_claim_id is null and payer_claim_id != '' order by version desc limit 1)");
+   if(!$res) return "Not Available";
+
+   return $res['payer_claim_id'];
+}
 ?>
