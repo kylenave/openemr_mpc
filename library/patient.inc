@@ -1771,4 +1771,27 @@ function is_patient_deceased($pid,$date='') {
   }
 }
 
+function getStatementsTable($pid)
+{
+
+   $res = sqlStatement("SELECT date(s.date) as statement_date, sum(balance) as statement_balance  FROM statements s where s.pid='" . $pid . "' group by date(s.date)");
+
+   $html = "<table border=1><tr bgcolor='#87abe5'><th>Statement Date</th><th>DOS</th><th>DOS Balance</th><th>Statement Balance</th></tr>";
+   while($srow = sqlFetchArray($res))
+   {
+       $html .= "<tr bgcolor='#c5d1e5'><td>" . $srow['statement_date'] . "</td><td></td><td></td><td>" . $srow['statement_balance'] . "</td></tr>";
+ 
+       $res2 = sqlStatement(
+       "SELECT s.encounter, date(fe.date) as dos, balance FROM statements s left join form_encounter fe on fe.encounter=s.encounter where s.pid='" . $pid . 
+       "' and date(s.date) = '" . $srow['statement_date'] . "' order by fe.date");
+
+       while($detailRow = sqlFetchArray($res2))
+       {
+           $html .= "<tr><td></td><td>" . $detailRow['dos'] . "</td><td>" . $detailRow['balance'] . "</td><td></td></tr>";
+       }
+   }
+   $html .= "</table>";
+   return $html;
+}
+
 ?>

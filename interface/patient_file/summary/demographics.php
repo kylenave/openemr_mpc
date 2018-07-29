@@ -707,6 +707,7 @@ if ($GLOBALS['patient_id_category_name']) {
 		//Debit the patient balance from insurance balance
 		$insurancebalance = get_patient_balance($pid, true) - $patientbalance;
 	   $totalbalance=$patientbalance + $insurancebalance;
+           //$statements = getStatements($pid);
 
  // Show current balance and billing note, if any.
   echo "<table border='0'><tr><td>" .
@@ -741,13 +742,39 @@ if ($GLOBALS['patient_id_category_name']) {
     xlt('Effective Date') . ': ' .  text(oeFormatShortDate($result3['effdate'])) .
     "</span></td></tr>";
   }
-  echo "</table></td></tr></td></tr></table><br>";
+  echo "</table>";
+  echo "</td></tr></td></tr></table>";
 
 ?>
         </div> <!-- required for expand_collapse_widget -->
        </td>
       </tr>
       <?php } ?>
+
+      <tr>
+       <td>
+<?php
+// Demographics expand collapse widget
+$widgetTitle = xl("Statements");
+$widgetLabel = "statements";
+$widgetButtonLabel = xl("Edit");
+$widgetButtonLink = "return newEvt();";
+$widgetButtonClass = "";
+$linkMethod = "javascript";
+$bodyClass = "notab";
+$widgetAuth = false;
+$fixedWidth = true;
+expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
+  $widgetButtonLink, $widgetButtonClass, $linkMethod, $bodyClass,
+  $widgetAuth, $fixedWidth, false);
+?>
+<br>
+         <div id="Statememts" >
+<?php echo getStatementsTable($pid); ?> <br>
+        </div> <!-- required for expand_collapse_widget -->
+       </td>
+      </tr>
+
       <tr>
        <td>
 <?php

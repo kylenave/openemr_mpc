@@ -578,8 +578,18 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
 
    // this sorts the details more or less chronologically:
    ksort($cdata['dtl']);
+   $lineByDateColor = false;
+   $prev_ddate=0;
+
    foreach ($cdata['dtl'] as $dkey => $ddata) {
     $ddate = substr($dkey, 0, 10);
+    if($ddate != $prev_ddate)
+    {
+       $prev_ddate=$ddate;
+       $lineByDateColor = !$lineByDateColor;
+    }
+    $bgcolor2 = "#" . (($lineByDateColor) ? "eeeeff" : "ffeeee");
+
     if (preg_match('/^(\d\d\d\d)(\d\d)(\d\d)\s*$/', $ddate, $matches)) {
      $ddate = $matches[1] . '-' . $matches[2] . '-' . $matches[3];
     }
@@ -596,7 +606,7 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
       else $tmpchg = $ddata['chg'];
     }
 ?>
- <tr bgcolor='<?php echo $bgcolor ?>'>
+ <tr bgcolor='<?php echo $bgcolor2 ?>'>
   <td class="detail">
    <?php echo $dispcode; $dispcode = "" ?>
   </td>
