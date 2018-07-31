@@ -162,6 +162,143 @@ function ar_get_invoice_summary($patient_id, $encounter_id, $with_detail = false
   return $codes;
 }
 
+function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = false) {
+  $codes = array();
+  $keysuff1 = 1000;
+  $keysuff2 = 5000;
+
+  $index = 0;
+
+  // Get charges from services.
+  $res = sqlStatement("SELECT " .
+    "id, date, code_type, code, modifier, code_text, fee " .
+    "FROM billing WHERE " .
+    "pid = ? AND encounter = ? AND " .
+    "activity = 1 AND fee != 0.00 ORDER BY id", array($patient_id,$encounter_id) );
+
+  while ($row = sqlFetchArray($res)) {
+    $amount = sprintf('%01.2f', $row['fee']);
+
+      $codesItem=array();
+      $code = $row['code'];
+
+      if (! $code) $code = "Unknown";
+
+
+      if ($row['modifier']) {
+         $notAllowed = array(", "," ,"," , ","  ",",", " :",": "," : ");
+         $tmpModifier = str_replace($notAllowed, ":", $row['modifier']);
+         $code .= ':' . $tmpModifier;
+         $row['modifier'] = $tmpModifier;
+      }
+      
+      $codesItem['code']= $code;
+      $codesItem['id'] = $row['id'];
+      $codesItem['chg'] += $amount;
+      $codesItem['bal'] += $amount;
+
+    // Pass the code type, code and code_text fields
+    // Although not all used yet, useful information
+    // to improve the statement reporting etc.
+    $codesItem['code_type'] = $row['code_type'];
+    $codesItem['code_value'] = $row['code'];
+    $codesItem['modifier'] = $row['modifier'];
+    $codesItem['code_text'] = $row['code_text'];
+
+    // Add the details if they want 'em.
+    if ($with_detail) {
+      if (! $codesItem['dtl']) $codesItem['dtl'] = array();
+      $tmp = array();
+      $tmp['chg'] = $amount;
+      $tmpkey = "          " . $keysuff1++;
+      $codesItem['dtl'][$tmpkey] = $tmp;
+    }
+
+    $codes[$row['id']] = $codesItem;
+  }
+
+
+  // Get payments and adjustments. (includes copays)
+  $res = sqlStatement("SELECT " .
+    "a.code_type, a.code, a.modifier, a.memo, a.payer_type, a.adj_amount, a.pay_amount, a.reason_code, " .
+    "a.post_time, a.session_id, a.sequence_no, a.account_code, " .
+    "s.payer_id, s.reference, s.check_date, s.deposit_date, a.billing_id " .
+    ",i.name " .
+    "FROM ar_activity AS a " .
+    "LEFT OUTER JOIN ar_session AS s ON s.session_id = a.session_id " .
+    "LEFT OUTER JOIN insurance_companies AS i ON i.id = s.payer_id " .
+    "WHERE a.pid = ? AND a.encounter = ? " .
+    "ORDER BY s.check_date, a.sequence_no", array($patient_id,$encounter_id) );
+  while ($arow = sqlFetchArray($res)) 
+{
+    $code = $arow['code'];
+    if (! $code) $code = "Unknown";
+    if ($arow['modifier']) $code .= ':' . $arow['modifier'];
+
+    $thisIndex = 0; 
+
+    if( $arow['billing_id'] )
+    {
+       $thisIndex = $arow['billing_id'];
+    }else
+    {
+        foreach($codes as $thisCode)
+	{
+	   if($thisCode['code']==$arow['code'] && $thisCode['modifier']==$arow['modifier'])
+	   {
+		$thisIndex = $thisCode['id'];
+		break;
+	   }
+	}
+    }
+
+    $code = $thisIndex;
+
+    if(!$codes[$code]) continue;
+
+    $ins_id = 0 + $arow['payer_id'];
+    $codes[$code]['bal'] -= $arow['pay_amount'];
+    $codes[$code]['bal'] -= $arow['adj_amount'];
+    $codes[$code]['chg'] -= $row['adj_amount'];
+    $codes[$code]['adj'] += $arow['adj_amount'];
+
+    if ($ins_id) $codes[$code]['ins'] = $ins_id;
+
+    // Add the details if they want 'em.
+    if ($with_detail) 
+    {
+      if (! $codes[$code]['dtl']) $codes[$code]['dtl'] = array();
+      $tmp = array();
+      $paydate = empty($row['deposit_date']) ? substr($row['post_time'], 0, 10) : $row['deposit_date'];
+      if ($row['pay_amount'] != 0) $tmp['pmt'] = $row['pay_amount'];
+      if ( isset($row['reason_code'] ) ) {
+      	$tmp['msp'] = $row['reason_code'];
+      }
+      if ($row['adj_amount'] != 0 || $row['pay_amount'] == 0) {
+        $tmp['chg'] = 0 - $row['adj_amount'];
+        // $tmp['rsn'] = (empty($row['memo']) || empty($row['session_id'])) ? 'Unknown adjustment' : $row['memo'];
+        $tmp['rsn'] = empty($row['memo']) ? 'Unknown adjustment' : $row['memo'];
+        $tmpkey = $paydate . $keysuff1++;
+      }
+      else {
+        $tmpkey = $paydate . $keysuff2++;
+      }
+      if ($row['account_code'] == "PCP") {
+        //copay
+        $tmp['src'] = 'Pt Paid';
+      }
+      else {
+        $tmp['src'] = empty($row['session_id']) ? $row['memo'] : $row['reference'];
+      }
+      $tmp['insurance_company'] = substr($row['name'], 0, 10);
+      if ($ins_id) $tmp['ins'] = $ins_id;
+      $tmp['plv'] = $row['payer_type'];
+      $tmp['arseq'] = $row['sequence_no'];
+      $codes[$code]['dtl'][$tmpkey] = $tmp;
+    }
+  }
+  return $codes;
+}
 // This determines the party from whom payment is currently expected.
 // Returns: -1=Nobody, 0=Patient, 1=Ins1, 2=Ins2, 3=Ins3.
 // for Integrated A/R.

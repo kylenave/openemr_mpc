@@ -86,6 +86,9 @@ function clearBilling($id)
 function updateClaim($newversion, $patient_id, $encounter_id, $payer_id=-1, $payer_type=-1,
   $status=-1, $bill_process=-1, $process_file='', $target='', $partner_id=-1,$crossover=0,$payer_name='', $payer_claim_id='')
 {
+
+  if(!$encounter_id) return;
+
   if (!$newversion) {
     $sql = "SELECT * FROM claims WHERE patient_id = '$patient_id' AND " .
       "encounter_id = '$encounter_id' AND status > 0 AND status < 4 ";

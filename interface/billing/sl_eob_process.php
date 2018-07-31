@@ -182,6 +182,8 @@ require_once("$srcdir/billing.inc");
         $inverror = true;
         $codes = array();
 
+	$group = 0;
+
 if ($pid && $encounter) 
 {
             // Get invoice data into $arrow or $ferow.
@@ -197,7 +199,7 @@ if ($pid && $encounter)
         } else 
 	{
           $inverror = false;
-          $codes = ar_get_invoice_summary($pid, $encounter, true);
+          $codes = ar_get_invoice_summary2($pid, $encounter, true);
           // $svcdate = substr($ferow['date'], 0, 10);
         }
 }
@@ -270,13 +272,18 @@ if ($pid && $encounter)
 			   // THIS ASSUMES A SINGLE INSTANCE OF A CODE PER ENCOUNTER WHICH IS WRONG
           		   $billing_row = sqlQuery(
 				"SELECT id FROM billing WHERE pid = '$pid' " .
-				"AND encounter = '$encounter' AND code='" . $svc['code'] . " AND modifier='" .$svc['mod'] . 
+				"AND encounter = '$encounter' AND code='" . $svc['code'] . "' AND modifier='" .$svc['mod'] . 
 				"' LIMIT 1");
 
                            $billing_id = $billing_row['id'];
 
 			   //cycle through results until one is found that was not already handled.
-                           
+                           if( $svc['remark'])
+			   { 
+                               sqlStatement("insert into claim_denials (encounter, billing_id, date, reason, group_code) VALUES " .
+                                               "( '$encounter', '$billing_id','$current_date','" . $svc['remark'] . "','Remarks')"); 
+			   }
+
                            foreach ($svc['adj'] as $adj) 
                            {
                                  //Per code and modifier the reason will be shown in the billing manager.
@@ -331,18 +338,21 @@ if ($pid && $encounter)
       $error = $inverror;
 
 	$billing_id = 0;
-	$billing_ids_handled = array();
+        $billing_ids_handled = array();
 
         // This loops once for each service item in this claim.
 foreach ($out['svc'] as $svc) 
 {
 
+	$group += 1;
+
 	$billing_row = sqlStatement(
 				"SELECT id FROM billing WHERE pid = '$pid' " .
-				"AND encounter = '$encounter' AND code='" . $svc['code'] . " AND modifier='" .$svc['mod'] .  "' ");
+				"AND encounter = '$encounter' AND code='" . $svc['code'] . "' AND modifier='" .$svc['mod'] .  "' ");
+
 	while($billing_data = sqlFetchArray($billing_row))
 	{
-		if(!in_array($billing_data['id'], $billing_ids_handled)
+		if(!in_array($billing_data['id'], $billing_ids_handled))
 		{
 			$billing_ids_handled[] = $billing_data['id'];
 			$billing_id = $billing_data['id'];
@@ -351,16 +361,9 @@ foreach ($out['svc'] as $svc)
 
       // Treat a modifier in the remit data as part of the procedure key.
       // This key will then make its way into SQL-Ledger.
-      $codekey = $svc['code'];
-      if ($svc['mod'])
-      {
-	  $tmpMod = trim($svc['mod']);
-	  $tmpMod = str_replace(" ",":",$tmpMod);
-          $codekey .= ':' . $svc['mod'];
-      }
+      $codekey = $billing_id;
 
       $prev = $codes[$codekey];
-      $codekeySuffix='';
 
       $ignoreSvcLine = false;
  
@@ -382,16 +385,16 @@ foreach ($out['svc'] as $svc)
                    {
                       //This should be the actual secondary payment
                       $codetype = $codes[$codekey]['code_type']; //store code type
-                      writeOldDetail($prev, $patient_name, $invnumber, $service_date, $codekey, $bgcolor);
+                      writeOldDetail($prev, $patient_name, $invnumber, $service_date, $svc['code'], $bgcolor);
                       
-                      unset($codes[$codekey . $codekeySuffix]);
+                      unset($codes[$codekey]);
                    }
                 }
                 else
                 {
 
                    $codetype = $codes[$codekey]['code_type']; //store code type
-                   writeOldDetail($prev, $patient_name, $invnumber, $service_date, $codekey, $bgcolor);
+                   writeOldDetail($prev, $patient_name, $invnumber, $service_date, $svc['code'], $bgcolor);
                    // Check for sanity in amount charged.
                    $prevchg = sprintf("%.2f", $prev['chg'] + $prev['adj']);
 
@@ -414,7 +417,6 @@ foreach ($out['svc'] as $svc)
                 }
                 ****/
 
-                  unset($codes[$codekey . $codekeySuffix]);
                 }
             }
 
@@ -478,7 +480,7 @@ foreach ($out['svc'] as $svc)
                 if (!$error && !$debug) 
 		{
                    arPostPayment($pid, $encounter,$InsertionId[$out['check_number']], $svc['paid'],//$InsertionId[$out['check_number']] gives the session id
-                                 $codekey, substr($inslabel,3), $out['check_number'], $debug,'',$codetype);
+                                 $svc['code'], $svc['mod'], substr($inslabel,3), $out['check_number'], $debug,'',$codetype, $group, $billing_id);
                 }
                 $invoice_total -= $svc['paid'];
                 $description = "$inslabel/" . $out['check_number'] . ' payment';
@@ -489,8 +491,10 @@ foreach ($out['svc'] as $svc)
                 }
 
                 writeDetailLine($bgcolor, $class, $patient_name, $invnumber,
-                    $codekey, $check_date, $description,
+                    $svc['code'], $check_date, $description,
                     0 - $svc['paid'], ($error ? '' : $invoice_total));
+
+		unset($codes[$codekey]);
             }
 
             // Post and report adjustments from this ERA.  Posted adjustment reasons
@@ -513,6 +517,12 @@ foreach ($out['svc'] as $svc)
                     $description_prefix = 'Zeroed Orig adj of $' . $adj['amount'] . "|";
                     $adj['amount']= 0.0;
                 }
+
+		if($adj['amount'] < 0)
+		{
+		    arSetDeniedFlag($pid,$encounter);
+		}
+
                 $adjAmounts[] = $adj['amount'];
 
                 $description = $adj['reason_code'] . ': ' . $adjustment_reasons[$adj['reason_code']];
@@ -532,6 +542,7 @@ foreach ($out['svc'] as $svc)
                     $description_prefix = 'Zeroed orig adj of $' . $adj['amount'] . "|";
                     $adj['amount']= 0.0;
                     $adjustmentFlag='*';
+		    arSetDeniedFlag($pid,$encounter);
                 }
 
 
@@ -564,8 +575,8 @@ foreach ($out['svc'] as $svc)
                     // Post a zero-dollar adjustment just to save it as a comment.
                     if (!$error && !$debug) {
 //echo "Posting Zero dollar Adjustment " . $reason . "<br>";
-                        arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], 0, $codekey,//$InsertionId[$out['check_number']] gives the session id
-                        substr($inslabel,3), $reason, $debug, '', $codetype);
+                        arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], 0, $svc['code'], $svc['mod'],//$InsertionId[$out['check_number']] gives the session id
+                        substr($inslabel,3), $reason, $debug, '', $codetype, $group, $billing_id);
                     }
                     writeMessageLine($bgcolor, $class, $description_prefix . $description . ' ' . sprintf("%.2f", $adj['amount']));
                 }
@@ -576,11 +587,11 @@ $reason = "$inslabel note " . $adj['reason_code'] . ': ';
 $reason .= sprintf("%.2f", $adj['amount']);
 //echo "Posting Adjustment " . $reason . "<br>";
                        arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], $adj['amount'],//$InsertionId[$out['check_number']] gives the session id
-                                         $codekey, substr($inslabel,3), "Adjust code " . $adj['reason_code'] . $adjustmentFlag, $debug, '', $codetype);
+                                         $svc['code'], $svc['mod'], substr($inslabel,3), "Adjust code " . $adj['reason_code'] . $adjustmentFlag, $debug, '', $codetype, $group, $billing_id);
                     }
                     $invoice_total -= $adj['amount'];
                     writeDetailLine($bgcolor, $class, $patient_name, $invnumber,
-                        $codekey, $production_date, $description,
+                        $svc['code'], $production_date, $description,
                         0 - $adj['amount'], ($error ? '' : $invoice_total));
                 }
             }
@@ -588,13 +599,15 @@ $reason .= sprintf("%.2f", $adj['amount']);
 
         } // End of service item
 
+
+// KBN FIX SECONDARY HISTORY DATA HERE ... ALSO RESTORE UNSET LOGIC
         // Report any existing service items not mentioned in the ERA, and
         // determine if any of them are still missing an insurance response
         // (if so, then insurance is not yet done with the claim).
         $insurance_done = true;
         foreach ($codes as $code => $prev) {
       // writeOldDetail($prev, $arrow['name'], $invnumber, $service_date, $code, $bgcolor);
-      writeOldDetail($prev, $patient_name, $invnumber, $service_date, $code, $bgcolor);
+            writeOldDetail($prev, $patient_name, $invnumber, $service_date, $code, $bgcolor);
             $got_response = false;
             foreach ($prev['dtl'] as $ddata) {
                 if ($ddata['pmt'] || $ddata['rsn']) $got_response = true;

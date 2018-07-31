@@ -234,34 +234,29 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
   
   // Post a payment, new style.
   //
-  function arPostPayment($patient_id, $encounter_id, $session_id, $amount, $code, $payer_type, $memo, $debug, $time='', $codetype='') {
-    $codeonly = $code;
-    $modifier = '';
-    $tmp = strpos($code, ':');
-    if ($tmp) {
-      $codeonly = substr($code, 0, $tmp);
-      $modifier = substr($code, $tmp+1);
-    }
+  function arPostPayment($patient_id, $encounter_id, $session_id, $amount, $code, $modifier, $payer_type, $memo, $debug, $time='', $codetype='', $group=-1, $billing_id=-1) {
     if (empty($time)) $time = date('Y-m-d H:i:s');
 
     sqlBeginTrans();
     $sequence_no = sqlQuery( "SELECT IFNULL(MAX(sequence_no),0) + 1 AS increment FROM ar_activity WHERE pid = ? AND encounter = ?", array($patient_id, $encounter_id));
     $query = "INSERT INTO ar_activity ( " .
       "pid, encounter, sequence_no, code_type, code, modifier, payer_type, post_time, post_user, " .
-      "session_id, memo, pay_amount " .
+      "session_id, memo, pay_amount, billing_id, billing_group " .
       ") VALUES ( " .
       "'$patient_id', " .
       "'$encounter_id', " .
       "'{$sequence_no['increment']}', " .
       "'$codetype', " .
-      "'$codeonly', " .
+      "'$code', " .
       "'$modifier', " .
       "'$payer_type', " .
       "'$time', " .
       "'" . $_SESSION['authUserID'] . "', " .
       "'$session_id', " .
       "'$memo', " .
-      "'$amount' " .
+      "'$amount', " .
+      "'$billing_id', " .
+      "'$group' " .
       ")";
     sqlStatement($query);
     sqlCommitTrans();
@@ -315,34 +310,29 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
 
   // Post an adjustment, new style.
   //
-  function arPostAdjustment($patient_id, $encounter_id, $session_id, $amount, $code, $payer_type, $reason, $debug, $time='', $codetype='') {
-    $codeonly = $code;
-    $modifier = '';
-    $tmp = strpos($code, ':');
-    if ($tmp) {
-      $codeonly = substr($code, 0, $tmp);
-      $modifier = substr($code, $tmp+1);
-    }
+  function arPostAdjustment($patient_id, $encounter_id, $session_id, $amount, $code, $modifier, $payer_type, $reason, $debug, $time='', $codetype='', $group=-1, $billing_id=-1) {
     if (empty($time)) $time = date('Y-m-d H:i:s');
 
     sqlBeginTrans();
     $sequence_no = sqlQuery( "SELECT IFNULL(MAX(sequence_no),0) + 1 AS increment FROM ar_activity WHERE pid = ? AND encounter = ?", array($patient_id, $encounter_id));
     $query = "INSERT INTO ar_activity ( " .
       "pid, encounter, sequence_no, code_type, code, modifier, payer_type, post_user, post_time, " .
-      "session_id, memo, adj_amount " .
+      "session_id, memo, adj_amount, billing_id, billing_group " .
       ") VALUES ( " .
       "'$patient_id', " .
       "'$encounter_id', " .
       "'{$sequence_no['increment']}', " .
       "'$codetype', " .
-      "'$codeonly', " .
+      "'$code', " .
       "'$modifier', " .
       "'$payer_type', " .
       "'" . $_SESSION['authUserID'] . "', " .
       "'$time', " .
       "'$session_id', " .
       "'$reason', " .
-      "'$amount' " .
+      "'$amount', " .
+      "'$billing_id', " .
+      "'$group' " .
       ")";
     sqlStatement($query);
     sqlCommitTrans();
