@@ -253,7 +253,7 @@ if ($pid && $encounter)
             }
         }
 
-
+$Denied=false;
         if ($csc == '4' || ($csc=='1' && !$hasPayment)) 
 {
      //Denial case, code is stored in the claims table for display in the billing manager screen with reason explained.
@@ -307,6 +307,7 @@ if ($pid && $encounter)
                       updateClaim(true, $pid, $encounter, $_REQUEST['InsId'], substr($inslabel,3),-1,-1,$code_value, $out['payer_name'], $out['payer_claim_id']);
                     }
 		    arSetDeniedFlag($pid,$encounter);
+		    $Denied=true;
                 }
             }
             writeMessageLine($bgcolor, 'errdetail', "Not posting adjustments for denied claims, please follow up manually!");
@@ -350,6 +351,7 @@ foreach ($out['svc'] as $svc)
 				"SELECT id FROM billing WHERE pid = '$pid' " .
 				"AND encounter = '$encounter' AND code='" . $svc['code'] . "' AND modifier='" .$svc['mod'] .  "' ");
 
+        $billing_id=0;
 	while($billing_data = sqlFetchArray($billing_row))
 	{
 		if(!in_array($billing_data['id'], $billing_ids_handled))
@@ -357,6 +359,26 @@ foreach ($out['svc'] as $svc)
 			$billing_ids_handled[] = $billing_data['id'];
 			$billing_id = $billing_data['id'];
 		}
+	}
+
+        if($billing_id==0)
+	{
+	   //We have already handled everything but there are more line items so reload and start again
+           $billing_ids_handled = array();
+
+	$billing_row = sqlStatement(
+				"SELECT id FROM billing WHERE pid = '$pid' " .
+				"AND encounter = '$encounter' AND code='" . $svc['code'] . "' AND modifier='" .$svc['mod'] .  "' ");
+
+        $billing_id=0;
+	while($billing_data = sqlFetchArray($billing_row))
+	{
+		if(!in_array($billing_data['id'], $billing_ids_handled))
+		{
+			$billing_ids_handled[] = $billing_data['id'];
+			$billing_id = $billing_data['id'];
+		}
+	}
 	}
 
       // Treat a modifier in the remit data as part of the procedure key.
@@ -398,10 +420,14 @@ foreach ($out['svc'] as $svc)
                    // Check for sanity in amount charged.
                    $prevchg = sprintf("%.2f", $prev['chg'] + $prev['adj']);
 
-                   if ($prevchg != abs($svc['chg']) and abs($svc['chg']) != $prev['chg'] and $svc['chg'] != ($prev['chg'] - $svc['allowed'])) {
-                    writeMessageLine($bgcolor, 'errdetail',
-                        "EOB charge amount " . $svc['chg'] . " for this code (" . $svc['code']. ") does not match our invoice: " . $prev['chg'] . "," . $prev['adj'] );
-                    $error = true;
+                   if ( $prevchg != abs($svc['chg']) && 
+			abs($svc['chg']) != $prev['chg'] &&
+			$svc['chg'] != ($prev['chg'] - $svc['allowed']) 
+                      ) 
+		   {
+                        writeMessageLine($bgcolor, 'errdetail',
+                                 "EOB charge amount " . $svc['chg'] . " for this code (" . $svc['code']. ") does not match our invoice: " . $prev['chg'] . "," . $prev['adj'] );
+                        //$error = true;
                    }
 
                 // Check for already-existing primary remittance activity.
@@ -507,6 +533,29 @@ foreach ($out['svc'] as $svc)
 //foreach ($svc['adj'] as $adj) { echo $adj['amount'] . " "; }
 //echo "<br><br>";
 
+		$acceptableAdjustCodes=Array();
+
+		$acceptableAdjustCodes[]='S0020';
+		$acceptableAdjustCodes[]='A4550';
+		$acceptableAdjustCodes[]='A4220';
+		$acceptableAdjustCodes[]='77002';
+		$acceptableAdjustCodes[]='Q9966';
+	    $totalAdjAmount = 0.01;
+            foreach ($svc['adj'] as $adj) 
+	    {
+                if($adj['amount'] > 0)
+		   $totalAdjAmount += $adj['amount'];
+	    }
+
+                if($svc['chg'] <= $totalAdjAmount && !in_array($svc['code'], $acceptableAdjustCodes))
+                {
+                    $description_prefix = 'Zeroed orig adj of $' . $adj['amount'] . "|";
+                    $adj['amount']= 0.0;
+                    $adjustmentFlag='*';
+                    arSetDeniedFlag($pid,$encounter);
+                    $Denied=true;
+                }
+	    
             foreach ($svc['adj'] as $adj) 
 	    {
 
@@ -521,6 +570,7 @@ foreach ($out['svc'] as $svc)
 		if($adj['amount'] < 0)
 		{
 		    arSetDeniedFlag($pid,$encounter);
+		    $Denied=true;
 		}
 
                 $adjAmounts[] = $adj['amount'];
@@ -529,13 +579,6 @@ foreach ($out['svc'] as $svc)
 
                 $adjustmentFlag='';
 
-		$acceptableAdjustCodes=Array();
-
-		$acceptableAdjustCodes[]='S0020';
-		$acceptableAdjustCodes[]='A4550';
-		$acceptableAdjustCodes[]='A4220';
-		$acceptableAdjustCodes[]='77002';
-		$acceptableAdjustCodes[]='Q9966';
 
                 if($svc['chg'] <= $adj['amount'] && !in_array($svc['code'], $acceptableAdjustCodes) and $adj['group_code']!= 'PR')
                 {
@@ -543,6 +586,7 @@ foreach ($out['svc'] as $svc)
                     $adj['amount']= 0.0;
                     $adjustmentFlag='*';
 		    arSetDeniedFlag($pid,$encounter);
+		    $Denied=true;
                 }
 
 
@@ -586,7 +630,14 @@ foreach ($out['svc'] as $svc)
 $reason = "$inslabel note " . $adj['reason_code'] . ': ';
 $reason .= sprintf("%.2f", $adj['amount']);
 //echo "Posting Adjustment " . $reason . "<br>";
-                       arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], $adj['amount'],//$InsertionId[$out['check_number']] gives the session id
+
+		       $postAdjAmount = $adj['amount'];
+			if($Denied && $svc['paid'] <=0)
+			{
+				$postAdjAmount=0;
+			}
+
+                       arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], $postAdjAmount,//$InsertionId[$out['check_number']] gives the session id
                                          $svc['code'], $svc['mod'], substr($inslabel,3), "Adjust code " . $adj['reason_code'] . $adjustmentFlag, $debug, '', $codetype, $group, $billing_id);
                     }
                     $invoice_total -= $adj['amount'];
