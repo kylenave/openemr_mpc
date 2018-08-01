@@ -215,7 +215,7 @@ if(($screen=='new_payment' && $payment_id*1==0) || ($screen=='edit_payment' && $
 	    <td align="left" class="text"><?php echo htmlspecialchars( xl('Check Number'), ENT_QUOTES).':' ?></td>
 	    <td>
 		<?php
-		if($PaymentMethod=='check_payment' || $PaymentMethod=='bank_draft' || $PaymentMethod=='lockbox' || $CheckNumber!='' || $screen=='new_payment')
+		if($PaymentMethod=='check_payment' || $PaymentMethod=='bank_draft' || $PaymentMethod=='lockbox' || $PaymentMethod=='previous_month' || $CheckNumber!='' || $screen=='new_payment')
 		 {
 		  $CheckDisplay='';
 		  $CheckDivDisplay=' display:none; ';

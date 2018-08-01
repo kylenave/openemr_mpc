@@ -592,7 +592,8 @@ function CheckVisible(MakeBlank)
  {//Displays and hides the check number text box.
    if(document.getElementById('form_method').options[document.getElementById('form_method').selectedIndex].value=='check_payment' ||
    	  document.getElementById('form_method').options[document.getElementById('form_method').selectedIndex].value=='bank_draft' || 
-   	  document.getElementById('form_method').options[document.getElementById('form_method').selectedIndex].value=='lockbox'  )
+   	  document.getElementById('form_method').options[document.getElementById('form_method').selectedIndex].value=='lockbox'  ||
+   	  document.getElementById('form_method').options[document.getElementById('form_method').selectedIndex].value=='previous_month'  )
    {
 	document.getElementById('check_number').disabled=false;
    }

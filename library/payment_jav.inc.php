@@ -34,7 +34,8 @@ function CheckVisible(MakeBlank)
  //In edit its value should not be lost on just a change.It is controlled be the 'MakeBlank' argument.
    if(document.getElementById('payment_method').options[document.getElementById('payment_method').selectedIndex].value=='check_payment' ||
    	  document.getElementById('payment_method').options[document.getElementById('payment_method').selectedIndex].value=='bank_draft' || 
-   	  document.getElementById('payment_method').options[document.getElementById('payment_method').selectedIndex].value=='lockbox'  )
+   	  document.getElementById('payment_method').options[document.getElementById('payment_method').selectedIndex].value=='lockbox' || 
+   	  document.getElementById('payment_method').options[document.getElementById('payment_method').selectedIndex].value=='previous_month'  )
    {
 	document.getElementById('div_check_number').style.display='none';
 	document.getElementById('check_number').style.display='';
