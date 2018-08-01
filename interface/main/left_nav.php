@@ -1411,6 +1411,12 @@ if (!empty($reg)) {
       </li>
     <?php } ?>
 
+      <li><a class="collapsed_lv2"><span><?php echo xlt('MPC Reports') ?></span></a>
+        <ul>
+          <?php genMiscLink('RTop','rep','0',xl('Case Log'),'reports/report_case_log.php'); ?>
+        </ul>
+      </li>
+
       <?php // genTreeLink('RTop','rep','Other'); ?>
     </ul>
   </li>
