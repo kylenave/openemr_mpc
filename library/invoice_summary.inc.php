@@ -109,7 +109,7 @@ function ar_get_invoice_summary($patient_id, $encounter_id, $with_detail = false
   // Get payments and adjustments. (includes copays)
   $res = sqlStatement("SELECT " .
     "a.code_type, a.code, a.modifier, a.memo, a.payer_type, a.adj_amount, a.pay_amount, a.reason_code, " .
-    "a.post_time, a.session_id, a.sequence_no, a.account_code, " .
+    "a.post_time, a.session_id, a.sequence_no, a.account_code, a.follow_up, a.follow_up_note, " .
     "s.payer_id, s.reference, s.check_date, s.deposit_date " .
     ",i.name " .
     "FROM ar_activity AS a " .
@@ -139,7 +139,10 @@ function ar_get_invoice_summary($patient_id, $encounter_id, $with_detail = false
       if ($row['adj_amount'] != 0 || $row['pay_amount'] == 0) {
         $tmp['chg'] = 0 - $row['adj_amount'];
         // $tmp['rsn'] = (empty($row['memo']) || empty($row['session_id'])) ? 'Unknown adjustment' : $row['memo'];
-        $tmp['rsn'] = empty($row['memo']) ? 'Unknown adjustment' : $row['memo'];
+
+        $tmp['rsn'] = empty($row['memo']) ? '' : $row['memo'];
+        $tmp['rsn'] .= (!empty($row['memo']) && !empty($row['follow_up_note'])) ? ', ':'';
+	$tmp['rsn'] .= empty($row['follow_up_note']) ? '' : $row['follow_up_note'];
         $tmpkey = $paydate . $keysuff1++;
       }
       else {
@@ -157,6 +160,10 @@ function ar_get_invoice_summary($patient_id, $encounter_id, $with_detail = false
       $tmp['plv'] = $row['payer_type'];
       $tmp['arseq'] = $row['sequence_no'];
       $codes[$code]['dtl'][$tmpkey] = $tmp;
+      if($row['follow_up']=='y')
+      {
+          $codes[$code]['follow_up_note'] .= $row['follow_up_note'];
+      }
     }
   }
   return $codes;

@@ -237,6 +237,14 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
   function arPostPayment($patient_id, $encounter_id, $session_id, $amount, $code, $modifier, $payer_type, $memo, $debug, $time='', $codetype='', $group=-1, $billing_id=-1) {
     if (empty($time)) $time = date('Y-m-d H:i:s');
 
+    $codeonly = $code;
+    $tmp = strpos($code, ':');
+    if ($tmp) 
+    {
+      $modifier = substr($code, $tmp+1);
+      $code = substr($code, 0, $tmp);
+    }
+
     sqlBeginTrans();
     $sequence_no = sqlQuery( "SELECT IFNULL(MAX(sequence_no),0) + 1 AS increment FROM ar_activity WHERE pid = ? AND encounter = ?", array($patient_id, $encounter_id));
     $query = "INSERT INTO ar_activity ( " .
@@ -313,6 +321,14 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
   function arPostAdjustment($patient_id, $encounter_id, $session_id, $amount, $code, $modifier, $payer_type, $reason, $debug, $time='', $codetype='', $group=-1, $billing_id=-1) {
     if (empty($time)) $time = date('Y-m-d H:i:s');
 
+    $codeonly = $code;
+    $tmp = strpos($code, ':');
+    if ($tmp) 
+    {
+      $modifier = substr($code, $tmp+1);
+      $code = substr($code, 0, $tmp);
+    }
+    
     sqlBeginTrans();
     $sequence_no = sqlQuery( "SELECT IFNULL(MAX(sequence_no),0) + 1 AS increment FROM ar_activity WHERE pid = ? AND encounter = ?", array($patient_id, $encounter_id));
     $query = "INSERT INTO ar_activity ( " .

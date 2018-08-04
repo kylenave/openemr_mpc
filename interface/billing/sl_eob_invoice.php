@@ -276,7 +276,7 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
 
         if ($thispay) {
             arPostPayment($patient_id, $encounter_id, $session_id,
-              $thispay, $code, $payer_type, '', $debug, '', $thiscodetype);
+              $thispay, $code, '', $payer_type, '', $debug, '', $thiscodetype);
           $paytotal += $thispay;
         }
 
@@ -309,7 +309,7 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
               $reason .= ' ' . $_POST['form_insurance'];
           }
             arPostAdjustment($patient_id, $encounter_id, $session_id,
-              $thisadj, $code, $payer_type, $reason, $debug, '', $thiscodetype);
+              $thisadj, $code, '', $payer_type, $reason, $debug, '', $thiscodetype);
         }
       }
 
@@ -635,7 +635,7 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
    <?php bucks($tmpadj) ?>
   </td>
   <td class="detail">
-   <?php echo $ddata['rsn'] ?>
+   <?php echo $ddata['rsn']  ?>
   </td>
 <?php if ($ALLOW_DELETE) { ?>
   <td class="detail">

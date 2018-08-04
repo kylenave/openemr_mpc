@@ -348,6 +348,14 @@ if (($_POST['form_print'] || $_POST['form_download'] || $_POST['form_pdf']) && $
 
         <?php
   // Identify the payer to support resumable posting sessions.
+if(isset($_POST['form_payer_id']))
+{
+   $formPayerId=$_POST['form_payer_id'];
+}else
+{
+   $formPayerId=-1;
+}
+
         echo "  <td>\n";
         echo "   " . xl('Payer') . ":\n";
         echo "  </td>\n";
@@ -357,7 +365,8 @@ if (($_POST['form_print'] || $_POST['form_download'] || $_POST['form_pdf']) && $
         echo "    <option value='0'>-- " . xl('Patient') . " --</option>\n";
         foreach ($insurancei as $iid => $iname) {
           echo "<option value='$iid'";
-          if ($iid == $_POST['form_payer_id']) echo " selected";
+	  
+          if ($iid == $formPayerId) echo " selected";
           echo ">" . $iname . "</option>\n";
         }
         echo "   </select>\n";
@@ -490,13 +499,18 @@ if ($_POST['form_search'] || $_POST['form_print']) {
 
     // Handle .zip extension if present.  Probably won't work on Windows.
     if (strtolower(substr($_FILES['form_erafile']['name'], -4)) == '.zip') {
-      rename($tmp_name, "$tmp_name.zip");
-      exec("unzip -p $tmp_name.zip > $tmp_name");
-      unlink("$tmp_name.zip");
+      rename($tmp_name, $tmp_name . ".zip");
+      //exec("unzip -p $tmp_name.zip > $tmp_name");
+      $eraFile = "/tmp/" . substr(shell_exec("unzip -l " . $tmp_name . ".zip | sed '1,3d;\$d' | sed '\$d' | awk '{print $4}' | sed -n 2p"),0,-1);
+      $eobFile = "/tmp/" . shell_exec("unzip -l " . $tmp_name . ".zip | sed '1,3d;\$d' | sed '\$d' | awk '{print $4}' | sed -n 1p");
+      $execCmd ="unzip " . $tmp_name . ".zip"; 
+      exec($execCmd);
+      unlink($tmp_name. ".zip");
+      unlink($eobFile);
     }
 
     echo "<!-- Notes from ERA upload processing:\n";
-    $alertmsg .= parse_era($tmp_name, 'era_callback');
+    $alertmsg .= parse_era($eraFile, 'era_callback');
     echo "-->\n";
     $erafullname = $GLOBALS['OE_SITE_DIR'] . "/era/$eraname.edi";
 
@@ -507,7 +521,7 @@ if ($_POST['form_search'] || $_POST['form_print']) {
       else
         $alertmsg .= "but not yet processed. ";
     }
-    rename($tmp_name, $erafullname);
+    rename($eraFile, $erafullname);
   } // End 835 upload
 
   if ($eracount > 0) {
@@ -550,11 +564,11 @@ if ($_POST['form_search'] || $_POST['form_print']) {
       }
     }
     if (! $where) {
-      if ($_POST['form_category'] == 'All') {
+      //if ($_POST['form_category'] == 'All') {
         die(xl("At least one search parameter is required if you select All."));
-      } else {
-        $where = "1 = 1";
-      }
+      //} else {
+      //  $where = "1 = 1";
+      //}
     }
   }
 

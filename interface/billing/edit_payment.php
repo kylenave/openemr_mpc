@@ -130,8 +130,16 @@ if (isset($_POST["mode"]))
 	 {
 	  if (isset($_POST["HiddenEncounter$CountRow"]))
 	   {
+			$pid = trim(formData("HiddenPId$CountRow"));
+			$encounter = trim(formData("HiddenEncounter$CountRow"));
+			$codeType = trim(formData("HiddenCode$CountRow"));
+			$code =  trim(formData("HiddenCode$CountRow"));
+			$modifier = trim(formData("HiddenModifier$CountRow"));
+
 		  if (isset($_POST["Payment$CountRow"]) && $_POST["Payment$CountRow"]*1>0)
 		   {
+
+
 				if(trim(formData('type_name'   ))=='insurance')
 				 {
 				  if(trim(formData("HiddenIns$CountRow"   ))==1)
@@ -152,11 +160,11 @@ if (isset($_POST["mode"]))
 				  $AccountCode="PP";
 				 }
 				$resPayment = sqlStatement("SELECT  * from ar_activity " .
-					" where  session_id ='$payment_id' and pid ='" . trim(formData("HiddenPId$CountRow"   ))  .
-					"' and  encounter  ='" . trim(formData("HiddenEncounter$CountRow"   ))  .
-                                        "' and  code_type  ='" . trim(formData("HiddenCodetype$CountRow"   ))  .
-					"' and  code  ='" . trim(formData("HiddenCode$CountRow"   ))  .
-					"' and  modifier  ='" . trim(formData("HiddenModifier$CountRow"   ))  .
+					" where  session_id ='$payment_id' and pid ='" . $pid  .
+					"' and  encounter  ='" . $encounter  .
+                                        "' and  code_type  ='" . $codeType  .
+					"' and  code  ='" . $code  .
+					"' and  modifier  ='" . $modifier .
 					"' and pay_amount>0");
 				if(sqlNumRows($resPayment)>0)
 				 {
@@ -399,7 +407,8 @@ if (isset($_POST["mode"]))
 //==============================================================================================================================
 		  if (isset($_POST["FollowUp$CountRow"]) && $_POST["FollowUp$CountRow"]=='y')
 		   {
-arSetDeniedFlag(trim(formData("HiddenPId$CountRow")), trim(formData("HiddenEncounter$CountRow")));
+			error_log("Setting DENIED flag based on follow up checked. PID=" . $pid . " and Encoutner= " . $encounter);
+			arSetDeniedFlag($pid, $encounter);
 
 				$resPayment = sqlStatement("SELECT  * from ar_activity " .
 					" where  session_id ='$payment_id' and pid ='" . trim(formData("HiddenPId$CountRow"   ))  .

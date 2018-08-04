@@ -41,6 +41,18 @@ require_once("$srcdir/billing.inc");
         return '';
     }
 
+    function writeClaimSummary($bgcolor, $class, $state)
+    {
+       $dline = 
+
+            " <tr bgcolor='$bgcolor'>\n" .
+            "  <td class='$class' colspan='4'>&nbsp;</td>\n" .
+            "  <td class='$class'>$state</td>\n" .
+            "  <td class='$class' colspan='2'>&nbsp;</td>\n" .
+            " </tr>\n";
+        echo $dline;
+   }
+
     function writeMessageLine($bgcolor, $class, $description) {
         $dline =
             " <tr bgcolor='$bgcolor'>\n" .
@@ -157,6 +169,7 @@ require_once("$srcdir/billing.inc");
         }
         }
     }
+
     function era_callback(&$out) {
         global $encount, $debug, $claim_status_codes, $adjustment_reasons, $remark_codes;
         global $invoice_total, $last_code, $paydate;
@@ -166,6 +179,7 @@ require_once("$srcdir/billing.inc");
         $chk_123=$out['check_number'];
         $chk_123=str_replace(' ','_',$chk_123);
         if(isset($_REQUEST['chk'.$chk_123])){
+
         if ($encount == 0) {
             writeMessageLine('#ffffff', 'infdetail', "Payer: " . htmlspecialchars($out['payer_name'], ENT_QUOTES));
             if ($debug) {
@@ -540,7 +554,7 @@ foreach ($out['svc'] as $svc)
 		$acceptableAdjustCodes[]='A4220';
 		$acceptableAdjustCodes[]='77002';
 		$acceptableAdjustCodes[]='Q9966';
-	    $totalAdjAmount = 0.01;
+	    $totalAdjAmount = 0.0;
             foreach ($svc['adj'] as $adj) 
 	    {
                 if($adj['amount'] > 0)
@@ -594,13 +608,8 @@ foreach ($out['svc'] as $svc)
 		{
                     // Group code PR is Patient Responsibility.  Enter these as zero
                     // adjustments to retain the note without crediting the claim.
-                    if ($primary) {
-            /****
-                        $reason = 'Pt resp: '; // Reasons should be 25 chars or less.
-                        if ($adj['reason_code'] == '1') $reason = 'To deductible: ';
-                        else if ($adj['reason_code'] == '2') $reason = 'Coinsurance: ';
-                        else if ($adj['reason_code'] == '3') $reason = 'Co-pay: ';
-            ****/
+                    if ($primary) 
+		    {
                         $reason = "$inslabel ptresp: "; // Reasons should be 25 chars or less.
                         if ($adj['reason_code'] == '1') $reason = "$inslabel dedbl: ";
                         else if ($adj['reason_code'] == '2') $reason = "$inslabel coins: ";
@@ -611,35 +620,38 @@ foreach ($out['svc'] as $svc)
                     // but do not post any amounts.
                     else {
                         $reason = "$inslabel note " . $adj['reason_code'] . ': ';
-            /****
-                        $reason .= sprintf("%.2f", $adj['amount']);
-            ****/
                     }
                     $reason .= sprintf("%.2f", $adj['amount']);
                     // Post a zero-dollar adjustment just to save it as a comment.
-                    if (!$error && !$debug) {
-//echo "Posting Zero dollar Adjustment " . $reason . "<br>";
-                        arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], 0, $svc['code'], $svc['mod'],//$InsertionId[$out['check_number']] gives the session id
-                        substr($inslabel,3), $reason, $debug, '', $codetype, $group, $billing_id);
+                    if (!$error && !$debug) 
+		    {
+                        arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], 0, 
+				$svc['code'], $svc['mod'],//$InsertionId[$out['check_number']] gives the session id
+                        	substr($inslabel,3), $reason, $debug, '', $codetype, $group, $billing_id);
                     }
                     writeMessageLine($bgcolor, $class, $description_prefix . $description . ' ' . sprintf("%.2f", $adj['amount']));
                 }
                 // Other group codes for primary insurance are real adjustments.
-                else {
-                    if (!$error && !$debug) {
-$reason = "$inslabel note " . $adj['reason_code'] . ': ';
-$reason .= sprintf("%.2f", $adj['amount']);
-//echo "Posting Adjustment " . $reason . "<br>";
+                else 
+		{
+                    if (!$error && !$debug) 
+		    {
+			$reason = "$inslabel note " . $adj['reason_code'] . ': ';
+			$reason .= sprintf("%.2f", $adj['amount']);
+			//echo "Posting Adjustment " . $reason . "<br>";
 
-		       $postAdjAmount = $adj['amount'];
+		        $postAdjAmount = $adj['amount'];
 			if($Denied && $svc['paid'] <=0)
 			{
 				$postAdjAmount=0;
 			}
 
-                       arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], $postAdjAmount,//$InsertionId[$out['check_number']] gives the session id
-                                         $svc['code'], $svc['mod'], substr($inslabel,3), "Adjust code " . $adj['reason_code'] . $adjustmentFlag, $debug, '', $codetype, $group, $billing_id);
+                       arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], 
+				$postAdjAmount,//$InsertionId[$out['check_number']] gives the session id
+                                $svc['code'], $svc['mod'], substr($inslabel,3), 
+				"Adjust code " . $adj['reason_code'] . $adjustmentFlag, $debug, '', $codetype, $group, $billing_id);
                     }
+	
                     $invoice_total -= $adj['amount'];
                     writeDetailLine($bgcolor, $class, $patient_name, $invnumber,
                         $svc['code'], $production_date, $description,
@@ -666,34 +678,102 @@ $reason .= sprintf("%.2f", $adj['amount']);
             if (!$got_response) $insurance_done = false;
         }
 
+        $claimState = '[DEBUG] ' . $inslabel;
+
         // Cleanup: If all is well, mark Ins<x> done and check for secondary billing.
-        if (!$error && !$debug && $insurance_done) {
+        if (!$debug && $insurance_done) 
+	{
             $level_done = 0 + substr($inslabel, 3);
 
             if($out['crossover']==1)
-             {//Automatic forward case.So need not again bill from the billing manager screen.
-              sqlStatement("UPDATE form_encounter " .
-              "SET last_level_closed = $level_done,last_level_billed=".$level_done." WHERE " .
-              "pid = '$pid' AND encounter = '$encounter'");
-              writeMessageLine($bgcolor, 'infdetail',
-                'This claim is processed by Insurance '.$level_done.' and automatically forwarded to Insurance '.($level_done+1) .' for processing. ');
-             }
-            else {
-              sqlStatement("UPDATE form_encounter " .
-              "SET last_level_closed = $level_done WHERE " .
-              "pid = '$pid' AND encounter = '$encounter'");
-            }
-            // Check for secondary insurance.
-            if ($primary && arGetPayerID($pid, $service_date, 2)) {
-              arSetupSecondary($pid, $encounter, $debug,$out['crossover']);
+            {
+
+		if($Denied)
+		{
+		    writeMessageLine($bgcolor, 'infdetail', 
+                      'This claim is processed by Insurance ' . $level_done . 
+		      ' and automatically forwarded to Insurance ' . ($level_done+1) .
+ 		      ' for processing but is now in a DENIED state. ');
+		   $claimState='DENIED';
+		}else
+		{
+
+			//Automatic forward case.So need not again bill from the billing manager screen.
+                	sqlStatement("UPDATE form_encounter " .
+                      		"SET last_level_closed = $level_done,last_level_billed=".$level_done." WHERE " .
+                      		"pid = '$pid' AND encounter = '$encounter'");
               
-              if($out['crossover']<>1)
-              {
-                writeMessageLine($bgcolor, 'infdetail',
-                'This claim is now re-queued for secondary paper billing');
-              }
-            }
-        }
+			writeMessageLine($bgcolor, 'infdetail',
+                      		'This claim is processed by Insurance '.$level_done.
+				' and automatically forwarded to Insurance '.($level_done+1) .
+				' for processing. ');
+
+			if($level_done=='1')
+			{
+				$claimState = 'Secondary';
+			}else
+			{
+				$claimState = 'Tertiary';
+			}
+		}
+             }
+             else 
+	     {
+                 if($Denied)
+		 {
+		    	writeMessageLine($bgcolor, 'infdetail',
+				"This claim is in a denied state so it will not be moved forward yet.");
+			$claimState='DENIED';
+		 }else
+		 {
+			sqlStatement("UPDATE form_encounter " .
+                    		"SET last_level_closed = $level_done WHERE " .
+                    		"pid = '$pid' AND encounter = '$encounter'");
+			$claimState='Patient or Closed';
+		 }
+             }
+             
+	     // Check for secondary insurance.
+             if (!$Denied && $primary && arGetPayerID($pid, $service_date, 2)) 
+	     {
+                 arSetupSecondary($pid, $encounter, $debug,$out['crossover']);
+              
+                 if($out['crossover']<>1)
+                 {
+                     writeMessageLine($bgcolor, 'infdetail',
+                        'This claim is now re-queued for secondary paper billing');
+                 }
+		 $claimState = 'Secondary';
+             }
+        }else if(!$insurance_done)
+	{
+            $level_done = 0 + substr($inslabel, 3);
+  	    if($level_done=='1')
+	    {
+		$claimState = 'Primary';
+	    }else
+	    {
+		$claimState = 'Secondary';
+	    }
+
+	    if($Denied){
+	       $claimState='DENIED';
+	    }
+	}
+
+        //Write out claim summary line
+	$openemr_state = ar_responsible_party($pid, $encounter);
+        writeClaimSummary('#ccccdd', 'summary', 'This claim state is now: ' . $claimState . ' (' . $openemr_state . ')' );
+
+	if( ($openemr_state == '1' && $claimState != 'Primary') || 
+	    ($openemr_state=='2' && $claimState != 'Secondary') ||
+	    ($openemr_state=='3' && $claimState != 'Tertiary') ||
+	    ($openemr_state=='0' && $claimState != 'Patient or Closed') ||
+	    ($openemr_state=='-1' && $claimState != 'Patient or Closed'))
+	{
+            writeClaimSummary('#ee8888', 'summary', 'Claim state is conflicted.' );
+	}
+
         }
     }
 

@@ -161,7 +161,8 @@ function process_form($ar) {
     $patient_id = $ta[0];
     $encounter  = $ta[1];
     $payer_id   = substr($claim_array['payer'], 1);
-    $payer_type = substr($claim_array['payer'], 0, 1);
+    $payer_type = strtoupper(substr($claim_array['payer'], 0, 1));
+    error_log('Payer = ' . $claim_array['payer']);
     $payer_type = $payer_type == 'T' ? 3 : $payer_type == 'S' ? 2 : 1;
 
     if (isset($claim_array['bill'])) {

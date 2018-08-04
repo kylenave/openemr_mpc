@@ -55,6 +55,8 @@ class Claim {
   var $mcr_dme_claim = '0';
   var $mcr_dme_payer = array();
   var $billingIncidentTo=false;
+  var $dbPayerType;
+  var $dbPayerId;
 
   function loadPayerInfo(&$billrow) {
     global $sl_err;
@@ -125,7 +127,7 @@ class Claim {
     // Get payment and adjustment details if there are any previous payers.
     //
     $this->invoice = array();
-    if ($this->payerSequence() != 'P') {
+    if (strtoupper($this->payerSequence()) != 'P') {
         $this->invoice = ar_get_invoice_summary($this->pid, $this->encounter_id, true);
       // Secondary claims might not have modifiers in SQL-Ledger data.
       // In that case, note that we should not try to match on them.
@@ -133,6 +135,28 @@ class Claim {
       foreach ($this->invoice as $key => $trash) {
         if (strpos($key, ':')) $this->using_modifiers = true;
       }
+    }
+
+    //Look in the claims table to see who this should be going out to...
+     $sql="select payer_type, payer_id from claims where encounter_id='$this->encounter_id' and payer_type !='-1' order by version desc limit 1";
+     $res = sqlStatement($sql);
+     $crow=sqlFetchArray($res);
+
+     if($crow)
+     {
+        $this->dbPayerType=$crow['payer_type'];
+        $this->dbPayerId=$cros['payer_type']; 
+     }else{
+        $this->dbPayerType='-1';
+        $this->dbPayerId='-1'; 
+     }
+
+    if($this->dbPayerType!='-1' && $this->dbPayerType!='1')
+    {
+       error_log("Setting payer type to: " . $this->dbPayerType);
+       $this->payers[0] = $this->payers[$this->dbPayerType-1];
+
+       error_log("Set default payer to: " . $this->payers[0]['company']['name']);
     }
   }
 
@@ -1481,6 +1505,16 @@ class Claim {
   function billingProviderTaxonomy() {
     if (empty($this->billing_prov_id['taxonomy'])) return '207Q00000X';
     return x12clean(trim($this->billing_prov_id['taxonomy']));
+  }
+
+  function getCurrentPayerType()
+  {
+     if($this->dbPayerType!='-1')
+     {
+        return $this->dbPayerType;
+     }
+
+     return 0;
   }
 
 }
