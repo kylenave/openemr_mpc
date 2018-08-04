@@ -48,6 +48,18 @@
       printf("%.2f", $amount);
   }
 
+  function getEobText($pid, $encounter)
+  {
+     $commandToFindFiles = "find " .  $GLOBALS['OE_SITE_DIR'] . "/era -name '*.eob' -exec ";
+     $commandToFilterFiles = "sed -n -e '/".$pid."-".$encounter."/,/---------/ p'";
+     $commandSuffix = " {} +";
+
+     $totalCommand = $commandToFindFiles . $commandToFilterFiles . $commandSuffix;
+error_log($totalCommand);
+
+     return shell_exec($totalCommand);
+  }
+
   // Delete rows, with logging, for the specified table using the
   // specified WHERE clause.  Borrowed from deleter.php.
   //
@@ -715,11 +727,15 @@ while ($orow = sqlFetchArray($ores)) {
 <?php } ?>
 
  </tr>
-<?php
-  } // end of code
-?>
-
 </table>
+<pre>
+<?php
+echo getEobText($patient_id, $encounter_id);
+  } // end of code
+
+?>
+</pre>
+
 </form>
 </center>
 <script language="JavaScript">

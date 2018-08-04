@@ -501,18 +501,34 @@ if ($_POST['form_search'] || $_POST['form_print']) {
     if (strtolower(substr($_FILES['form_erafile']['name'], -4)) == '.zip') {
       rename($tmp_name, $tmp_name . ".zip");
       //exec("unzip -p $tmp_name.zip > $tmp_name");
-      $eraFile = "/tmp/" . substr(shell_exec("unzip -l " . $tmp_name . ".zip | sed '1,3d;\$d' | sed '\$d' | awk '{print $4}' | sed -n 2p"),0,-1);
-      $eobFile = "/tmp/" . shell_exec("unzip -l " . $tmp_name . ".zip | sed '1,3d;\$d' | sed '\$d' | awk '{print $4}' | sed -n 1p");
-      $execCmd ="unzip " . $tmp_name . ".zip"; 
+      $file1 = "/tmp/" . substr(shell_exec("unzip -l " . $tmp_name . ".zip | sed '1,3d;\$d' | sed '\$d' | awk '{print $4}' | sed -n 2p"),0,-1);
+      $file2 = "/tmp/" . substr(shell_exec("unzip -l " . $tmp_name . ".zip | sed '1,3d;\$d' | sed '\$d' | awk '{print $4}' | sed -n 1p"),0,-1);
+
+      if(substr($file1, -3)=='835')
+      {
+         $eraFile = $file1;
+         $eobFile = $file2;
+      }else
+      {
+         $eraFile = $file2;
+         $eobFile = $file1;
+      }
+
+      $execCmd ="unzip -d /tmp " . $tmp_name . ".zip"; 
       exec($execCmd);
       unlink($tmp_name. ".zip");
-      unlink($eobFile);
+    }else
+    {
+       $eraFile = $tmp_name;
     }
+
 
     echo "<!-- Notes from ERA upload processing:\n";
     $alertmsg .= parse_era($eraFile, 'era_callback');
     echo "-->\n";
+
     $erafullname = $GLOBALS['OE_SITE_DIR'] . "/era/$eraname.edi";
+    $eobfullname = $GLOBALS['OE_SITE_DIR'] . "/era/$eraname.eob";
 
     if (is_file($erafullname)) {
       $alertmsg .= "Warning: Set $eraname was already uploaded ";
@@ -522,6 +538,7 @@ if ($_POST['form_search'] || $_POST['form_print']) {
         $alertmsg .= "but not yet processed. ";
     }
     rename($eraFile, $erafullname);
+    rename($eobFile, $eobfullname);
   } // End 835 upload
 
   if ($eracount > 0) {
