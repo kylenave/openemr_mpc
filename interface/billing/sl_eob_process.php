@@ -294,8 +294,12 @@ $Denied=false;
 			   //cycle through results until one is found that was not already handled.
                            if( $svc['remark'])
 			   { 
-                               sqlStatement("insert into claim_denials (encounter, billing_id, date, reason, group_code) VALUES " .
-                                               "( '$encounter', '$billing_id','$current_date','" . $svc['remark'] . "','Remarks')"); 
+			       $remarks = split(":", substr($svc['remark'],0,-1));
+			       foreach($remarks as $remark)
+                               {
+                                  sqlStatement("insert into claim_denials (encounter, billing_id, date, reason, group_code) VALUES " .
+                                               "( '$encounter', '$billing_id','$current_date','" . $remark . "','Remarks')"); 
+			       }
 			   }
 
                            foreach ($svc['adj'] as $adj) 

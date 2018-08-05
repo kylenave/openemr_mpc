@@ -727,12 +727,13 @@ while ($orow = sqlFetchArray($ores)) {
 <?php } ?>
 
  </tr>
-</table>
-<pre>
-<?php
-echo getEobText($patient_id, $encounter_id);
-  } // end of code
 
+<?php
+  } // end of code
+echo "</table>";
+$eobText = getEobText($patient_id, $encounter_id);
+error_log($eobText);
+echo $eobText;
 ?>
 </pre>
 
