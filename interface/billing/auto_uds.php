@@ -60,12 +60,24 @@ foreach ($lines as $key => $value)
       //fclose($fh);
 }
 
+function hasUdsEncounter($pid, $dos)
+{
+  $query = "SELECT fe.encounter FROM form_encounter fe " . 
+    "join billing b on b.encounter=fe.encounter " .
+    "WHERE fe.pid = ? AND date(fe.date) = date(?) " .
+    "and b.code='80307' ".
+    "ORDER BY encounter DESC LIMIT 1";
+
+  $tmprow = sqlQuery($query, array($pid,$dos) );
+  return empty($tmprow['encounter']) ? false : true;
+
+}
+
 function ProcessUdsData($udsData)
 {
-   echo "<pre>";
 
-   $errors = 'These names were not found:';
-
+   echo "<table border=1 width='80%' padding='15px'>";
+   echo "<tr bgcolor='#aaaadd'><th>Patient</th><th>Provider</th><th>Date of Service</th></th></tr>";
    $header=true;
 
    foreach($udsData as $uds)
@@ -79,36 +91,41 @@ function ProcessUdsData($udsData)
       $pid = udsGetPatientId($uds[0]);
       $provider = udsGetProviderId($uds[1]);
 
+      echo "<tr><td>$uds[0] ($pid)</td><td>$uds[1] ($provider)</td><td>$uds[2]</td></td></tr>";
       if($pid && $provider)
       {
          $dos = date('Y-m-d 00:00:00', strtotime($uds[2]));
 
-         $enc = todaysEncounterCheck($pid, $dos, $reason = 'UTOX Screen', '3', '', $provider, '', $return_existing = true);
-
-         addBilling($enc, 'CPT4', '80307', 'UTOX Screening', $pid, '1', $provider, '', '1', '326', '', 'ICD10|Z79.891:ICD10|Z51.81:');
-
-         echo "Added encounter ($dos) for patient: " . $uds[0] . "\n";
+               if(hasUdsEncounter($pid, $dos))
+               {
+                     echo "<tr bgcolor='#cc8888'><td colspan='3' align='center'>Patient already has a UDS for this date</td></tr>";
+               }else
+               { 
+                   $enc = todaysEncounterCheck($pid, $dos, $reason = 'UTOX Screen', '3', '', $provider, 'Office Visit', true, true);
+                   addBilling($enc, 'CPT4', '80307', 'UTOX Screening', $pid, '1', $provider, '', '1', '326', '', 'ICD10|Z79.891:ICD10|Z51.81:');
+                   echo "<tr bgcolor='#88cc88'><td colspan='3' align='center'>New UDS Encounter Added</td></tr>";
+               }
 
       }else
       {
          if(!$pid){
-         $errors .= "\nPatient:" . $uds[0];}
+            echo "<tr bgcolor='#cc8888'><td colspan='3' align='center'>Patient not recognized</td></tr>";
+         }
          else{
-            $errors .= "\nProvider:" . $uds[1];
+            echo "<tr bgcolor='#cc8888'><td colspan='3' align='center'>Provider not recognized</td></tr>";
          }
       }
    }
 
-   echo $errors;
-   echo "</pre>";
+   echo "</table>";
+
  }
 
 function PrintUdsData($udsData)
 {
-   echo "<pre>";
 
-   $errors = 'These names were not found:';
-
+   echo "<table border=1 width='80%' padding='15px'>";
+   echo "<tr bgcolor='#aaaadd'><th>Patient</th><th>Provider</th><th>Date of Service</th></th></tr>";
    $header=true;
 
    foreach($udsData as $uds)
@@ -121,22 +138,28 @@ function PrintUdsData($udsData)
 
       $pid = udsGetPatientId($uds[0]);
       $provider = udsGetProviderId($uds[1]);
+      $dos = date('Y-m-d 00:00:00', strtotime($uds[2]));
 
+
+      echo "<tr><td>$uds[0] ($pid)</td><td>$uds[1] ($provider)</td><td>$uds[2]</td></td></tr>";
       if($pid && $provider)
       {
-         echo "Patient: " . $uds[0] . "[" . $pid . "]   -  Provider: " . $uds[1] . "[" . $provider . "]  -  Date: " . $uds[2] . "\n";
+
+               if(hasUdsEncounter($pid, $dos))
+               {
+                     echo "<tr bgcolor='#cc8888'><td colspan='3' align='center'>Patient already has a UDS for this date</td></tr>";
+               }
       }else
       {
          if(!$pid){
-         $errors .= "\nPatient:" . $uds[0];}
+            echo "<tr bgcolor='#cc8888'><td colspan='3' align='center'>Patient not recognized</td></tr>";
+         }
          else{
-            $errors .= "\nProvider:" . $uds[1];
+            echo "<tr bgcolor='#cc8888'><td colspan='3' align='center'>Provider not recognized</td></tr>";
          }
       }
    }
-
-   echo $errors;
-   echo "</pre>";
+   echo "</table>";
 }
 
 ?>
@@ -155,7 +178,7 @@ function PrintUdsData($udsData)
     <form method='post' action='auto_uds.php' enctype='multipart/form-data'>
 
       <table border='0' cellpadding='5' cellspacing='0'>
-<?php if(!$_POST['form_uds'])
+<?php if(!$_POST['form_uds'] && !$_POST['form_udsprocess'])
 {
 ?>
 
@@ -199,17 +222,14 @@ if ($_POST['form_uds'])
 
 if ($_POST['form_udsprocess'])
 {
-   echo "<pre>Displaying Data To Process:\n";
    $tmp_name = $_POST['tmp_uds_file'];
    $udsData = LoadUdsFile($tmp_name);
 
    ProcessUdsData($udsData);
-
-   echo "</pre>";
 }
 ?>
 
-	</table>
+</table>
 </form>
 </body>
 </html>
