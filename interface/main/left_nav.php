@@ -1130,6 +1130,7 @@ if (!empty($reg)) {
       <?php if ($GLOBALS['enable_batch_payment']) genTreeLink('RTop','npa',xl('Batch Payments'),false,2);?>
       <?php if ($GLOBALS['enable_posting']) genMiscLink('RTop','eob','0',xl('Posting'), 'billing/sl_eob_search.php'); ?>
       <?php if ($GLOBALS['enable_edihistory_in_left_menu'] && acl_check('acct', 'eob')) genTreeLink('RTop','edi',xl('EDI History'),false,2);?>
+      <?php genMiscLink('RTop','rep','0',xl('Auto UDS Test'),'billing/auto_uds.php'); ?>
     </ul>
   </li>
   <?php } ?>
