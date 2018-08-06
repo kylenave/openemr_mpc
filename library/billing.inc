@@ -179,7 +179,7 @@ function updateClaim($newversion, $patient_id, $encounter_id, $payer_id=-1, $pay
     $version = sqlQuery( "SELECT IFNULL(MAX(version),0) + 1 AS increment FROM claims WHERE patient_id = ? AND encounter_id = ?", array( $patient_id, $encounter_id ) );
     if($crossover<>1)
     {
-      $sql .= "INSERT INTO claims SET " .
+      $sql = "INSERT INTO claims SET " .
           "patient_id = $patient_id, " .
           "encounter_id = $encounter_id, " .
           "bill_time = NOW() $claimset ," .
