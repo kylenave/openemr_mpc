@@ -227,7 +227,13 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
 
    $payer_claim_id = arGetPayerClaimId($encounter_id);
 
-  if ($_POST['form_save'] || $_POST['form_cancel']) {
+  if ($_POST['form_save'] || $_POST['form_cancel'] || $_POST['form_reopen']) {
+
+    if($_POST['form_reopen'])
+    {
+       doVoid($patient_id, $encounter_id, true);
+    }
+
     if ($_POST['form_save']) {
       if ($debug) {
         echo xl("This module is in test mode. The database will not be changed.",'','<p><b>',"</b><p>\n");
@@ -342,11 +348,13 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
       if(!$_POST['isDenied'] and ($denied_state=='1'))
       {
           arClearDeniedFlag($patient_id, $encounter_id);
+          $denied_state='0';
       }
       
       if($_POST['isDenied'] and ($denied_state!= '1'))
       {
           arSetDeniedFlag($patient_id, $encounter_id);
+          $denied_state='1';
       }
 
       echo "<script language='JavaScript'>\n";
@@ -366,8 +374,10 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
     // Get invoice charge details.
     $codes = ar_get_invoice_summary($patient_id, $encounter_id, true);
 
+  //$pdrow = sqlQuery("select billing_note " .
+  //  "from patient_data where pid = '$patient_id' limit 1");
   $pdrow = sqlQuery("select billing_note " .
-    "from patient_data where pid = '$patient_id' limit 1");
+    "from form_encounter where encounter = '$encounter_id' limit 1");
 ?>
 <center>
 
@@ -375,7 +385,7 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
  onsubmit='return validate(this)'>
 
 <center><h3>Note: This form doesn't automatically refresh when saved. You can hit F5 to refresh the data.</h3></center>
-<table border='1' cellpadding='3'>
+<table border='1' cellpadding='3' width='80%'>
  <tr>
   <td>
    <?php xl('Patient:','e')?>
@@ -512,6 +522,8 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
    <input type='submit' name='form_save' value='<?php xl('Save','e')?>'>
    &nbsp;
    <input type='button' value='<?php xl('Cancel','e')?>' onclick='window.close()'>
+   &nbsp;
+   <input type='submit' name='form_reopen' value='<?php xl('ReOpen','e')?>'>
   </td>
 <?php
     echo "<td>\n";
@@ -532,7 +544,7 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
   <td>
    <?php xl('Billing Note:','e')?>
   </td>
-  <td colspan='3' style='color:red'>
+  <td colspan='5' style='color:red'>
    <?php echo $pdrow['billing_note'] ?>
   </td>
  </tr>
