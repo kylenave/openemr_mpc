@@ -731,6 +731,7 @@ while ($orow = sqlFetchArray($ores)) {
 <?php
   } // end of code
 echo "</table>";
+echo "<pre>";
 $eobText = getEobText($patient_id, $encounter_id);
 error_log($eobText);
 echo $eobText;
