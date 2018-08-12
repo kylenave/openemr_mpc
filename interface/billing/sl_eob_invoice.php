@@ -48,6 +48,15 @@
       printf("%.2f", $amount);
   }
 
+  function getAttachmentFiles($encounter)
+  {
+     //Get a list of all ar_sessions
+
+     //For each session, check and see if a file exists with the name {session_id}_*
+
+     //Add it to array output
+  }
+
   function getEobText($pid, $encounter)
   {
      $commandToFindFiles = "find " .  $GLOBALS['OE_SITE_DIR'] . "/era -name '*.eob' -exec ";
@@ -227,11 +236,25 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
 
    $payer_claim_id = arGetPayerClaimId($encounter_id);
 
-  if ($_POST['form_save'] || $_POST['form_cancel'] || $_POST['form_reopen']) {
+  if ($_POST['form_save'] || $_POST['form_cancel'] || $_POST['form_reopen'] || $_POST['form_add_attachment']) {
 
     if($_POST['form_reopen'])
     {
        doVoid($patient_id, $encounter_id, true);
+    }
+
+    if($_POST['form_add_attachment'])
+    {
+
+       if($_FILES['form_attachment']['size'])
+       {
+          $tmp_name = $_FILES['form_attachment']['tmp_name'];
+          $new_filename = $GLOBALS['OE_SITE_DIR'] . "/era/attachments/$eraname.edi";
+          rename($tmp_name, $new_filename);
+
+          echo "<input type='hidden' name='tmp_uds_file' value='". $uds_filename . "' />";
+          $udsData = LoadUdsFile($uds_filename);
+       }     
     }
 
     if ($_POST['form_save']) {
@@ -524,6 +547,7 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
    <input type='button' value='<?php xl('Cancel','e')?>' onclick='window.close()'>
    &nbsp;
    <input type='submit' name='form_reopen' value='<?php xl('ReOpen','e')?>'>
+   &nbsp;
   </td>
 <?php
     echo "<td>\n";
@@ -550,8 +574,11 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
  </tr>
 <?php } ?>
  <tr>
-  <td height="1">
-  </td>
+   <td colspan='3'>
+     <?php xl('Attach payment file:','e'); ?>
+     <input name="form_attachment" type="file" />
+     <input type='submit' name='form_add_attachment' value='<?php xl('Add Attachment','e')?>'>
+   </td>
  </tr>
 </table>
 
@@ -743,6 +770,8 @@ while ($orow = sqlFetchArray($ores)) {
 <?php
   } // end of code
 echo "</table>";
+
+//Show EOB INFORMATION HERE
 echo "<pre>";
 $eobText = getEobText($patient_id, $encounter_id);
 error_log($eobText);

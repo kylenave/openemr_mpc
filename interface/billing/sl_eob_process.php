@@ -321,8 +321,10 @@ $Denied=false;
                     //process_file is used as for the denial case file name will not be there, and extra field(to store reason) can be avoided.
                     if($csc=='4') {
                       updateClaim(true, $pid, $encounter, $_REQUEST['InsId'], substr($inslabel,3),7,0,$code_value, $out['payer_name'], $out['payer_claim_id']);
+error_log("Updated claim with payer claim id=" . $out['payer_claim_id']);
                     }else{
                       updateClaim(true, $pid, $encounter, $_REQUEST['InsId'], substr($inslabel,3),-1,-1,$code_value, $out['payer_name'], $out['payer_claim_id']);
+error_log("Updated claim with payer claim id=" . $out['payer_claim_id']);
                     }
 		    arSetDeniedFlag($pid,$encounter);
 		    $Denied=true;

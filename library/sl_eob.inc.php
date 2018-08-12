@@ -210,6 +210,12 @@ function arGetSession2($payer_id, $reference, $check_date, $deposit_date='', $pa
     return $row['session_id'];
     }
 }
+
+function arGetAllSessions($encounter)
+{
+   //KBN Todo: Complete function to get all sessions for an encounter.
+}
+
   //writing the check details to Session Table on ERA proxcessing
 function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_date,$deposit_date,$debug) {
       $query = "INSERT INTO ar_session( " .
