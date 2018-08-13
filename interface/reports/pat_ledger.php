@@ -113,12 +113,12 @@ function GetAllCredits($enc = '', $pat='') {
     }
     return($all);
 }
-function PrintEncHeader($dt, $rsn, $dr) {
+function PrintEncHeader($enc, $dt, $rsn, $dr) {
     global $bgcolor, $orow;
     $bgcolor = (($bgcolor == "#FFFFDD") ? "#FFDDDD" : "#FFFFDD");
     echo "<tr bgcolor='#FFFFFF'>";
     if(strlen($rsn) > 50) $rsn = substr($rsn,0,50).'...';
-    echo "<td colspan='4'><span class='bold'>".xlt('Encounter Dt / Rsn'). ": </span><span class='detail'>".text(substr($dt,0,10))." / ".text($rsn)."</span></td>";
+    echo "<td colspan='4'><span class='bold'>".xlt('Encounter: Dt / Rsn'). ": </span><span class='detail'>" . text($enc) . ":  " . text(substr($dt,0,10))." / ".text($rsn)."</span></td>";
     echo "<td colspan='5'><span class='bold'>" . xlt('Provider'). ": </span><span class='detail'>".text(User_Id_Look($dr))."</span></td>";
     echo "</tr>\n";
 	$orow++;
@@ -597,7 +597,7 @@ if ($_REQUEST['form_refresh'] || $_REQUEST['form_csvexport']) {
                     $credits = GetAllCredits($prev_encounter_id, $form_pid);
                     if(count($credits) > 0) {
                         if(!$hdr_printed) {
-                            PrintEncHeader($prev_row{'date'},
+                            PrintEncHeader($prev_row['encounter'], $prev_row{'date'},
                             $prev_row{'reason'}, $prev_row{'provider_id'});
                         }
                         PrintCreditDetail($credits, $form_pid);
@@ -610,7 +610,7 @@ if ($_REQUEST['form_refresh'] || $_REQUEST['form_csvexport']) {
             if($erow{'id'}) {
                 // Now print an encounter heading line -
                 if(!$hdr_printed) {
-                    PrintEncHeader($erow{'date'},
+                    PrintEncHeader($erow['encounter'], $erow{'date'},
                     $erow{'reason'}, $erow{'provider_id'});
                     $hdr_printed = true;
                 }
@@ -651,7 +651,7 @@ if ($_REQUEST['form_refresh'] || $_REQUEST['form_csvexport']) {
             $credits = GetAllCredits($prev_encounter_id, $form_pid);
             if(count($credits) > 0) {
                 if(!$hdr_printed) {
-                  PrintEncHeader($prev_row{'date'},
+                  PrintEncHeader($prev_row['encounter'], $prev_row{'date'},
                   $prev_row{'reason'}, $prev_row{'provider_id'});
                 }
                 PrintCreditDetail($credits, $form_pid);

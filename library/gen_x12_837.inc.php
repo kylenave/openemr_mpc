@@ -29,6 +29,14 @@ function gen_x12_837($pid, $encounter, &$log, $encounter_claim=false) {
     return;
   }
 
+error_log("Claim type: " . $claim->claimType());
+  if($claim->claimType()=='09'){ //SELF PAY
+          sqlStatement("UPDATE form_encounter SET " .
+          "last_level_billed = '1', last_level_closed = '1' WHERE " .
+          "pid = '$pid' AND encounter = '$encounter'");
+     return;
+  }
+
   // This is true for the 5010 standard, false for 4010.
   // x12gsversionstring() should be "005010X222A1" or "004010X098A1".
   $CMS_5010 = strpos($claim->x12gsversionstring(), '5010') !== false;
