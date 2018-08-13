@@ -547,12 +547,14 @@ if ($_POST['form_search'] || $_POST['form_print']) {
   }
   else {
     if ($form_name) {
+
+      $esc_name = str_replace("'","''",$form_name);
       if ($where) $where .= " AND ";
         // Allow the last name to be followed by a comma and some part of a first name.
-      if (preg_match('/^(.*\S)\s*,\s*(.*)/', $form_name, $matches)) {
+      if (preg_match('/^(.*\S)\s*,\s*(.*)/', $esc_name, $matches)) {
         $where .= "p.lname LIKE '" . $matches[1] . "%' AND p.fname LIKE '" . $matches[2] . "%'";
         // Allow a filter like "A-C" on the first character of the last name.
-      } else if (preg_match('/^(\S)\s*-\s*(\S)$/', $form_name, $matches)) {
+      } else if (preg_match('/^(\S)\s*-\s*(\S)$/', $esc_name, $matches)) {
         $tmp = '1 = 2';
         while (ord($matches[1]) <= ord($matches[2])) {
           $tmp .= " OR p.lname LIKE '" . $matches[1] . "%'";
@@ -560,7 +562,7 @@ if ($_POST['form_search'] || $_POST['form_print']) {
         }
         $where .= "( $tmp ) ";
       } else {
-        $where .= "p.lname LIKE '%$form_name%'";
+        $where .= "p.lname LIKE '%$esc_name%'";
       }
     }
     if ($form_pid) {
