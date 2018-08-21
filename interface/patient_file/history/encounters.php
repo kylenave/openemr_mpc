@@ -431,7 +431,9 @@ $res4 = sqlStatement($query, $sqlBindArray);
 
 while ($result4 = sqlFetchArray($res4)) {
 
-        // $href = "javascript:window.toencounter(" . $result4['encounter'] . ")";
+        $encounter_id = $result4['encounter'];
+
+
         $reason_string = "";
         $auth_sensitivity = true;
 
@@ -439,6 +441,18 @@ while ($result4 = sqlFetchArray($res4)) {
 
         $raw_encounter_date = date("Y-m-d", strtotime($result4{"date"}));
         $encounter_date = date("D F jS", strtotime($result4{"date"}));
+
+
+        //Gather notes
+	$res = sqlStatement("Select date, user_id, comments, u.fname, u.lname from billing_notes " .
+		"left join users u on u.id=user_id " .
+		"where encounter = " . $encounter_id . " order by date asc");
+
+	$notes = "[CLICK TO ADD]<br>";
+	while($data = sqlFetchArray($res))
+	{
+	  $notes .= "<p><b>" . $data['date'] . ":  " . $data['fname'] . " " . $data['lname'] . "</b><br>" . $data['comments'] . "</p>";
+	}
 
         // if ($auth_notes_a || ($auth_notes && $result4['user'] == $_SESSION['authUser']))
         $reason_string .= htmlspecialchars( $result4{"reason"}, ENT_NOQUOTES) . "<br>\n";
@@ -481,13 +495,12 @@ while ($result4 = sqlFetchArray($res4)) {
         if ($billing_view) {
 
             // Show billing note that you can click on to edit.
-            $feid = $result4['id'] ? htmlspecialchars( $result4['id'], ENT_QUOTES) : 0; // form_encounter id
+            $feid = $result4['encounter'] ? htmlspecialchars( $result4['encounter'], ENT_QUOTES) : 0; // form_encounter id
             echo "<td valign='top'>";
             echo "<div>". $result4{"lname"} ." / " . $result4{"name"} . "</div>";
             echo "<div id='note_$feid'>";
-            //echo "<div onclick='editNote($feid)' title='Click to edit' class='text billing_note_text'>";
             echo "<div id='$feid' title='". htmlspecialchars( xl('Click to edit'), ENT_QUOTES) . "' class='text billing_note_text'>";
-            echo $result4['billing_note'] ? nl2br(htmlspecialchars( $result4['billing_note'], ENT_NOQUOTES)) : htmlspecialchars( xl('Add','','[',']'), ENT_NOQUOTES);
+            echo $notes;
             echo "</div>";
             echo "</div>";
             echo "</td>\n";

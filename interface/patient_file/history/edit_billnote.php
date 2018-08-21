@@ -55,34 +55,54 @@ if ($_POST['form_submit'] || $_POST['form_cancel']) {
   $fenote = trim($_POST['form_note']);
   if ($_POST['form_submit']) {
     sqlStatement("UPDATE form_encounter " .
-      "SET billing_note = ? WHERE id = ?", array($fenote,$feid) );
+      "SET billing_note = ? WHERE encounter = ?", array($fenote,$feid) );
+
+	$user_id=$_SESSION['authUserID'];
+	$datestamp = date("Y-m-d H:i:s");
+
+	$insertSql = "INSERT INTO billing_notes
+		(encounter, date, user_id, comments) VALUES
+		('" . $feid . "','" . $datestamp . "','" . $user_id . "','" . htmlspecialchars($fenote,ENT_QUOTES) ."')";
+
+	sqlStatement($insertSql);
+
   }
   else {
     $tmp = sqlQuery("SELECT billing_note FROM form_encounter " .
-      " WHERE id = ?", array($feid) );
+      " WHERE encounter = ?", array($feid) );
     $fenote = $tmp['billing_note'];
   }
   // escape and format note for viewing
   $fenote = htmlspecialchars($fenote,ENT_QUOTES);
   $fenote = str_replace("\r\n", "<br />", $fenote);
   $fenote = str_replace("\n"  , "<br />", $fenote);
+
+        $res = sqlStatement("Select date, user_id, comments, u.fname, u.lname from billing_notes " .
+                "left join users u on u.id=user_id " .
+                "where encounter = " . $feid . " order by date asc");
+
+        $notes = "[CLICK TO ADD]<br>";
+        while($data = sqlFetchArray($res))
+        {
+          $notes .= "<p><b>" . $data['date'] . ":  " . $data['fname'] . " " . $data['lname'] . "</b><br>" . $data['comments'] . "</p>";
+        }
+
   if (! $fenote) $fenote = '['. xl('Add') . ']';
   echo "<script language='JavaScript'>\n";
-  echo " parent.closeNote($feid, '$fenote')\n";
+  echo " parent.closeNote($feid, '$notes')\n";
   echo "</script></body></html>\n";
   exit();
 }
 
 $tmp = sqlQuery("SELECT billing_note FROM form_encounter " .
-  " WHERE id = ?", array($feid) );
+  " WHERE encounter = ?", array($feid) );
 $fenote = $tmp['billing_note'];
 ?>
 
 <form method='post' action='edit_billnote.php?feid=<?php echo htmlspecialchars($feid,ENT_QUOTES); ?>' onsubmit='return top.restoreSession()'>
 
 <center>
-<textarea name='form_note' rows='8' style='width:100%'><?php echo htmlspecialchars($fenote,ENT_NOQUOTES); ?></textarea>
-<p>
+<textarea name='form_note' rows='8' style='width:100%'></textarea>
 <input type='submit' name='form_submit' value='<?php echo htmlspecialchars( xl('Save'), ENT_QUOTES); ?>' />
 &nbsp;&nbsp;
 <input type='submit' name='form_cancel' value='<?php echo htmlspecialchars( xl('Cancel'), ENT_QUOTES); ?>' />

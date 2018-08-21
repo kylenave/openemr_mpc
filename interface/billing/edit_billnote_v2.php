@@ -124,7 +124,6 @@ while($data = sqlFetchArray($res))
 <form method='post' action='edit_billnote_v2.php?feid=<?php echo htmlspecialchars($feid,ENT_QUOTES); ?>' onsubmit='return restoreSession()'>
 <center>
 <textarea name='form_note' rows='8' style='width:100%'></textarea>
-<p>
 <input type='submit' name='form_submit' value='<?php echo htmlspecialchars( xl('Save'), ENT_QUOTES); ?>' />
 &nbsp;&nbsp;
 <input type='submit' name='form_cancel' value='<?php echo htmlspecialchars( xl('Cancel'), ENT_QUOTES); ?>' />
