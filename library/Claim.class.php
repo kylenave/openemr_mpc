@@ -195,6 +195,8 @@ class Claim {
         $this->diags[$row['code']] = $row['code'];
         continue;
       }
+
+
       if (!$row['units']) $row['units'] = 1;
       // Load prior payer data at the first opportunity in order to get
       // the using_modifiers flag that is referenced below.
@@ -218,7 +220,10 @@ class Claim {
         $row['insurance_numbers'] = sqlQuery($sql);
       }
 
+    if (!(strpos($row['notecodes'], '@@') !== false)) 
+    {
       $this->procs[] = $row;
+    }
 
       if($row['code']=='80307' || ($row['code'][0]=='L' && $row['code_type']=='CPT4')){
           $hasUdsCode=true;

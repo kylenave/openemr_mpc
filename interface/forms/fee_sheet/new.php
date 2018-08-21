@@ -543,6 +543,9 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
 	{
 		var f = document.forms[0];
 
+            var twoCount = false;
+            var fiveNine = false;
+
 	   for (var lino = 0; f['bill['+lino+'][code_type]'] ; ++lino) {
             var pfx = 'bill[' + lino + ']';
             if (f[pfx + '[del]'] && f[pfx + '[del]'].checked) continue;
@@ -557,7 +560,7 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
             var price  = f[pfx+'[price]'].value;
             
             //valText=codeVal + ":" + modifiers + ":" + units + ":" + justify;
-            
+
             if(codeVal==='80307')
             {
                 valColor = 'orange';
@@ -570,12 +573,6 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
                valColor = 'orange';
             }
             
-            if(justify.length < 1)
-            {
-               valText += 'Error: This item needs a justification. ';
-               valColor = 'red';
-            }
-
 	    if(units > 9)
 	    {
 		valColor = 'orange';
@@ -588,11 +585,36 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
 		valText += 'Warning: This item value is $' + (units*price) + ' ... please confirm this is correct.  ';
 	    }
 
+            if(justify.length < 1)
+            {
+               valText = 'Error: This item needs a justification. ';
+               valColor = 'red';
+            }
+
+            if(codeVal.substring(0,1)=='2')
+            {
+               if(modifiers.search("59")!= -1)
+               {
+                  fiveNine=true;
+               }
+               if(twoCount)
+               {
+                  if(!fiveNine)
+                  {
+                     valText = 'Error: One of the 2XXXX codes needs a 59 modifier. ';
+                     valColor = 'red';
+                  }
+               }
+               twoCount=true;
+            }
+
+
 	    if( valText=='')
 	    {
 		valText = 'Looks good!';
 	    }
             lineItemValidation(lino, valText, valColor);
+
         }
         
     }
@@ -1633,6 +1655,9 @@ value='<?php echo xla('Refresh');?>'>
  onclick="top.restoreSession();location='<?php echo $GLOBALS['form_exit_url']; ?>'" />
 
 <input type='button' value='Validate' onclick='validateAllRows();'/>
+<p><hr width='80%'>
+Note: To exclude a code from an insurance claim (for example a paid line item) add '@@' to the "Note Codes" field.
+</p>
 
 </center>
 

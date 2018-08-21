@@ -33,7 +33,7 @@
   require_once("../../custom/code_types.inc.php");
   require_once("$srcdir/formdata.inc.php");
 
-  $debug = 0; // set to 1 for debugging mode
+$debug = 0; // set to 1 for debugging mode
 
  
   // If we permit deletion of transactions.  Might change this later.
@@ -97,7 +97,31 @@ error_log($totalCommand);
 <?php html_header_show(); ?>
 <link rel=stylesheet href="<?php echo $css_header;?>" type="text/css">
 <title><?php xl('EOB Posting - Invoice','e')?></title>
+
+<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-1-2-1/index.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['webroot'] ?>/library/js/ajtooltip.js"></script>
+
 <script language="JavaScript">
+
+var oemr_session_name = '<?php echo session_name(); ?>';
+var oemr_session_id   = '<?php echo session_id(); ?>';
+var oemr_dialog_close_msg = '<?php echo (function_exists('xla')) ? xla("OK to close this other popup window?") : "OK to close this other popup window?"; ?>';
+//
+function restoreSession() {
+<?php if (!empty($GLOBALS['restore_sessions'])) { ?>
+ var ca = document.cookie.split('; ');
+ for (var i = 0; i < ca.length; ++i) {
+  var c = ca[i].split('=');
+  if (c[0] == oemr_session_name && c[1] != oemr_session_id) {
+<?php if ($GLOBALS['restore_sessions'] == 2) { ?>
+   alert('Changing session ID from\n"' + c[1] + '" to\n"' + oemr_session_id + '"');
+<?php } ?>
+   document.cookie = oemr_session_name + '=' + oemr_session_id + '; path=/';
+  }
+ }
+<?php } ?>
+ return true;
+}
 
 // An insurance radio button is selected.
 function setins(istr) {
@@ -119,7 +143,7 @@ function writeoff(code) {
 
 // Onsubmit handler.  A good excuse to write some JavaScript.
 function validate(f) {
-top.restoreSession();
+restoreSession();
  var delcount = 0;
  for (var i = 0; i < f.elements.length; ++i) {
   var ename = f.elements[i].name;
@@ -206,6 +230,27 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
    // Assign rounded adjustment value back to TextField
    adjField.value = adjAmount = Math.round(adjAmount*100)/100;
 }
+
+ // Helper function to set the contents of a div.
+function setDivContent(id, content) {
+    $("#"+id).html(content);
+}
+
+ // Called when clicking on a billing note.
+function editNote(feid) {
+  restoreSession();
+  var c = "<iframe src='edit_billnote_v2.php?feid=" + feid +
+    "' style='width:100%;height:140pt;'></iframe>";
+  setDivContent('notes', c);
+}
+
+ // Called when the billing note editor closes.
+ function closeNote(feid, fenote) {
+    var c = "<div id='" + feid + "' title='<?php echo htmlspecialchars( xl('Click to edit'), ENT_QUOTES); ?>' class='text billing_note_text'>" +
+            fenote + "</div>";
+    setDivContent('notes', c);
+    $(".billing_note_text").click(function(evt) { evt.stopPropagation(); editNote(feid); });
+ }
 
 </script>
 </head>
@@ -401,13 +446,23 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
   //  "from patient_data where pid = '$patient_id' limit 1");
   $pdrow = sqlQuery("select billing_note " .
     "from form_encounter where encounter = '$encounter_id' limit 1");
+
+$res = sqlStatement("Select date, user_id, comments, u.fname, u.lname from billing_notes " .
+"left join users u on u.id=user_id " .
+"where encounter = " . $encounter_id . " order by date asc");
+
+$notes = "";
+while($data = sqlFetchArray($res))
+{
+  $notes .= "<p><b>" . $data['date'] . ":  " . $data['fname'] . " " . $data['lname'] . "</b><br>" . $data['comments'] . "</p>";
+}
+
 ?>
 <center>
 
 <form method='post' action='sl_eob_invoice.php?id=<?php echo $trans_id ?>'
  onsubmit='return validate(this)'>
 
-<center><h3>Note: This form doesn't automatically refresh when saved. You can hit F5 to refresh the data.</h3></center>
 <table border='1' cellpadding='3' width='80%'>
  <tr>
   <td>
@@ -563,16 +618,20 @@ function updateFields(payField, adjField, balField, coPayField, isFirstProcCode)
     echo "</td>\n";
 ?>
  </tr>
-<?php if (!empty($pdrow['billing_note'])) { ?>
  <tr>
   <td>
    <?php xl('Billing Note:','e')?>
   </td>
-  <td colspan='5' style='color:red'>
-   <?php echo $pdrow['billing_note'] ?>
+  <td colspan='5' >
+            <div id='notes'>
+            <?php echo "<div id='" . $encounter_id . "' title='". htmlspecialchars( xl('Click to edit'), ENT_QUOTES) . "' class='text billing_note_text'>";
+            //echo $pdrow['billing_note'] ? nl2br(htmlspecialchars( "[CLICK TO EDIT]   " . $pdrow['billing_note'], ENT_NOQUOTES)) : htmlspecialchars( xl('Click to add notes...'), ENT_NOQUOTES); 
+            echo $notes ? "[CLICK TO ADD NEW NOTE]   " . $notes : htmlspecialchars( xl('Click to add notes...'), ENT_NOQUOTES); ?>
+            </div>
+            </div>
+   <?php //echo $pdrow['billing_note'] ?>
   </td>
  </tr>
-<?php } ?>
  <tr>
    <td colspan='3'>
      <?php xl('Attach payment file:','e'); ?>
@@ -815,4 +874,15 @@ echo $eobText;
  setins("Ins1");
 </script>
 </body>
+
+<script language="javascript">
+// jQuery stuff to make the page a little easier to use
+
+$(document).ready(function(){
+    $(".billing_note_text").mouseover(function() { $(this).toggleClass("billing_note_text_highlight"); });
+    $(".billing_note_text").mouseout(function() { $(this).toggleClass("billing_note_text_highlight"); });
+    $(".billing_note_text").click(function(evt) { evt.stopPropagation(); editNote(this.id); });
+});
+
+</script>
 </html>

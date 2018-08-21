@@ -206,7 +206,7 @@ function setDivContent(id, content) {
 function editNote(feid) {
   top.restoreSession();
   var c = "<iframe src='edit_billnote.php?feid=" + feid +
-    "' style='width:100%;height:88pt;'></iframe>";
+    "' style='width:100%;height:140pt;'></iframe>";
   setDivContent('note_' + feid, c);
 }
 
