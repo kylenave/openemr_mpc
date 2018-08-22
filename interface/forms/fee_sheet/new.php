@@ -541,7 +541,11 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
 
 	function validateAllRows()
 	{
-		var f = document.forms[0];
+           $("#bn_save").removeAttr('disabled'); 
+       	   $("#bn_save").css( { 'background-color': '#00cc00' });
+
+            var result = true;
+   	    var f = document.forms[0];
 
             var twoCount = false;
             var fiveNine = false;
@@ -561,11 +565,11 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
             
             //valText=codeVal + ":" + modifiers + ":" + units + ":" + justify;
 
-            if(codeVal==='80307')
-            {
-                valColor = 'orange';
-                valText += 'This is a UDS. Be sure to bill out of Bloomington';
-            }
+            //if(codeVal==='80307')
+            //{
+            //    valColor = 'orange';
+            //    valText += 'This is a UDS. Be sure to bill out of Bloomington.\n';
+            //}
             
             if(modifiers.includes('50') && units>1 )
             {
@@ -589,6 +593,7 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
             {
                valText = 'Error: This item needs a justification. ';
                valColor = 'red';
+               result=false;
             }
 
             if(codeVal.substring(0,1)=='2')
@@ -603,11 +608,20 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
                   {
                      valText = 'Error: One of the 2XXXX codes needs a 59 modifier. ';
                      valColor = 'red';
+                     result=false;
                   }
                }
                twoCount=true;
             }
 
+            if(modifiers.includes('25') )
+            {
+               if(codeVal.substring(0,3)!=='992')
+               {
+                  valText += 'ERROR: Only office visits should have a 25 modifier.\n';
+                  valColor = 'red';
+               }
+            }
 
 	    if( valText=='')
 	    {
@@ -616,6 +630,9 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
             lineItemValidation(lino, valText, valColor);
 
         }
+
+
+        return result;
         
     }
 
@@ -1615,7 +1632,7 @@ if (true) {
 &nbsp; &nbsp; &nbsp;
 
 <?php if (!$isBilled) { // visit is not yet billed ?>
-<input type='submit' name='bn_save' value='<?php echo xla('Save');?>'
+<input type='submit' disabled id='bn_save' name='bn_save' style='background-color:#cc0000' value='<?php echo xla('Save');?>' 
 <?php if ($rapid_data_entry) echo " style='background-color:#cc0000';color:#ffffff'"; ?>
 />
 <?php if ($GLOBALS['ippf_specific']) { // start ippf-only stuff ?>
