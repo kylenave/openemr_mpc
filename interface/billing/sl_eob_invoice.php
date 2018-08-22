@@ -60,7 +60,7 @@ $debug = 0; // set to 1 for debugging mode
   function getEobText($pid, $encounter)
   {
      $commandToFindFiles = "find " .  $GLOBALS['OE_SITE_DIR'] . "/era -name '*.eob' -exec ";
-     $commandToFilterFiles = "sed -n -e '/".$pid."-".$encounter."/,/---------/ p'";
+     $commandToFilterFiles = "sed -n -e '/ ".$pid."-".$encounter." /,/---------/ p'";
      $commandSuffix = " {} +";
 
      $totalCommand = $commandToFindFiles . $commandToFilterFiles . $commandSuffix;
