@@ -409,7 +409,7 @@ if (isset($_POST['form_checksum'])) {
   if ($_POST['form_checksum'] != $current_checksum) {
     $alertmsg = xl('Someone else has just changed this visit. Please cancel this page and try again.');
     $comment = "CHECKSUM ERROR, expecting '{$_POST['form_checksum']}'";
-    newEvent("checksum", $_SESSION['authUser'], $_SESSION['authProvider'], 1, $comment, $pid);
+    //newEvent("checksum", $_SESSION['authUser'], $_SESSION['authProvider'], 1, $comment, $pid);
   }
 }
 
@@ -425,6 +425,7 @@ if (!$alertmsg && ($_POST['bn_save'] || $_POST['bn_save_close'])) {
 if (!$alertmsg && ($_POST['bn_save'] || $_POST['bn_save_close'])) {
   $main_provid = 0 + $_POST['ProviderID'];
   $main_supid  = 0 + $_POST['SupervisorID'];
+  newEvent("Fee Sheet Saved", $_SESSION['authUser'], $_SESSION['authProvider'], 1, "Fee sheet saved", $pid);
 
   $fs->save($_POST['bill'], $_POST['prod'], $main_provid, $main_supid,
     $_POST['default_warehouse'], $_POST['bn_save_close']);
@@ -504,6 +505,7 @@ if (!$alertmsg && $_POST['bn_reopen']) {
   // Remove the line items so they are refreshed from the database on redisplay.
   unset($_POST['bill']);
   unset($_POST['prod']);
+  newEvent("Fee Sheet Reopened", $_SESSION['authUser'], $_SESSION['authProvider'], 1, "Fee sheet reopened", $pid);
 }
 
 $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
@@ -550,9 +552,10 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
             var twoCount = false;
             var fiveNine = false;
 
-	   for (var lino = 0; f['bill['+lino+'][code_type]'] ; ++lino) {
-            var pfx = 'bill[' + lino + ']';
-            if (f[pfx + '[del]'] && f[pfx + '[del]'].checked) continue;
+	   for (var lino = 0; f['bill['+lino+'][code_type]'] ; ++lino) 
+           {
+               var pfx = 'bill[' + lino + ']';
+               if (f[pfx + '[del]'] && f[pfx + '[del]'].checked) continue;
             
             var valColor = 'green';
             var valText = '';
@@ -629,12 +632,12 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
 	    }
             lineItemValidation(lino, valText, valColor);
 
-        }
+            }
 
 
-        return result;
+            return result;
         
-    }
+       }
 
 </script>
 	

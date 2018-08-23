@@ -23,6 +23,8 @@ foreach ($_POST as $key => $val) {
   }
 }
 
+  newEvent("Demographics Updated", $_SESSION['authUser'], $_SESSION['authProvider'], 1, "", $pid);
+
 // Update patient_data and employer_data:
 //
 $newdata = array();
