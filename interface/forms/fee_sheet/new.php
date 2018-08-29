@@ -626,6 +626,12 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
                }
             }
 
+            if(codeVal=='27096' && modifiers.length < 1)
+            {
+                  valText += 'ERROR: This code always needs a modifier.\n';
+                  valColor = 'red';
+            }
+
 	    if( valText=='')
 	    {
 		valText = 'Looks good!';
