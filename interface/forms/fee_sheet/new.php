@@ -601,7 +601,7 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
 
             if(codeVal.substring(0,1)=='2')
             {
-               if(modifiers.search("59")!= -1)
+               if(modifiers.search("59")!= -1 && modifiers.search("XU") && modifiers.search("XS"))
                {
                   fiveNine=true;
                }
@@ -609,7 +609,7 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
                {
                   if(!fiveNine)
                   {
-                     valText = 'Error: One of the 2XXXX codes needs a 59 modifier. ';
+                     valText = 'Error: One of the 2XXXX codes needs a 59 (commercial) or XS or XU (Medicare) modifier. ';
                      valColor = 'red';
                      result=false;
                   }
