@@ -364,6 +364,13 @@ function addPnote($pid, $newtext, $authorized = '0', $activity = '1',
   if ($assigned_to) $body .= " to $assigned_to";
   $body = $body . ') ' . $newtext;
 
+  //add to billing_notes also
+  if($assigned_to != '')
+{
+  $user_id = sqlQuery("SELECT id from users where username='$assigned_to'");
+  sqlInsert('INSERT INTO billing_notes (date, encounter, user_id, comments) VALUES (?,?,?,?)', array($datetime, -($pid), $user_id['id'], $newtext));
+
+}
   return sqlInsert('INSERT INTO pnotes (date, body, pid, user, groupname, ' .
     'authorized, activity, title, assigned_to, message_status) VALUES ' .
     '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
