@@ -601,7 +601,7 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
 
             if(codeVal.substring(0,1)=='2')
             {
-               if(modifiers.search("59")!= -1 && modifiers.search("XU") && modifiers.search("XS"))
+               if(modifiers.search("59")!= -1 || modifiers.search("XU")!= -1 || modifiers.search("XS")!= -1)
                {
                   fiveNine=true;
                }
