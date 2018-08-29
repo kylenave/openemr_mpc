@@ -1424,6 +1424,8 @@ if (!empty($reg)) {
   <li><a class="collapsed" id="misimg" ><span><?php xl('Miscellaneous','e') ?></span></a>
     <ul>
       <?php genMiscLink('RTop','rep','0',xl('Todays Charges'),'reports/todays_charge_entry.php'); ?>
+      <?php genMiscLink('RTop','rep','0',xl('All Notes'),'reports/all_notes.php'); ?>
+      <?php genMiscLink('RTop','rep','0',xl('Note Summary'),'reports/note_summary.php'); ?>
       <?php genTreeLink('RTop','ped',xl('Patient Education')); ?> 
       <?php genTreeLink('RBot','aun',xl('Authorizations')); ?>
       <?php genTreeLink('RTop','fax',xl('Fax/Scan')); ?>
