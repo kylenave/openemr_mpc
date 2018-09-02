@@ -545,7 +545,6 @@ foreach ($out['svc'] as $svc)
 
             // Post and report adjustments from this ERA.  Posted adjustment reasons
             // must be 25 characters or less in order to fit on patient statements.
-            if(!$ignoreSvcLine) {
 
             $adjAmounts = array();
 
@@ -587,7 +586,7 @@ foreach ($out['svc'] as $svc)
                     $adj['amount']= 0.0;
                 }
 
-		if($adj['amount'] < 0)
+		if($adj['amount'] < 0 && (!$ignoreSvcLine))
 		{
 		    arSetDeniedFlag($pid,$encounter);
 		    $Denied=true;
@@ -600,7 +599,7 @@ foreach ($out['svc'] as $svc)
                 $adjustmentFlag='';
 
 
-                if($svc['chg'] <= $adj['amount'] && !in_array($svc['code'], $acceptableAdjustCodes) and $adj['group_code']!= 'PR')
+                if((!$ignoreSvcLine) && $svc['chg'] <= $adj['amount'] && !in_array($svc['code'], $acceptableAdjustCodes) and $adj['group_code']!= 'PR')
                 {
                     $description_prefix = 'Zeroed orig adj of $' . $adj['amount'] . "|";
                     $adj['amount']= 0.0;
@@ -652,19 +651,29 @@ foreach ($out['svc'] as $svc)
 				$postAdjAmount=0;
 			}
 
-                       arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], 
+                        $comment = "Adjust code " . $adj['reason_code'] . $adjustmentFlag; 
+
+			if($ignoreSvcLine)
+			{
+                           $comment .= "(" . $postAdjAmount . ")";
+			   $postAdjAmount = 0;
+			}
+                           arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], 
 				$postAdjAmount,//$InsertionId[$out['check_number']] gives the session id
                                 $svc['code'], $svc['mod'], substr($inslabel,3), 
-				"Adjust code " . $adj['reason_code'] . $adjustmentFlag, $debug, '', $codetype, $group, $billing_id);
+				$comment, $debug, '', $codetype, $group, $billing_id);
                     }
 	
+		   if(!$ignoreSvcLine)
+		   {
                     $invoice_total -= $adj['amount'];
                     writeDetailLine($bgcolor, $class, $patient_name, $invnumber,
                         $svc['code'], $production_date, $description,
                         0 - $adj['amount'], ($error ? '' : $invoice_total));
+                    }
                 }
             }
-            }
+            
 
         } // End of service item
 

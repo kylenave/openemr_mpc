@@ -33,7 +33,6 @@ require_once("code_check.php");
     var diag_code_types=<?php echo diag_code_types('json');?>;  // This is a list of diagnosis code types to present for as options in the justify dialog, for now, only "internal codes" included.
     var ippf_specific = <?php echo $GLOBALS['ippf_specific'] ? 'true' : 'false'; ?>;
 </script>
-<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-2-2-0/index.js"></script>
 <script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/knockout-3-4-0/dist/knockout.js"></script>
 <script>
     function fee_sheet_option(code,code_type,description,fee)

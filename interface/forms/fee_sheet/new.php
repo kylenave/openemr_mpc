@@ -413,7 +413,7 @@ if (isset($_POST['form_checksum'])) {
   }
 }
 
-if (!$alertmsg && ($_POST['bn_save'] || $_POST['bn_save_close'])) {
+if (!$alertmsg && (isset($_POST['bn_save']) || isset($_POST['bn_save_close']))) {
   $alertmsg = $fs->checkInventory($_POST['prod']);
 }
 
@@ -422,7 +422,7 @@ if (!$alertmsg && ($_POST['bn_save'] || $_POST['bn_save_close'])) {
 // If Save or Save-and-Close was clicked, save the new and modified billing
 // lines; then if no error, redirect to $GLOBALS['form_exit_url'].
 //
-if (!$alertmsg && ($_POST['bn_save'] || $_POST['bn_save_close'])) {
+if (!$alertmsg && (isset($_POST['bn_save']) || isset($_POST['bn_save_close']))) {
   $main_provid = 0 + $_POST['ProviderID'];
   $main_supid  = 0 + $_POST['SupervisorID'];
   newEvent("Fee Sheet Saved", $_SESSION['authUser'], $_SESSION['authProvider'], 1, "Fee sheet saved", $pid);
@@ -499,7 +499,7 @@ if ($billresult) {
 
 // Handle reopen request.  In that case no other changes will be saved.
 // If there was a checkout this will undo it.
-if (!$alertmsg && $_POST['bn_reopen']) {
+if (!$alertmsg && isset($_POST['bn_reopen'])) {
   doVoid($fs->pid, $fs->encounter, true);
   $current_checksum = $fs->visitChecksum();
   // Remove the line items so they are refreshed from the database on redisplay.
@@ -515,7 +515,7 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
 
 
 <?php html_header_show(); ?>
-<link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
+<link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css" > 
 <style>
 .billcell { font-family: sans-serif; font-size: 10pt }
 </style>
@@ -526,8 +526,6 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
 <script type="text/javascript" src="../../../library/dynarch_calendar.js"></script>
 <script type="text/javascript" src="../../../library/dynarch_calendar_en.js"></script>
 <script type="text/javascript" src="../../../library/dynarch_calendar_setup.js"></script>
-<script src='../../../public/assets/jquery-min-2-2-0/index.js'></script>
-
 <script>
 
 	function jsLineItemValidation()
@@ -660,14 +658,14 @@ if ($billresult) {
     genDiagJS($iter["code_type"], trim($iter["code"]));
   }
 }
-if ($_POST['bill']) {
+if (isset($_POST['bill'])) {
   foreach ($_POST['bill'] as $iter) {
     if ($iter["del"]) continue; // skip if Delete was checked
     if ($iter["id"])  continue; // skip if it came from the database
     genDiagJS($iter["code_type"], $iter["code"]);
   }
 }
-if ($_POST['newcodes']) {
+if (isset($_POST['newcodes'])) {
   $arrcodes = explode('~', $_POST['newcodes']);
   foreach ($arrcodes as $codestring) {
     if ($codestring === '') continue;
@@ -833,9 +831,20 @@ function pricelevel_changed(sel) {
 
 </script>
 
+<script src='../../../public/assets/jquery-min-2-2-0/index.js'></script>
+<script src='../../../public/assets/jquery-ui-1-11-4/jquery-ui.min.js'></script>
 </head>
 
 <body class="body_top">
+
+<style>
+.ui-autocomplete {
+    background: #87ceeb;
+    z-index: 2;
+}
+</style>
+
+
 <form method="post" action="<?php echo $rootdir; ?>/forms/fee_sheet/new.php?<?php
  echo "rde=" . urlencode($rapid_data_entry) . "&addmore=" . urlencode($add_more_items); ?>"
  onsubmit="return validate(this)">
@@ -1201,7 +1210,7 @@ if ($GLOBALS['sell_non_drug_products']) {
 }
 
 $search_type = $default_search_type;
-if ($_POST['search_type']) $search_type = $_POST['search_type'];
+if ( isset($_POST['search_type'])) $search_type = $_POST['search_type'];
 
 $ndc_applies = true; // Assume all payers require NDC info.
 
@@ -1213,7 +1222,7 @@ echo "  <td colspan='" . attr($FEE_SHEET_COLUMNS) . "' align='center' nowrap>\n"
 // There's no limit on the number of results!
 //
 $numrows = 0;
-if ($_POST['bn_search'] && $_POST['search_term']) {
+if (isset($_POST['bn_search']) && isset($_POST['search_term'])) {
   $res = main_code_set_search($search_type,$_POST['search_term']);
   if (!empty($res)) {
     $numrows = sqlNumRows($res);
@@ -1284,6 +1293,13 @@ echo " </tr>\n";
  </tr>
 </table>
 </p>
+<center>
+<hr width='80%'>
+<div>
+<label>Diagnostic/Service Code Search:</label> <input type='text' name='dxsearch' value='' class='auto' size='50'/>
+</div>
+<hr width='80%'>
+</center>
 <p style='margin-top:16px;margin-bottom:8px'>
 
 <?php } // end encounter not billed ?>
@@ -1309,7 +1325,7 @@ echo " </tr>\n";
   <td class='billcell' align='center' <?php echo $liprovstyle; ?>><b><?php echo xlt('Provider/Warehouse');?></b></td>
   <td class='billcell' align='center'<?php echo $usbillstyle; ?>><b><?php echo xlt('Note Codes');?></b></td>
   <td class='billcell' align='center'<?php echo $usbillstyle; ?>><b><?php echo xlt('Auth');?></b></td>
-<?php if ($GLOBALS['gbl_auto_create_rx']) { ?>
+<?php if (isset($GLOBALS['gbl_auto_create_rx'])) { ?>
   <td class='billcell' align='center'><b><?php echo xlt('Rx'); ?></b></td>
 <?php } ?>  
   <td class='billcell' align='center'><b><?php echo xlt('Delete');?></b></td>
@@ -1403,7 +1419,7 @@ while($rowMoneyGot = sqlFetchArray($resMoneyGot)){
 // Echo new billing items from this form here, but omit any line
 // whose Delete checkbox is checked.
 //
-if ($_POST['bill']) {
+if (isset($_POST['bill'])) {
   foreach ($_POST['bill'] as $key => $iter) {
     if ($iter["id"])  continue; // skip if it came from the database
     if ($iter["del"]) continue; // skip if Delete was checked
@@ -1482,7 +1498,7 @@ while ($srow = sqlFetchArray($sres)) {
 // Echo new product items from this form here, but omit any line
 // whose Delete checkbox is checked.
 //
-if ($_POST['prod']) {
+if (isset($_POST['prod'])) {
   foreach ($_POST['prod'] as $key => $iter) {
     if ($iter["sale_id"])  continue; // skip if it came from the database
     if ($iter["del"]) continue; // skip if Delete was checked
@@ -1504,7 +1520,7 @@ if ($_POST['prod']) {
 
 // If new billing code(s) were <select>ed, add their line(s) here.
 //
-if ($_POST['newcodes'] && !$alertmsg) {
+if (isset($_POST['newcodes']) && !$alertmsg) {
   $arrcodes = explode('~', $_POST['newcodes']);
 
   // A first pass here checks for any sex restriction errors.
@@ -1700,13 +1716,42 @@ if ($alertmsg) {
 ?>
 </script>
 
+<script type="text/javascript">
+$(function() {
+    
+    //autocomplete
+    $(".auto").autocomplete({
+	select: function (a,b) {
+  top.restoreSession();
+  var f = document.forms[0];
+  f.newcodes.value = b.item.value; 
+  f.submit();
+        },
+        source: "search.php",
+        minLength: 3
+    });
+
+/*
+  .addAutocomplete({
+    	// add autocomplete window positioning
+        // options here (using position utility)
+		position : {
+			of : null,
+			my : 'right top',
+			at : 'left top',
+			collision: 'flip'
+		}
+	});                
+*/
+});
+</script>
+
 
 </body>
 </html>
 <?php if (!empty($_POST['running_as_ajax'])) exit; ?>
 <?php require_once("review/initialize_review.php"); ?>
 <?php require_once("code_choice/initialize_code_choice.php"); ?>
-<?php if ($GLOBALS['ippf_specific']) require_once("contraception_products/initialize_contraception_products.php"); ?>
 <script>
 var translated_price_header="<?php echo xlt("Price");?>";
 </script>
