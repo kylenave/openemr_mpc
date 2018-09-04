@@ -133,7 +133,7 @@ $relevance = "0";
 //      (this only holds $where and not $relevance binded values)
 $sqlBindArray = array();
 $sqlBindArraySpecial = array();
-$where = "1 = 0";
+$where = "(1 = 0";
 
 foreach ($_REQUEST as $key => $value) {
   if (substr($key, 0, 3) != 'mf_') continue; // "match field"
@@ -147,10 +147,22 @@ foreach ($_REQUEST as $key => $value) {
     $relevance .= " + ( ".add_escape_custom($fldname)." LIKE ? )";
     array_push($sqlBindArray, $value);
   }
+  
+  if($fldname=='DOB')
+  {
+     $dobValue = $value;    
+  }
+
   $where .= " OR ".add_escape_custom($fldname)." LIKE ?";
   array_push($sqlBindArraySpecial, $value);
   echo "<input type='hidden' name='".htmlspecialchars( $key, ENT_QUOTES)."' value='".htmlspecialchars( $value, ENT_QUOTES)."' />\n";
   ++$numfields;
+}
+
+$where .= ")";
+if(isset($dobValue))
+{
+   $where .= " AND abs(datediff(DOB,'$dobValue')) < 367 ";
 }
 
 $sql = "SELECT *, ( $relevance ) AS relevance, " .
@@ -161,6 +173,8 @@ $sql = "SELECT *, ( $relevance ) AS relevance, " .
 
 $sqlBindArray = array_merge($sqlBindArray, $sqlBindArraySpecial);
 $rez = sqlStatement($sql, $sqlBindArray);
+error_log($sql);
+
 $result = array();
 while ($row = sqlFetchArray($rez)) $result[] = $row;
 _set_patient_inc_count($MAXSHOW, count($result), $where, $sqlBindArraySpecial);
