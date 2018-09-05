@@ -266,7 +266,7 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
     $ins_id = 0 + $arow['payer_id'];
     $codes[$code]['bal'] -= $arow['pay_amount'];
     $codes[$code]['bal'] -= $arow['adj_amount'];
-    $codes[$code]['chg'] -= $row['adj_amount'];
+    $codes[$code]['chg'] -= $arow['adj_amount'];
     $codes[$code]['adj'] += $arow['adj_amount'];
 
     if ($ins_id) $codes[$code]['ins'] = $ins_id;
@@ -276,18 +276,17 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
     {
       if (! $codes[$code]['dtl']) $codes[$code]['dtl'] = array();
       $tmp = array();
-      $paydate = empty($row['deposit_date']) ? substr($row['post_time'], 0, 10) : $row['deposit_date'];
+      $paydate = empty($arow['deposit_date']) ? substr($arow['post_time'], 0, 10) : $arow['deposit_date'];
 
-      if ($row['pay_amount'] != 0) $tmp['pmt'] = $row['pay_amount'];
+      if ($arow['pay_amount'] != 0) $tmp['pmt'] = $arow['pay_amount'];
 
-      if ( isset($row['reason_code'] ) ) {
-      	$tmp['msp'] = $row['reason_code'];
+      if ( isset($arow['reason_code'] ) ) {
+      	$tmp['msp'] = $arow['reason_code'];
       }
 
-      if ($row['adj_amount'] != 0 || $row['pay_amount'] == 0) {
-        $tmp['chg'] = 0 - $row['adj_amount'];
+      if ($arow['adj_amount'] != 0 || $arow['pay_amount'] == 0) {
+        $tmp['chg'] = 0 - $arow['adj_amount'];
         // $tmp['rsn'] = (empty($row['memo']) || empty($row['session_id'])) ? 'Unknown adjustment' : $row['memo'];
-        error_log("evaluating adj...memo: " . $arow['memo'] . " is empty? " . empty($arow['memo']));
         $tmp['rsn'] = (empty($arow['memo']) ? 'Unknown adjustment' : $arow['memo']);
         $tmpkey = $paydate . $keysuff1++;
       }
@@ -295,18 +294,18 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
         $tmpkey = $paydate . $keysuff2++;
       }
 
-      if ($row['account_code'] == "PCP") {
+      if ($arow['account_code'] == "PCP") {
         //copay
         $tmp['src'] = 'Pt Paid';
       }
       else {
-        $tmp['src'] = empty($row['session_id']) ? $row['memo'] : $row['reference'];
+        $tmp['src'] = empty($arow['session_id']) ? $arow['memo'] : $arow['reference'];
       }
 
-      $tmp['insurance_company'] = substr($row['name'], 0, 10);
+      $tmp['insurance_company'] = substr($arow['name'], 0, 10);
       if ($ins_id) $tmp['ins'] = $ins_id;
-      $tmp['plv'] = $row['payer_type'];
-      $tmp['arseq'] = $row['sequence_no'];
+      $tmp['plv'] = $arow['payer_type'];
+      $tmp['arseq'] = $arow['sequence_no'];
       $codes[$code]['dtl'][$tmpkey] = $tmp;
     }
   }
