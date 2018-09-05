@@ -331,7 +331,7 @@ function ar_responsible_party($patient_id, $encounter_id) {
   $balance = 0;
   $codes = ar_get_invoice_summary($patient_id, $encounter_id);
   foreach ($codes as $cdata) $balance += $cdata['bal'];
-  if ($balance > 0) return 0;
+  if ($balance > 0.01) return 0;
   return -1;
 }
 ?>

@@ -14,6 +14,7 @@
 require_once("../globals.php");
 require_once("$srcdir/invoice_summary.inc.php");
 require_once("$srcdir/sl_eob.inc.php");
+require_once("$srcdir/classes/InsuranceCompany.class.php");
 require_once("$srcdir/parse_era.inc.php");
 require_once("claim_status_codes.php");
 require_once("adjustment_reason_codes.php");
@@ -253,12 +254,11 @@ if ($pid && $encounter)
 	    {
                 if($svc['paid'] !=  0) $hasPayment=true;
 
-                //if( ($svc['adj']['amount'] > 0) && ($svc['adj']['amount'] < $svc['chg'])) $hasPayment=true;
-
                 if($svc['allowed']) $hasPayment=true;
 
                 foreach ($svc['adj'] as $adj) 
-                {//Per code and modifier the reason will be showed in the billing manager.
+                {
+                        //Per code and modifier the reason will be showed in the billing manager.
 			//45 is a contractual adjustment
 		        //16 means some information is missing
                       if($adj['reason_code']=='45' || $adj['reason_code']=='16' ) $hasPayment=true;
@@ -269,8 +269,8 @@ if ($pid && $encounter)
 
 $Denied=false;
         if ($csc == '4' || ($csc=='1' && !$hasPayment)) 
-{
-     //Denial case, code is stored in the claims table for display in the billing manager screen with reason explained.
+        {
+            //Denial case, code is stored in the claims table for display in the billing manager screen with reason explained.
             
             $inverror = true;
             if (!$debug) 
@@ -321,12 +321,13 @@ $Denied=false;
                     //process_file is used as for the denial case file name will not be there, and extra field(to store reason) can be avoided.
                     if($csc=='4') {
                       updateClaim(true, $pid, $encounter, $_REQUEST['InsId'], substr($inslabel,3),7,0,$code_value, $out['payer_name'], $out['payer_claim_id']);
-error_log("Updated claim with payer claim id=" . $out['payer_claim_id']);
+		      arSetDeniedFlag($pid,$encounter,"Claim set to denied state because Claim Status on the ERA was set to '4' or 'Denied'.");
+//error_log("Updated claim with payer claim id=" . $out['payer_claim_id']);
                     }else{
                       updateClaim(true, $pid, $encounter, $_REQUEST['InsId'], substr($inslabel,3),-1,-1,$code_value, $out['payer_name'], $out['payer_claim_id']);
-error_log("Updated claim with payer claim id=" . $out['payer_claim_id']);
+		      arSetDeniedFlag($pid,$encounter,"Claim set to denied state even though Claim Status = '1' because there was no payment and no CO-45 adjustment.");
+//error_log("Updated claim with payer claim id=" . $out['payer_claim_id']);
                     }
-		    arSetDeniedFlag($pid,$encounter);
 		    $Denied=true;
                 }
             }
@@ -367,11 +368,14 @@ foreach ($out['svc'] as $svc)
 
 	$group += 1;
 
+        //Get the billing ID for this line item=====================================================================================
 	$billing_row = sqlStatement(
 				"SELECT id FROM billing WHERE pid = '$pid' " .
 				"AND encounter = '$encounter' AND code='" . $svc['code'] . "' AND modifier='" .$svc['mod'] .  "' ");
 
         $billing_id=0;
+
+        //Get all of the ID's and select the first one that has not yet been processed.
 	while($billing_data = sqlFetchArray($billing_row))
 	{
 		if(!in_array($billing_data['id'], $billing_ids_handled))
@@ -386,23 +390,24 @@ foreach ($out['svc'] as $svc)
 	   //We have already handled everything but there are more line items so reload and start again
            $billing_ids_handled = array();
 
-	$billing_row = sqlStatement(
+	   $billing_row = sqlStatement(
 				"SELECT id FROM billing WHERE pid = '$pid' " .
 				"AND encounter = '$encounter' AND code='" . $svc['code'] . "' AND modifier='" .$svc['mod'] .  "' ");
 
-        $billing_id=0;
-	while($billing_data = sqlFetchArray($billing_row))
-	{
+           $billing_id=0;
+	   while($billing_data = sqlFetchArray($billing_row))
+	   {
 		if(!in_array($billing_data['id'], $billing_ids_handled))
 		{
 			$billing_ids_handled[] = $billing_data['id'];
 			$billing_id = $billing_data['id'];
 		}
+	   }
 	}
-	}
+       //=============================Got the billing ID... this should be moved to a function
 
-      // Treat a modifier in the remit data as part of the procedure key.
-      // This key will then make its way into SQL-Ledger.
+
+      //The codekey used to be code-modifier but now it is the billing_id so that it can be unambiguous
       $codekey = $billing_id;
 
       $prev = $codes[$codekey];
@@ -419,17 +424,20 @@ foreach ($out['svc'] as $svc)
                 {
                    //This is a secondary so any adjustment codes are historical and to be ignored
 
+                   writeOldDetail($prev, $patient_name, $invnumber, $service_date, $svc['code'], $bgcolor);
+
+		    $ic = new InsuranceCompany($out['payer_id']);
+
                    if($svc['adj'])
-                   {
-                      //This is historical so we can ignore
-                      $ignoreSvcLine=true;
+		   {
+                        if($ic->get_ins_type_code() !='3') $ignoreSvcLine=true;
                    }else
                    {
                       //This should be the actual secondary payment
                       $codetype = $codes[$codekey]['code_type']; //store code type
-                      writeOldDetail($prev, $patient_name, $invnumber, $service_date, $svc['code'], $bgcolor);
+                      //writeOldDetail($prev, $patient_name, $invnumber, $service_date, $svc['code'], $bgcolor);
                       
-                      unset($codes[$codekey]);
+                      //unset($codes[$codekey]);
                    }
                 }
                 else
@@ -540,7 +548,7 @@ foreach ($out['svc'] as $svc)
                     $svc['code'], $check_date, $description,
                     0 - $svc['paid'], ($error ? '' : $invoice_total));
 
-		unset($codes[$codekey]);
+		//unset($codes[$codekey]);
             }
 
             // Post and report adjustments from this ERA.  Posted adjustment reasons
@@ -563,56 +571,45 @@ foreach ($out['svc'] as $svc)
             foreach ($svc['adj'] as $adj) 
 	    {
                 if($adj['amount'] > 0)
+                {
 		   $totalAdjAmount += $adj['amount'];
+                }
 	    }
 
+/*
                 if($svc['chg'] <= $totalAdjAmount && !in_array($svc['code'], $acceptableAdjustCodes))
                 {
                     $description_prefix = 'Zeroed orig adj of $' . $adj['amount'] . "|";
                     $adj['amount']= 0.0;
                     $adjustmentFlag='*';
-                    arSetDeniedFlag($pid,$encounter);
+                    arSetDeniedFlag($pid,$encounter, "Claim Set to Denied because there was an adjustment for the full charge amount or more and it was not on the approved code list (i.e. S0020, A4550, etc)");
                     $Denied=true;
                 }
-	    
+*/	    
+	    $allowToMoveOn=true;
             foreach ($svc['adj'] as $adj) 
 	    {
 
-                $description_prefix='';
-
-                if($adj['amount'] > 0 && in_array($adj['amount'], $adjAmounts))
-                {
-                    $description_prefix = 'Zeroed Orig adj of $' . $adj['amount'] . "|";
-                    $adj['amount']= 0.0;
-                }
+		$postAdjustAmount = $adj['amount'];
+                $description = $adj['group_code'].$adj['reason_code'] . ': ' . $adjustment_reasons[$adj['reason_code']];
 
 		if($adj['amount'] < 0 && (!$ignoreSvcLine))
 		{
-		    arSetDeniedFlag($pid,$encounter);
+		    arSetDeniedFlag($pid,$encounter, "Claim set to denied state because there is an adjustment with a negative value");
 		    $Denied=true;
 		}
-
-                $adjAmounts[] = $adj['amount'];
-
-                $description = $adj['reason_code'] . ': ' . $adjustment_reasons[$adj['reason_code']];
-
-                $adjustmentFlag='';
 
 
                 if((!$ignoreSvcLine) && $svc['chg'] <= $adj['amount'] && !in_array($svc['code'], $acceptableAdjustCodes) and $adj['group_code']!= 'PR')
                 {
-                    $description_prefix = 'Zeroed orig adj of $' . $adj['amount'] . "|";
-                    $adj['amount']= 0.0;
-                    $adjustmentFlag='*';
-		    arSetDeniedFlag($pid,$encounter);
+                    arSetDeniedFlag($pid, $encounter, "Claim Set to Denied because there was an adjustment for the full charge amount or more and it was not on the approved code list (i.e. S0020, A4550, etc)");
 		    $Denied=true;
                 }
 
 
+		//PR Responsibility adjustments should be ignored as should secondary
                 if ($adj['group_code'] == 'PR' || !$primary) 
 		{
-                    // Group code PR is Patient Responsibility.  Enter these as zero
-                    // adjustments to retain the note without crediting the claim.
                     if ($primary) 
 		    {
                         $reason = "$inslabel ptresp: "; // Reasons should be 25 chars or less.
@@ -620,57 +617,64 @@ foreach ($out['svc'] as $svc)
                         else if ($adj['reason_code'] == '2') $reason = "$inslabel coins: ";
                         else if ($adj['reason_code'] == '3') $reason = "$inslabel copay: ";
                     }
-                    // Non-primary insurance adjustments are garbage, either repeating
-                    // the primary or are not adjustments at all.  Report them as notes
-                    // but do not post any amounts.
-                    else {
-                        $reason = "$inslabel note " . $adj['reason_code'] . ': ';
+                    else 
+		    {
+                        $reason = "$inslabel note " . $adj['group_code'].$adj['reason_code'] . ': ';
+		        $postAmount = 0;
+
+		        if($adj['group_code']=='CO'&&$adj['reason_code']=='45')
+                        {
+		           $postAmount = $adj['amount'];
+                        }
+
+		        $allowToMoveOn=false;
+		        if($adj['reason_code']=='178')
+                        {
+		           $allowToMoveOn=true;
+                        }
                     }
-                    $reason .= sprintf("%.2f", $adj['amount']);
+                    $reason .= sprintf("(%.2f)", $adj['amount']);
                     // Post a zero-dollar adjustment just to save it as a comment.
+
+
                     if (!$error && !$debug) 
 		    {
-                        arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], 0, 
-				$svc['code'], $svc['mod'],//$InsertionId[$out['check_number']] gives the session id
+                        arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], $postAmount, $svc['code'], $svc['mod'],
                         	substr($inslabel,3), $reason, $debug, '', $codetype, $group, $billing_id);
                     }
-                    writeMessageLine($bgcolor, $class, $description_prefix . $description . ' ' . sprintf("%.2f", $adj['amount']));
+                    //writeMessageLine($bgcolor2, $class, $description_prefix . $description . ' ' . sprintf("%.2f", $adj['amount']));
+                    $invoice_total -= $postAmount;
+                    writeDetailLine($bgcolor, $class, $patient_name, $invnumber, $svc['code'], $production_date, $description, 0 - $postAmount, ($error ? '' : $invoice_total));
                 }
                 // Other group codes for primary insurance are real adjustments.
                 else 
 		{
                     if (!$error && !$debug) 
 		    {
-			$reason = "$inslabel note " . $adj['reason_code'] . ': ';
-			$reason .= sprintf("%.2f", $adj['amount']);
-			//echo "Posting Adjustment " . $reason . "<br>";
+			$reason = "$inslabel note " . $adj['group_code'].$adj['reason_code'] . ': ';
+			$reason .= sprintf("(%.2f).", $adj['amount']);
 
 		        $postAdjAmount = $adj['amount'];
 			if($Denied && $svc['paid'] <=0)
 			{
-				$postAdjAmount=0;
+			   $postAdjAmount=0;
 			}
-
-                        $comment = "Adjust code " . $adj['reason_code'] . $adjustmentFlag; 
 
 			if($ignoreSvcLine)
 			{
-                           $comment .= "(" . $postAdjAmount . ")";
 			   $postAdjAmount = 0;
 			}
                            arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], 
 				$postAdjAmount,//$InsertionId[$out['check_number']] gives the session id
                                 $svc['code'], $svc['mod'], substr($inslabel,3), 
-				$comment, $debug, '', $codetype, $group, $billing_id);
+				$reason, $debug, '', $codetype, $group, $billing_id);
                     }
 	
 		   if(!$ignoreSvcLine)
 		   {
                     $invoice_total -= $adj['amount'];
-                    writeDetailLine($bgcolor, $class, $patient_name, $invnumber,
-                        $svc['code'], $production_date, $description,
-                        0 - $adj['amount'], ($error ? '' : $invoice_total));
                     }
+                    writeDetailLine($bgcolor, $class, $patient_name, $invnumber, $svc['code'], $production_date, $description, 0 - $adj['amount'], ($error ? '' : $invoice_total));
                 }
             }
             
@@ -682,10 +686,10 @@ foreach ($out['svc'] as $svc)
         // Report any existing service items not mentioned in the ERA, and
         // determine if any of them are still missing an insurance response
         // (if so, then insurance is not yet done with the claim).
-        $insurance_done = true;
+        $insurance_done = $allowToMoveOn;
         foreach ($codes as $code => $prev) {
       // writeOldDetail($prev, $arrow['name'], $invnumber, $service_date, $code, $bgcolor);
-            writeOldDetail($prev, $patient_name, $invnumber, $service_date, $code, $bgcolor);
+           // writeOldDetail($prev, $patient_name, $invnumber, $service_date, $prev['code'], $bgcolor);
             $got_response = false;
             foreach ($prev['dtl'] as $ddata) {
                 if ($ddata['pmt'] || $ddata['rsn']) $got_response = true;
@@ -715,7 +719,7 @@ foreach ($out['svc'] as $svc)
 
 			//Automatic forward case.So need not again bill from the billing manager screen.
                 	sqlStatement("UPDATE form_encounter " .
-                      		"SET last_level_closed = $level_done,last_level_billed=".$level_done." WHERE " .
+                      		"SET last_level_closed = $level_done, last_level_billed=".$level_done." WHERE " .
                       		"pid = '$pid' AND encounter = '$encounter'");
               
 			writeMessageLine($bgcolor, 'infdetail',
@@ -778,6 +782,12 @@ foreach ($out['svc'] as $svc)
 
         //Write out claim summary line
 	$openemr_state = ar_responsible_party($pid, $encounter);
+
+        if($openemr_state==-1)
+        {
+           $claimState='Closed';
+	   if($Denied) arClearDeniedFlag($pid,$encounter);
+	}
         writeClaimSummary('#ccccdd', 'summary', 'This claim state is now: ' . $claimState . ' (' . $openemr_state . ')' );
 
 	if( ($openemr_state == '1' && $claimState != 'Primary') || 

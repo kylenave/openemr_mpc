@@ -1201,9 +1201,9 @@ if (!$_POST['form_csvexport']) {
 <a href='javascript:;' class='css_button' onclick='$("#form_csvexport").attr("value","true"); $("#theform").submit();'>
 	<span><?php echo xlt('Export Selected as CSV'); ?></span>
 </a>
-<a href='javascript:;' class='css_button' onclick='$("#form_export").attr("value","true"); $("#theform").submit();'>
-	<span><?php echo xlt('Export Selected to Collections'); ?></span>
-</a>
+<!--a href='javascript:;' class='css_button' onclick='$("#form_export").attr("value","true"); $("#theform").submit();'>
+	<span><?php //echo xlt('Export Selected to Collections'); ?></span>
+</a -->
 </div>
 
 <div style='float:left'>
