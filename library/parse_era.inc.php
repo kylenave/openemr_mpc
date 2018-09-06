@@ -401,8 +401,8 @@ function parse_era($filename, $cb) {
                 if ($seg[1] == 'CO' && $seg[$k+1] < 0)
 		{
           		$out['warnings'] .= "Negative Contractual Obligation adjustment " .
-            			"seems wrong. Inverting, but should be checked!\n";
-          		$seg[$k+1] = 0 - $seg[$k+1];
+            			"seems wrong. Allowing, but should be checked!\n";
+          		$seg[$k+1] = $seg[$k+1];
         	}
                 $j = count($out['svc'][$i]['adj']);
                 $out['svc'][$i]['adj'][$j] = array();
