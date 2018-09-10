@@ -133,6 +133,7 @@ if ($_POST['form_save']) {
   $form_pid = $_POST['form_pid'];
   $form_method = trim($_POST['form_method']);
   $form_source = trim($_POST['form_source']);
+  $form_check_date = trim($_POST['check_date']);
   $patdata = getPatientData($form_pid, 'fname,mname,lname,pubpid');
   $NameNew=$patdata['fname'] . " " .$patdata['lname']. " " .$patdata['mname'];
 
@@ -144,14 +145,14 @@ if ($_POST['form_save']) {
 			", user_id = ?"     .
 			", closed = ?"      .
 			", reference = ?"   .
-			", check_date =  now() , deposit_date = now() "	.
+			", check_date =  ? , deposit_date = ? "	.
 			",  pay_total = ?"    .
 			", payment_type = 'patient'" .
 			", description = ?"   .
 			", adjustment_code = 'pre_payment'" .
 			", post_to_date = now() " .
 			", payment_method = ?",
-			array(0,$form_pid,$_SESSION['authUserID'],0,$form_source,$_REQUEST['form_prepayment'],$NameNew,$form_method));
+			array(0,$form_pid,$_SESSION['authUserID'],0,$form_source,$form_check_date, $form_check_date, $_REQUEST['form_prepayment'],$NameNew,$form_method));
 	
 		 frontPayment($form_pid, 0, $form_method, $form_source, $_REQUEST['form_prepayment'], 0, $timestamp);//insertion to 'payments' table.
 	 }
@@ -193,8 +194,8 @@ if ($_POST['form_save']) {
 			 {
 				$session_id=sqlInsert("INSERT INTO ar_session (payer_id,user_id,reference,check_date,deposit_date,pay_total,".
 				 " global_amount,payment_type,description,patient_id,payment_method,adjustment_code,post_to_date) ".
-				 " VALUES ('0',?,?,now(),now(),?,'','patient','COPAY',?,?,'patient_payment',now())",
-				 array($_SESSION['authId'],$form_source,$amount,$form_pid,$form_method));
+				 " VALUES ('0',?,?,?,?,?,'','patient','COPAY',?,?,'patient_payment',now())",
+				 array($_SESSION['authId'],$form_source,$form_check_date,$form_check_date,$amount,$form_pid,$form_method));
 
                  sqlBeginTrans();
                  $sequence_no = sqlQuery( "SELECT IFNULL(MAX(sequence_no),0) + 1 AS increment FROM ar_activity WHERE pid = ? AND encounter = ?", array($form_pid, $enc));
@@ -221,14 +222,14 @@ if ($_POST['form_save']) {
 					", user_id = ?"     .
 					", closed = ?"      .
 					", reference = ?"   .
-					", check_date =  now() , deposit_date = now() "	.
+					", check_date =  ? , deposit_date = ? "	.
 					",  pay_total = ?"    .
 					", payment_type = 'patient'" .
 					", description = ?"   .
 					", adjustment_code = ?" .
 					", post_to_date = now() " .
 					", payment_method = ?",
-					array(0,$form_pid,$_SESSION['authUserID'],0,$form_source,$amount,$NameNew,$adjustment_code,$form_method));
+					array(0,$form_pid,$_SESSION['authUserID'],0,$form_source,$form_check_date, $form_check_date, $amount,$NameNew,$adjustment_code,$form_method));
 
 	//--------------------------------------------------------------------------------------------------------------------
 
@@ -885,6 +886,18 @@ function make_insurance()
 </head>
 
 <body class="body_top" onunload='imclosing()' onLoad="cursor_pointer();">
+
+<?php 
+
+   if($_REQUEST['check_date'])
+   {
+      $checkDate = $_REQUEST['check_date'];
+   }
+   else
+   {
+      $checkDate = date("Y-m-d");
+   }
+?>
 <center>
 
 <form method='post' action='front_payment.php<?php if ($payid) echo "?payid=$payid"; ?>'
@@ -908,6 +921,15 @@ function make_insurance()
 
  <tr height="15"><td colspan='3'></td></tr>
 
+ <tr>
+  <td class='text' >
+   <?php echo xla('Check Date'); ?>:
+  </td>
+  <td colspan='2' ><div id="id_check_date_div" style="display:none;"></div>
+   <input type='date'  id="check_date" name='check_date' style="width:120px" value='<?php echo $checkDate; ?>'>
+  </td>
+ </tr>
+ <tr height="5"><td colspan='3'></td></tr>
 
  <tr>
   <td class='text' >
