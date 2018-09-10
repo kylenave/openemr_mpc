@@ -565,6 +565,8 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
            {
                var pfx = 'bill[' + lino + ']';
                if (f[pfx + '[del]'] && f[pfx + '[del]'].checked) continue;
+
+	       if(!f[pfx+'[mod]']) continue;
             
             var valColor = 'green';
             var valText = '';
