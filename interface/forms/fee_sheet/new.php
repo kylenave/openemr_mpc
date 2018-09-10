@@ -550,6 +550,17 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
             var twoCount = false;
             var fiveNine = false;
 
+           var has27096=false;
+           var has20610 = false; 
+
+	   for (var lino = 0; f['bill['+lino+'][code_type]'] ; ++lino) 
+           {
+              var pfx = 'bill[' + lino + ']';
+              var codeVal = f[pfx+'[code]'].value;
+              if(codeVal=='27096') has27096=true;
+              if(codeVal=='20610') has20610=true;		
+           }
+
 	   for (var lino = 0; f['bill['+lino+'][code_type]'] ; ++lino) 
            {
                var pfx = 'bill[' + lino + ']';
@@ -596,7 +607,7 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
                valColor = 'red';
                result=false;
             }
-
+/*
             if(codeVal.substring(0,1)=='2')
             {
                if(modifiers.search("59")!= -1 || modifiers.search("XU")!= -1 || modifiers.search("XS")!= -1)
@@ -614,7 +625,7 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
                }
                twoCount=true;
             }
-
+*/
             if(modifiers.includes('25') )
             {
                if(codeVal.substring(0,3)!=='992')
@@ -628,9 +639,15 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
             var codesThatRequireModifier = ['J7321', '64620', '64680', '64681', '64633', '64634', '64635', '64636', '64640', '64483', '64484', '64490', '64491', 
 '64492', '64493', '64495', '20600', '20604', '20605', '20606', '20610', '20611', '20526', '20550', '27096', 
 '64400', '64405', '64420', '64425', '64430', '64450', '64505', '64510', '64517', '64520', '64530', '66418'];
-            if((codesThatRequireModifier.includes(codeVal)) && modifiers.length < 1)
+            if((codesThatRequireModifier.includes(codeVal)) && !(modifiers.search("50")!= -1 || modifiers.search("RT")!= -1 || modifiers.search("LT")!=-1))
             {
-                  valText += 'ERROR: This code always needs a modifier.\n';
+                  valText += 'ERROR: This code always needs a modifier (RT/LT/50).\n';
+                  valColor = 'red';
+            }
+
+            if(has27096 && codeVal=='20610' && !(modifiers.search("51")!= -1 || modifiers.search("XS")!= -1))
+            {
+                  valText += 'ERROR: This code is billed with 27096 and therefore needs a "51" or "XS" modifier.\n';
                   valColor = 'red';
             }
 
