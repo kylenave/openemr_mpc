@@ -625,7 +625,9 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
             }
 
             //Codes that require a modifier
-            var codesThatRequireModifier = ['27096', 'J7321'];
+            var codesThatRequireModifier = ['J7321', '64620', '64680', '64681', '64633', '64634', '64635', '64636', '64640', '64483', '64484', '64490', '64491', 
+'64492', '64493', '64495', '20600', '20604', '20605', '20606', '20610', '20611', '20526', '20550', '27096', 
+'64400', '64405', '64420', '64425', '64430', '64450', '64505', '64510', '64517', '64520', '64530', '66418'];
             if((codesThatRequireModifier.includes(codeVal)) && modifiers.length < 1)
             {
                   valText += 'ERROR: This code always needs a modifier.\n';
@@ -884,6 +886,7 @@ function pricelevel_changed(sel) {
 <span>Code:</span>
 <select id="cptSelect" onchange="myFunction()">
 <option value=''>Select CPT Code:</option>
+<option value='11900'>11900</option>
 <option value='20526'>20526</option>
 <option value='20605'>20605</option>
 <option value='22511'>22511</option>
@@ -934,6 +937,7 @@ AnesthesiaCode:
 <option value=''>Please Select Anes Code:</option>
 <option value='00300'>00300</option>
 <option value='00400'>00400</option>
+<option value='00800'>00800</option>
 <option value='01200'>01200</option>
 <option value='01250'>01250</option>
 <option value='01380'>01380</option>
@@ -967,6 +971,12 @@ function myFunction() {
 
 switch (x) {
 
+    case '11900':
+        var option = document.createElement("option");
+        option.text = '00800';
+        y.add(option);
+        bu.value=4; 
+        break;
     case '20526':
         var option = document.createElement("option");
         option.text = '01810';
@@ -1111,6 +1121,7 @@ switch (y) {
     case '00300': x.value=5; break;
 
     case '00400': x.value=3; break;
+    case '00800': x.value=4; break;
 
     case '01200': x.value=4; break;
 
