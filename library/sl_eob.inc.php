@@ -411,19 +411,25 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
   }
 
 //Clear the denied flag and store the date for tracing purposes
-function arClearDeniedFlag($patient_id, $encounter_id)
+function arClearDeniedFlag($patient_id, $encounter_id,$note='', $userId='1')
 {
    sqlStatement("UPDATE form_encounter set external_id='0' where encounter='$encounter_id' and pid='$patient_id'");   
+
+   if($note!='' && $encounter_id)
+   {
+      $datetime = date('Y-m-d H:i:s');
+      sqlInsert('INSERT INTO billing_notes (date, encounter, user_id, comments) VALUES (?,?,?,?)', array($datetime, $encounter_id, $userId, $note));
+   }
 }
-function arSetDeniedFlag($patient_id, $encounter_id, $note='')
+
+function arSetDeniedFlag($patient_id, $encounter_id, $note='', $userId='1')
 {
    sqlStatement("UPDATE form_encounter set external_id='1' where encounter='$encounter_id' and pid='$patient_id'");   
 
    if($note!='' && $encounter_id)
    {
-      error_log("Encounter: " . $encounter_id);
       $datetime = date('Y-m-d H:i:s');
-      sqlInsert('INSERT INTO billing_notes (date, encounter, user_id, comments) VALUES (?,?,?,?)', array($datetime, $encounter_id, 1, $note));
+      sqlInsert('INSERT INTO billing_notes (date, encounter, user_id, comments) VALUES (?,?,?,?)', array($datetime, $encounter_id, $userId, $note));
    }
 }
 

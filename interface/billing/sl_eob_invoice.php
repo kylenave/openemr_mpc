@@ -415,13 +415,13 @@ function editNote(feid) {
      // Clear Denied if needed... 
       if(!$_POST['isDenied'] and ($denied_state=='1'))
       {
-          arClearDeniedFlag($patient_id, $encounter_id);
+          arClearDeniedFlag($patient_id, $encounter_id, "Denied manually cleared.", $_SESSION['authUser']);
           $denied_state='0';
       }
       
       if($_POST['isDenied'] and ($denied_state!= '1'))
       {
-          arSetDeniedFlag($patient_id, $encounter_id);
+          arSetDeniedFlag($patient_id, $encounter_id, "Claim manually denied.", $_SESSION['authUser']);
           $denied_state='1';
       }
 
@@ -440,7 +440,7 @@ function editNote(feid) {
   }
 
     // Get invoice charge details.
-    $codes = ar_get_invoice_summary($patient_id, $encounter_id, true);
+    $codes = ar_get_invoice_summary2($patient_id, $encounter_id, true);
 
   //$pdrow = sqlQuery("select billing_note " .
   //  "from patient_data where pid = '$patient_id' limit 1");
@@ -680,10 +680,10 @@ while($data = sqlFetchArray($res))
   foreach ($codes as $code => $cdata) {
    ++$encount;
    $bgcolor = "#" . (($encount & 1) ? "ddddff" : "ffdddd");
-   $dispcode = $code;
+   $dispcode = $cdata['code'];
 
    // remember the index of the first entry whose code is not "CO-PAY", i.e. it's a legitimate proc code
-   if ($firstProcCodeIndex == -1 && strcmp($code, "CO-PAY") !=0)
+   if ($firstProcCodeIndex == -1 && strcmp($dispcode, "CO-PAY") !=0)
     $firstProcCodeIndex = $encount;
 
    // this sorts the details more or less chronologically:

@@ -254,14 +254,13 @@ if ($pid && $encounter)
 	    {
                 if($svc['paid'] !=  0) $hasPayment=true;
 
-                if($svc['allowed']) $hasPayment=true;
+                //if($svc['allowed']) $hasPayment=true;
 
                 foreach ($svc['adj'] as $adj) 
                 {
                         //Per code and modifier the reason will be showed in the billing manager.
 			//45 is a contractual adjustment
-		        //16 means some information is missing
-                      if($adj['reason_code']=='45' || $adj['reason_code']=='16' ) $hasPayment=true;
+                      if($adj['reason_code']=='45' ) $hasPayment=true;
                 }
 
             }
@@ -322,11 +321,9 @@ $Denied=false;
                     if($csc=='4') {
                       updateClaim(true, $pid, $encounter, $_REQUEST['InsId'], substr($inslabel,3),7,0,$code_value, $out['payer_name'], $out['payer_claim_id']);
 		      arSetDeniedFlag($pid,$encounter,"Claim set to denied state because Claim Status on the ERA was set to '4' or 'Denied'.");
-//error_log("Updated claim with payer claim id=" . $out['payer_claim_id']);
                     }else{
                       updateClaim(true, $pid, $encounter, $_REQUEST['InsId'], substr($inslabel,3),-1,-1,$code_value, $out['payer_name'], $out['payer_claim_id']);
 		      arSetDeniedFlag($pid,$encounter,"Claim set to denied state even though Claim Status = '1' because there was no payment and no CO-45 adjustment.");
-//error_log("Updated claim with payer claim id=" . $out['payer_claim_id']);
                     }
 		    $Denied=true;
                 }
@@ -361,6 +358,7 @@ $Denied=false;
 
 	$billing_id = 0;
         $billing_ids_handled = array();
+	$allowToMoveOn=true;
 
         // This loops once for each service item in this claim.
 foreach ($out['svc'] as $svc) 
@@ -371,19 +369,44 @@ foreach ($out['svc'] as $svc)
         //Get the billing ID for this line item=====================================================================================
 	$billing_row = sqlStatement(
 				"SELECT id FROM billing WHERE pid = '$pid' " .
-				"AND encounter = '$encounter' AND code='" . $svc['code'] . "' AND modifier='" .$svc['mod'] .  "' ");
+				"AND encounter = '$encounter' AND activity='1' and code='" . $svc['code'] . "' AND modifier='" .$svc['mod'] .  "' ");
 
         $billing_id=0;
+
+        $noneFound=true;
 
         //Get all of the ID's and select the first one that has not yet been processed.
 	while($billing_data = sqlFetchArray($billing_row))
 	{
+                $noneFound=false;
 		if(!in_array($billing_data['id'], $billing_ids_handled))
 		{
 			$billing_ids_handled[] = $billing_data['id'];
 			$billing_id = $billing_data['id'];
 		}
 	}
+
+        if($noneFound)
+        {
+
+	    $billing_row = sqlStatement(
+				"SELECT id FROM billing WHERE pid = '$pid' " .
+				"AND encounter = '$encounter' AND activity='1' AND code='" . $svc['code'] . "' ");
+
+            $billing_id=0;
+
+            $noneFound=true;
+
+	    while($billing_data = sqlFetchArray($billing_row))
+	    {
+                $noneFound=false;
+		if(!in_array($billing_data['id'], $billing_ids_handled))
+		{
+			$billing_ids_handled[] = $billing_data['id'];
+			$billing_id = $billing_data['id'];
+		}
+	    }  
+        }
 
         if($billing_id==0)
 	{
@@ -616,6 +639,7 @@ foreach ($out['svc'] as $svc)
                         if ($adj['reason_code'] == '1') $reason = "$inslabel dedbl: ";
                         else if ($adj['reason_code'] == '2') $reason = "$inslabel coins: ";
                         else if ($adj['reason_code'] == '3') $reason = "$inslabel copay: ";
+                        $description .= sprintf(" ($%.2f)", $adj['amount']);
                     }
                     else 
 		    {
@@ -627,13 +651,16 @@ foreach ($out['svc'] as $svc)
 		           $postAmount = $adj['amount'];
                         }
 
-		        $allowToMoveOn=false;
 		        if($adj['reason_code']=='178')
                         {
 		           $allowToMoveOn=true;
-                        }
+                        }else{
+		           $allowToMoveOn=false;
+			}
                     }
+
                     $reason .= sprintf("(%.2f)", $adj['amount']);
+		    $reason .= " {$allowedToMoveOn} ";
                     // Post a zero-dollar adjustment just to save it as a comment.
 
 
@@ -687,12 +714,17 @@ foreach ($out['svc'] as $svc)
         // determine if any of them are still missing an insurance response
         // (if so, then insurance is not yet done with the claim).
         $insurance_done = $allowToMoveOn;
+$insurance_done=true;
         foreach ($codes as $code => $prev) {
       // writeOldDetail($prev, $arrow['name'], $invnumber, $service_date, $code, $bgcolor);
            // writeOldDetail($prev, $patient_name, $invnumber, $service_date, $prev['code'], $bgcolor);
             $got_response = false;
-            foreach ($prev['dtl'] as $ddata) {
-                if ($ddata['pmt'] || $ddata['rsn']) $got_response = true;
+            foreach ($prev['dtl'] as $ddata) 
+	    {
+                if ($ddata['pmt'] || $ddata['rsn'])
+		{ 
+		   $got_response = true;
+		}
             }
             if (!$got_response) $insurance_done = false;
         }
@@ -785,7 +817,7 @@ foreach ($out['svc'] as $svc)
 
         if($openemr_state==-1)
         {
-           $claimState='Closed';
+           $claimState='Patient or Closed';
 	   if($Denied) arClearDeniedFlag($pid,$encounter);
 	}
         writeClaimSummary('#ccccdd', 'summary', 'This claim state is now: ' . $claimState . ' (' . $openemr_state . ')' );

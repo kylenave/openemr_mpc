@@ -256,6 +256,10 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
 		$thisIndex = $thisCode['id'];
 		break;
 	   }
+           if($thisCode['code']==$arow['code'])
+           {
+                $thisIndex = $thisCode['id'];
+           }
 	}
     }
 

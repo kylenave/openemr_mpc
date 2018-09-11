@@ -331,6 +331,7 @@ if (($_POST['form_print'] || $_POST['form_download'] || $_POST['form_pdf']) && $
 
  function npopup(pid) {
    window.open('sl_eob_patient_note.php?patient_id=' + pid, '_blank', 'width=500,height=250,resizable=1');
+   top.restoreSession();
    return false;
  }
 
