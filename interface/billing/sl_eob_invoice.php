@@ -325,12 +325,13 @@ function editNote(feid) {
         }
 
       $paytotal = 0;
-      foreach ($_POST['form_line'] as $code => $cdata) {
+      foreach ($_POST['form_line'] as $bid => $cdata) {
         $thispay  = trim($cdata['pay']);
         $thisadj  = trim($cdata['adj']);
         $thisins  = trim($cdata['ins']);
         $thiscodetype = trim($cdata['code_type']);
         $reason   = strip_escape_custom($cdata['reason']);
+        $code = trim($cdata['code']);
 
         // Get the adjustment reason type.  Possible values are:
         // 1 = Charge adjustment
@@ -362,7 +363,7 @@ function editNote(feid) {
 
         if ($thispay) {
             arPostPayment($patient_id, $encounter_id, $session_id,
-              $thispay, $code, '', $payer_type, '', $debug, '', $thiscodetype);
+              $thispay, $code, '', $payer_type, '', $debug, '', $thiscodetype,0,$bid);
           $paytotal += $thispay;
         }
 
@@ -395,7 +396,7 @@ function editNote(feid) {
               $reason .= ' ' . $_POST['form_insurance'];
           }
             arPostAdjustment($patient_id, $encounter_id, $session_id,
-              $thisadj, $code, '', $payer_type, $reason, $debug, '', $thiscodetype);
+              $thisadj, $code, '', $payer_type, $reason, $debug, '', $thiscodetype, 0, $bid);
         }
       }
 
@@ -677,7 +678,9 @@ while($data = sqlFetchArray($res))
 <?php
   $firstProcCodeIndex = -1;
   $encount = 0;
-  foreach ($codes as $code => $cdata) {
+
+  foreach ($codes as $billing_id => $cdata) 
+{
    ++$encount;
    $bgcolor = "#" . (($encount & 1) ? "ddddff" : "ffdddd");
    $dispcode = $cdata['code'];
@@ -691,7 +694,9 @@ while($data = sqlFetchArray($res))
    $lineByDateColor = false;
    $prev_ddate=0;
 
-   foreach ($cdata['dtl'] as $dkey => $ddata) {
+//Payments & Adjustments
+   foreach ($cdata['dtl'] as $dkey => $ddata) 
+   {
     $ddate = substr($dkey, 0, 10);
     if($ddate != $prev_ddate)
     {
@@ -768,9 +773,10 @@ while($data = sqlFetchArray($res))
    &nbsp;
   </td>
   <td class="detail" align="right">
-   <input type="hidden" name="form_line[<?php echo $code ?>][bal]" value="<?php bucks($cdata['bal']) ?>">
-   <input type="hidden" name="form_line[<?php echo $code ?>][ins]" value="<?php echo $cdata['ins'] ?>">
-   <input type="hidden" name="form_line[<?php echo $code ?>][code_type]" value="<?php echo $cdata['code_type'] ?>">
+   <input type="hidden" name="form_line[<?php echo $billing_id ?>][bal]" value="<?php bucks($cdata['bal']) ?>">
+   <input type="hidden" name="form_line[<?php echo $billing_id ?>][ins]" value="<?php echo $cdata['ins'] ?>">
+   <input type="hidden" name="form_line[<?php echo $billing_id ?>][code_type]" value="<?php echo $cdata['code_type'] ?>">
+   <input type="hidden" name="form_line[<?php echo $billing_id ?>][code]" value="<?php echo $cdata['code'] ?>">
    <?php printf("%.2f", $cdata['bal']) ?>&nbsp;
   </td>
   <td class="detail">
@@ -782,22 +788,22 @@ while($data = sqlFetchArray($res))
 
   </td>
   <td class="detail">
-   <input type="text" name="form_line[<?php echo $code ?>][pay]" size="10"
+   <input type="text" name="form_line[<?php echo $billing_id ?>][pay]" size="10"
     style="background-color:<?php echo $bgcolor ?>" 
-    onKeyUp="updateFields(document.forms[0]['form_line[<?php echo $code ?>][pay]'], 
-                          document.forms[0]['form_line[<?php echo $code ?>][adj]'],
-                          document.forms[0]['form_line[<?php echo $code ?>][bal]'],
+    onKeyUp="updateFields(document.forms[0]['form_line[<?php echo $billing_id ?>][pay]'], 
+                          document.forms[0]['form_line[<?php echo $billing_id ?>][adj]'],
+                          document.forms[0]['form_line[<?php echo $billing_id ?>][bal]'],
                           document.forms[0]['form_line[CO-PAY][bal]'],
                           <?php echo ($firstProcCodeIndex == $encount) ? 1 : 0 ?>)"/>
   </td>
   <td class="detail">
-   <input type="text" name="form_line[<?php echo $code ?>][adj]" size="10"
+   <input type="text" name="form_line[<?php echo $billing_id ?>][adj]" size="10"
     value='<?php echo $totalAdjAmount ?>' 
     style="background-color:<?php echo $bgcolor ?>" />
-   &nbsp; <a href="" onclick="return writeoff('<?php echo $code ?>')">W</a>
+   &nbsp; <a href="" onclick="return writeoff('<?php echo $billing_id ?>')">W</a>
   </td>
   <td class="detail">
-   <select name="form_line[<?php echo $code ?>][reason]"
+   <select name="form_line[<?php echo $billing_id ?>][reason]"
     style="background-color:<?php echo $bgcolor ?>">
 <?php
 // Adjustment reasons are now taken from the list_options table.

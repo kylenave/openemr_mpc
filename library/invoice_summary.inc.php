@@ -183,8 +183,10 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
     "pid = ? AND encounter = ? AND " .
     "activity = 1 AND fee != 0.00 ORDER BY id", array($patient_id,$encounter_id) );
 
-  while ($row = sqlFetchArray($res)) {
-    $amount = sprintf('%01.2f', $row['fee']);
+//First, cycle through each charge code in the encounter...
+  while ($row = sqlFetchArray($res)) 
+  {
+      $amount = sprintf('%01.2f', $row['fee']);
 
       $codesItem=array();
       $code = $row['code'];
@@ -192,7 +194,8 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
       if (! $code) $code = "Unknown";
 
 
-      if ($row['modifier']) {
+      if ($row['modifier']) 
+      {
          $notAllowed = array(", "," ,"," , ","  ",",", " :",": "," : ");
          $tmpModifier = str_replace($notAllowed, ":", $row['modifier']);
          $code .= ':' . $tmpModifier;
@@ -213,10 +216,17 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
     $codesItem['code_text'] = $row['code_text'];
 
     // Add the details if they want 'em.
-    if ($with_detail) {
-      if (! $codesItem['dtl']) $codesItem['dtl'] = array();
+    if ($with_detail) 
+    {
+      if (! $codesItem['dtl'])
+      {
+         $codesItem['dtl'] = array();
+      }
+
       $tmp = array();
       $tmp['chg'] = $amount;
+
+      //WTH is this???
       $tmpkey = "          " . $keysuff1++;
       $codesItem['dtl'][$tmpkey] = $tmp;
     }
@@ -230,14 +240,14 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
     "a.code_type, a.code, a.modifier, a.memo, a.payer_type, a.adj_amount, a.pay_amount, a.reason_code, " .
     "a.post_time, a.session_id, a.sequence_no, a.account_code, " .
     "s.payer_id, s.reference, s.check_date, s.deposit_date, a.billing_id " .
-    ",i.name " .
+    ",i.name, a.pr_amount, a.pr_code " .
     "FROM ar_activity AS a " .
     "LEFT OUTER JOIN ar_session AS s ON s.session_id = a.session_id " .
     "LEFT OUTER JOIN insurance_companies AS i ON i.id = s.payer_id " .
     "WHERE a.pid = ? AND a.encounter = ? " .
     "ORDER BY s.check_date, a.sequence_no", array($patient_id,$encounter_id) );
   while ($arow = sqlFetchArray($res)) 
-{
+  {
     $code = $arow['code'];
     if (! $code) $code = "Unknown";
     if ($arow['modifier']) $code .= ':' . $arow['modifier'];
@@ -279,7 +289,12 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
     if ($with_detail) 
     {
       if (! $codes[$code]['dtl']) $codes[$code]['dtl'] = array();
+
       $tmp = array();
+//tmp includes:
+//   pmt: Payment
+//   msp: reason_code
+//   chg: adj_amount
       $paydate = empty($arow['deposit_date']) ? substr($arow['post_time'], 0, 10) : $arow['deposit_date'];
 
       if ($arow['pay_amount'] != 0) $tmp['pmt'] = $arow['pay_amount'];
@@ -288,13 +303,15 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
       	$tmp['msp'] = $arow['reason_code'];
       }
 
-      if ($arow['adj_amount'] != 0 || $arow['pay_amount'] == 0) {
-        $tmp['chg'] = 0 - $arow['adj_amount'];
-        // $tmp['rsn'] = (empty($row['memo']) || empty($row['session_id'])) ? 'Unknown adjustment' : $row['memo'];
-        $tmp['rsn'] = (empty($arow['memo']) ? 'Unknown adjustment' : $arow['memo']);
-        $tmpkey = $paydate . $keysuff1++;
+      if ($arow['adj_amount'] != 0 || $arow['pay_amount'] == 0) 
+      {
+         $tmp['chg'] = 0 - $arow['adj_amount'];
+         // $tmp['rsn'] = (empty($row['memo']) || empty($row['session_id'])) ? 'Unknown adjustment' : $row['memo'];
+         $tmp['rsn'] = (empty($arow['memo']) ? 'Unknown adjustment' : $arow['memo']);
+         $tmpkey = $paydate . $keysuff1++;
       }
-      else {
+      else 
+      {
         $tmpkey = $paydate . $keysuff2++;
       }
 

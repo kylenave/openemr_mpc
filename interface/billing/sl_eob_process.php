@@ -415,9 +415,8 @@ foreach ($out['svc'] as $svc)
 
 	   $billing_row = sqlStatement(
 				"SELECT id FROM billing WHERE pid = '$pid' " .
-				"AND encounter = '$encounter' AND code='" . $svc['code'] . "' AND modifier='" .$svc['mod'] .  "' ");
+				"AND encounter = '$encounter' AND activity='1' and code='" . $svc['code'] . "' AND modifier='" .$svc['mod'] .  "' ");
 
-           $billing_id=0;
 	   while($billing_data = sqlFetchArray($billing_row))
 	   {
 		if(!in_array($billing_data['id'], $billing_ids_handled))
