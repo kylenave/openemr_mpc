@@ -647,9 +647,9 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
                   valColor = 'red';
             }
 
-            if(has27096 && codeVal=='20610' && !(modifiers.search("51")!= -1 || modifiers.search("XS")!= -1))
+            if(has27096 && codeVal=='20610' && !(modifiers.search("59")!= -1 || modifiers.search("51")!= -1 || modifiers.search("XS")!= -1))
             {
-                  valText += 'ERROR: This code is billed with 27096 and therefore needs a "51" or "XS" modifier.\n';
+                  valText += 'ERROR: This code is billed with 27096 and therefore needs a "51", "59" or "XS" modifier.\n';
                   valColor = 'red';
             }
 
