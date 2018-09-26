@@ -730,6 +730,8 @@ if(is_array($ret))
       if ($res['count'] > 0) continue;
     }
 
+    sqlStatement("update form_encounter set external_id='0' where encounter = ?",array($iter['enc_encounter']));
+
     // Let's filter out any fully paid claims
     $res = sqlQuery("select sum(fee) as charges from billing where activity='1' and encounter = ?", array($iter['enc_encounter']));
     $charges = $res['charges'];

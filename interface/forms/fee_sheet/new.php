@@ -539,6 +539,29 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
 		$("#valText" + lineNum).text(textVal).css( { 'color': colorVal, 'font-size': '95%' });
 	}
 
+        function hasModifier(modifiers, lookFor)
+        {
+            if(Array.isArray(lookFor))
+            {
+                var found = false;
+                for (index = 0; index < lookFor.length; ++index) {
+    		   found |= modifiers.includes(lookFor[index]);
+		}
+                return found;
+            }
+            else
+            {
+               return modifiers.includes(lookFor);
+            }
+
+        }
+
+        function hasLateralityModifier(modifier)
+        {
+	    laterality = ["RT","LT","50"];
+            return hasModifier(modifier, laterality);
+        }
+
 	function validateAllRows()
 	{
            $("#bn_save").removeAttr('disabled'); 
@@ -603,6 +626,12 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
 		valText += 'Warning: This item value is $' + (units*price) + ' ... please confirm this is correct.  ';
 	    }
 
+            if(codeVal=='95972')
+            {
+		valColor = 'orange';
+		valText += 'Please be sure to add a referring provider for this code.  ';
+            }
+
             if(justify.length < 1)
             {
                valText = 'Error: This item needs a justification. ';
@@ -636,22 +665,41 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
                   valColor = 'red';
                }
             }
-
+//95972 requires referring provider
             //Codes that require a modifier
             var codesThatRequireModifier = ['J7321', '64620', '64680', '64681', '64633', '64634', '64635', '64636', '64640', '64483', '64484', '64490', '64491', 
 '64492', '64493', '64495', '20600', '20604', '20605', '20606', '20610', '20611', '20526', '20550', '27096', 
 '64400', '64405', '64420', '64425', '64430', '64450', '64505', '64510', '64517', '64520', '64530', '66418'];
-            if((codesThatRequireModifier.includes(codeVal)) && !(modifiers.search("50")!= -1 || modifiers.search("RT")!= -1 || modifiers.search("LT")!=-1))
+
+            if((codesThatRequireModifier.includes(codeVal)) && hasLateralityModifier(modifiers))
             {
                   valText += 'ERROR: This code always needs a modifier (RT/LT/50).\n';
                   valColor = 'red';
             }
 
-            if(has27096 && codeVal=='20610' && !(modifiers.search("59")!= -1 || modifiers.search("51")!= -1 || modifiers.search("XS")!= -1))
+            if( codeVal=='63650' && !(hasModifier(modifiers, ["51","59","XS","XU"])))
             {
-                  valText += 'ERROR: This code is billed with 27096 and therefore needs a "51", "59" or "XS" modifier.\n';
+                  valText += 'ERROR: This code needs a "51", "59", "XS" or "XU" modifier.\n';
                   valColor = 'red';
             }
+
+            if(has27096 && codeVal=='20610' && !(hasModifier(modifiers, ["51","59","XS","XU"])))
+            {
+                  valText += 'ERROR: This code is billed with 27096 and therefore needs a "51", "59", "XS" or "XU" modifier.\n';
+                  valColor = 'red';
+            }
+
+            if( (codeVal=='20552' || codeVal=='20553') && !justify.includes("M79.1"))
+            {
+                  valText += 'ERROR: This code should be justified with "M79.1".';
+                  valColor = 'red';
+            } 
+
+            if( (codeVal=='20552' || codeVal=='20553' || codeVal=='63650') && hasLateralityModifier(modifiers))
+            {
+                  valText += 'ERROR: This code should not have a laterality modifier (RT/LT/50).';
+                  valColor = 'red';
+            } 
 
 	    if( valText=='')
 	    {
@@ -661,9 +709,7 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
 
             }
 
-
             return result;
-        
        }
 
 </script>
