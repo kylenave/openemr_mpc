@@ -600,15 +600,7 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
             var justify = f[pfx+'[justify]'].value;
             var price  = f[pfx+'[price]'].value;
             
-            //valText=codeVal + ":" + modifiers + ":" + units + ":" + justify;
-
-            //if(codeVal==='80307')
-            //{
-            //    valColor = 'orange';
-            //    valText += 'This is a UDS. Be sure to bill out of Bloomington.\n';
-            //}
-            
-            if(modifiers.includes('50') && units>1 )
+            if(codeVal != 'J7321' && modifiers.includes('50') && units>1 )
             {
                valText += 'Warning: This code has a 50 modifier and units > 1';
                valColor = 'orange';
@@ -671,7 +663,7 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
 '64492', '64493', '64495', '20600', '20604', '20605', '20606', '20610', '20611', '20526', '20550', '27096', 
 '64400', '64405', '64420', '64425', '64430', '64450', '64505', '64510', '64517', '64520', '64530', '66418'];
 
-            if((codesThatRequireModifier.includes(codeVal)) && hasLateralityModifier(modifiers))
+            if((codesThatRequireModifier.includes(codeVal)) && !hasLateralityModifier(modifiers))
             {
                   valText += 'ERROR: This code always needs a modifier (RT/LT/50).\n';
                   valColor = 'red';
