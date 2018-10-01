@@ -61,11 +61,11 @@ class FeeSheet {
 
   // Possible units of measure for NDC drug quantities.
   public $ndc_uom_choices = array(
+    'UN' => 'Units',
     'ML' => 'ML',
     'GR' => 'Grams',
     'ME' => 'Milligrams',
-    'F2' => 'I.U.',
-    'UN' => 'Units'
+    'F2' => 'I.U.'
   );
 
   // Set by checkRelatedForContraception():
