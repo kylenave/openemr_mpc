@@ -681,6 +681,12 @@ $billresult = getBillingByEncounter($fs->pid, $fs->encounter, "*");
                   valColor = 'red';
             }
 
+	    if(codeVal=='64495' && units > 1)
+            {
+                  valText += 'ERROR: This code should never have units > 1    ';
+                  valColor = 'red';
+            }
+
             if( (codeVal=='20552' || codeVal=='20553') && !justify.includes("M79.1"))
             {
                   valText += 'ERROR: This code should be justified with "M79.1".';
@@ -1823,11 +1829,13 @@ $(function() {
   var f = document.forms[0];
   f.newcodes.value = b.item.value; 
   f.submit();
+$(this).focus();
         },
         source: "search.php",
         minLength: 3
     });
 
+$('input[name=dxsearch]').focus();
 /*
   .addAutocomplete({
     	// add autocomplete window positioning
