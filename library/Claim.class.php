@@ -57,6 +57,7 @@ class Claim {
   var $billingIncidentTo=false;
   var $dbPayerType;
   var $dbPayerId;
+  var $hasMildCode = false;
 
   function loadPayerInfo(&$billrow) {
     global $sl_err;
@@ -227,6 +228,11 @@ class Claim {
 
       if($row['code']=='80307' || ($row['code'][0]=='L' && $row['code_type']=='CPT4')){
           $hasUdsCode=true;
+      }
+
+      if($row['code']=='0275T' && $row['activity']=='1')
+      {
+         $this->hasMildCode=true;
       }
     }
 
@@ -634,6 +640,10 @@ class Claim {
   // Number of payers for this claim. Ranges from 1 to 3.
   function payerCount() {
     return count($this->payers);
+  }
+
+  function hasMildCode(){
+    return $this->hasMildCode;
   }
 
   function x12gsversionstring() {

@@ -638,6 +638,15 @@ error_log("Claim type: " . $claim->claimType());
       "*" . $claim->priorAuth() .
       "~\n";
   }
+ 
+
+  error_log("Testing for Mild code.");
+  if($claim->hasMildCode())
+  {
+     error_log("Found Mild code.");
+     ++$edicount;
+     $out .= "REF*P4*03072927~\n";
+  }
 
   // Segment REF*F8 Payer Claim Control Number for claim re-submission.icn_resubmission_number
 
