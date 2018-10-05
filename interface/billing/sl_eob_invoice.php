@@ -448,7 +448,7 @@ function editNote(feid) {
     }
     if ($info_msg) echo " alert('" . addslashes($info_msg) . "');\n";
     //if (! $debug) echo " window.close();\n";
-    echo "</script></body>\n";
+    echo "</script>\n";
     //exit();
   }
 
