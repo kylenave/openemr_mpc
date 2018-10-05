@@ -91,6 +91,7 @@ $debug = 0; // set to 1 for debugging mode
     }
   }
 ?>
+
 <html>
 <head>
 <?php html_header_show(); ?>
@@ -273,6 +274,33 @@ function editNote(feid) {
     $form_check_date   = fixDate($_POST['form_check_date'], date('Y-m-d'));
     $form_deposit_date = fixDate($_POST['form_deposit_date'], $form_check_date);
     $form_pay_total    = 0 + $_POST['form_pay_total'];
+    $totalAdjAmount = 0;
+    $isDenied = false;
+    $isDeniedAuth = false;
+
+    $formReport = false;
+    $formAddAttachment = false;
+
+    if(array_key_exists($_POST, 'form_reopen'))
+    {
+      $formReopen=true;
+    }
+
+    if(array_key_exists($_POST, 'form_add_attachment'))
+    {
+      $formAddAttachment=true;
+    }
+
+    if(array_key_exists($_POST, 'is_denied'))
+    {
+      $isDenied=true;
+    }
+
+    if(array_key_exists($_POST, 'is_denied_auth'))
+    {
+      $isDeniedAuth=true;
+    }
+
 
   $payer_type = 0;
   if (preg_match('/^Ins(\d)/i', $_POST['form_insurance'], $matches)) {
@@ -281,14 +309,14 @@ function editNote(feid) {
 
    $payer_claim_id = arGetPayerClaimId($encounter_id);
 
-  if ($_POST['form_save'] || $_POST['form_cancel'] || $_POST['form_reopen'] || $_POST['form_add_attachment']) {
+  if ($_POST['form_save'] || $_POST['form_cancel'] || $formReopen || $formAddAttachment) {
 
-    if($_POST['form_reopen'])
+    if($formReopen)
     {
        doVoid($patient_id, $encounter_id, true);
     }
 
-    if($_POST['form_add_attachment'])
+    if($formAddAttachment)
     {
 
        if($_FILES['form_attachment']['size'])
@@ -414,25 +442,25 @@ function editNote(feid) {
         }
 
      // Clear Denied if needed... 
-      if(!$_POST['isDenied'] and ($denied_state=='1'))
+      if(!$isDenied and ($denied_state=='1'))
       {
           arClearDeniedFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
           $denied_state='0';
       }
       
-      if(!$_POST['isDeniedAuth'] and ($denied_state=='1'))
+      if(!$isDeniedAuth and ($denied_state=='1'))
       {
           arClearAuthFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
           $denied_auth='0';
       }
       
-      if($_POST['isDenied'] and ($denied_auth!= '1'))
+      if($isDenied and ($denied_auth!= '1'))
       {
           arSetDeniedFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
           $denied_state='1';
       }
 
-      if($_POST['isDeniedAuth'] and ($denied_auth!= '1'))
+      if($isDeniedAuth and ($denied_auth!= '1'))
       {
           arSetAuthFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
           $denied_auth='1';
@@ -533,9 +561,9 @@ while($data = sqlFetchArray($res))
 ?>
   </td>
 <td <?php if($denied_state=='1') echo 'bgcolor="#ffcccc"'; ?>>
-     <label><input type="checkbox" name="isDenied" <?php if($denied_state=='1') echo "checked=true" ?> >Claim is Denied <?php echo "(Payer ClmID: $payer_claim_id )" ?></label>
+     <label><input type="checkbox" name="is_denied" <?php if($denied_state=='1') echo "checked=true" ?> >Claim is Denied <?php echo "(Payer ClmID: $payer_claim_id )" ?></label>
 &nbsp;&nbsp;&nbsp;
-     <label><input type="checkbox" name="isDeniedAuth" <?php if($denied_auth=='1') echo "checked=true" ?> >Authorization Issue </label>
+     <label><input type="checkbox" name="is_denied_auth" <?php if($denied_auth=='1') echo "checked=true" ?> >Authorization Issue </label>
 </td>
  </tr>
 
@@ -591,12 +619,6 @@ while($data = sqlFetchArray($res))
    <input type='radio' name='form_insurance' value='Ins3' onclick='setins("Ins3")' /><?php xl('Ins3','e')?>&nbsp;
    <input type='radio' name='form_insurance' value='Pt'   onclick='setins("Pt")'   /><?php xl('Patient','e')?>
 
-<?php
-  // TBD: I think the following is unused and can be removed.
-?>
-   <input type='hidden' name='form_eobs' value='<?php echo addslashes($arrow['shipvia']) ?>' />
-
-  </td>
 <?php
     echo "<td>\n";
     echo xl('Check/EOB Date:');
