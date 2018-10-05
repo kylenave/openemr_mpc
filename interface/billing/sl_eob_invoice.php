@@ -274,7 +274,10 @@ function editNote(feid) {
     $form_check_date   = fixDate($_POST['form_check_date'], date('Y-m-d'));
     $form_deposit_date = fixDate($_POST['form_deposit_date'], $form_check_date);
     $form_pay_total    = 0 + $_POST['form_pay_total'];
+    $formSave - false;
+    
     $totalAdjAmount = 0;
+
     $isDenied = false;
     $isDeniedAuth = false;
 
@@ -284,6 +287,11 @@ function editNote(feid) {
     if(array_key_exists('form_reopen', $_POST))
     {
       $formReopen=true;
+    }
+
+    if(array_key_exists('form_save', $_POST))
+    {
+      $formSave=true;
     }
 
     if(array_key_exists('form_add_attachment', $_POST))
@@ -309,7 +317,7 @@ function editNote(feid) {
 
    $payer_claim_id = arGetPayerClaimId($encounter_id);
 
-  if ($_POST['form_save'] || $_POST['form_cancel'] || $formReopen || $formAddAttachment) {
+  if ($formSave || $_POST['form_cancel'] || $formReopen || $formAddAttachment) {
 
     if($formReopen)
     {
@@ -330,7 +338,7 @@ function editNote(feid) {
        }     
     }
 
-    if ($_POST['form_save']) {
+    if ($formSave) {
       if ($debug) {
         echo xl("This module is in test mode. The database will not be changed.",'','<p><b>',"</b><p>\n");
       }
@@ -450,6 +458,7 @@ function editNote(feid) {
       
       if(!$isDeniedAuth and ($denied_state=='1'))
       {
+          error_log("Clearing Auth flag...");
           arClearAuthFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
           $denied_auth='0';
       }
@@ -462,6 +471,7 @@ function editNote(feid) {
 
       if($isDeniedAuth and ($denied_auth!= '1'))
       {
+          error_log("Setting Auth Flag");
           arSetAuthFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
           $denied_auth='1';
       }
