@@ -317,7 +317,7 @@ function editNote(feid) {
         // the source input fields from row level to header level.
 
         // Handle deletes. row_delete() is borrowed from deleter.php.
-        if ($ALLOW_DELETE && !$debug) {
+        if ($ALLOW_DELETE && $_POST['form_del'] && !$debug) {
           foreach ($_POST['form_del'] as $arseq => $dummy) {
             row_delete("ar_activity", "pid = '$patient_id' AND " .
               "encounter = '$encounter_id' AND sequence_no = '$arseq'");
@@ -448,7 +448,7 @@ function editNote(feid) {
     }
     if ($info_msg) echo " alert('" . addslashes($info_msg) . "');\n";
     //if (! $debug) echo " window.close();\n";
-    echo "</script></body></html>\n";
+    echo "</script></body>\n";
     //exit();
   }
 
@@ -535,7 +535,7 @@ while($data = sqlFetchArray($res))
 <td <?php if($denied_state=='1') echo 'bgcolor="#ffcccc"'; ?>>
      <label><input type="checkbox" name="isDenied" <?php if($denied_state=='1') echo "checked=true" ?> >Claim is Denied <?php echo "(Payer ClmID: $payer_claim_id )" ?></label>
 &nbsp;&nbsp;&nbsp;
-     <label><input type="checkbox" name="isDeniedAuth" <?php if($denied_auth=='1') echo "checked=true" ?> >Authorization Issue</label>
+     <label><input type="checkbox" name="isDeniedAuth" <?php if($denied_auth=='1') echo "checked=true" ?> >Authorization Issue </label>
 </td>
  </tr>
 
