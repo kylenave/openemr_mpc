@@ -281,22 +281,22 @@ function editNote(feid) {
     $formReport = false;
     $formAddAttachment = false;
 
-    if(array_key_exists($_POST, 'form_reopen'))
+    if(array_key_exists('form_reopen', $_POST))
     {
       $formReopen=true;
     }
 
-    if(array_key_exists($_POST, 'form_add_attachment'))
+    if(array_key_exists('form_add_attachment', $_POST))
     {
       $formAddAttachment=true;
     }
 
-    if(array_key_exists($_POST, 'is_denied'))
+    if(array_key_exists('is_denied', $_POST))
     {
       $isDenied=true;
     }
 
-    if(array_key_exists($_POST, 'is_denied_auth'))
+    if(array_key_exists('is_denied_auth', $_POST))
     {
       $isDeniedAuth=true;
     }
