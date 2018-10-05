@@ -278,7 +278,7 @@ function editNote(feid) {
     $isDenied = false;
     $isDeniedAuth = false;
 
-    $formReport = false;
+    $formReopen = false;
     $formAddAttachment = false;
 
     if(array_key_exists('form_reopen', $_POST))
