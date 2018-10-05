@@ -277,7 +277,7 @@ error_log("At Top of Page");
     $form_check_date   = fixDate($_POST['form_check_date'], date('Y-m-d'));
     $form_deposit_date = fixDate($_POST['form_deposit_date'], $form_check_date);
     $form_pay_total    = 0 + $_POST['form_pay_total'];
-    $formSave - false;
+    $formSave = false;
     
     $totalAdjAmount = 0;
 
@@ -456,6 +456,8 @@ error_log("Loaded flags");
         }
 
         error_log("Are we even getting here???");
+        error_log("Is Denied: " . $isDenied . " - ". $denied_state);
+        error_log("Is Auth: ". $isDeniedAuth . " - " . $denied_auth);
      // Clear Denied if needed... 
       if(!$isDenied and ($denied_state=='1'))
       {
@@ -463,14 +465,14 @@ error_log("Loaded flags");
           $denied_state='0';
       }
       
-      if(!$isDeniedAuth and ($denied_state=='1'))
+      if(!$isDeniedAuth and ($denied_auth=='1'))
       {
           error_log("Clearing Auth flag...");
           arClearAuthFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
           $denied_auth='0';
       }
       
-      if($isDenied and ($denied_auth!= '1'))
+      if($isDenied and ($denied_state!= '1'))
       {
           arSetDeniedFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
           $denied_state='1';
