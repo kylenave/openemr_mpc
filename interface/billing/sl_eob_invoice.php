@@ -256,6 +256,9 @@ function editNote(feid) {
 </head>
 <body leftmargin='0' topmargin='0' marginwidth='0' marginheight='0'>
 <?php
+
+error_log("At Top of Page");
+
   $trans_id = 0 + $_GET['id'];
   if (! $trans_id) die(xl("You cannot access this page directly."));
 
@@ -309,6 +312,7 @@ function editNote(feid) {
       $isDeniedAuth=true;
     }
 
+error_log("Loaded flags");
 
   $payer_type = 0;
   if (preg_match('/^Ins(\d)/i', $_POST['form_insurance'], $matches)) {
@@ -339,6 +343,8 @@ function editNote(feid) {
     }
 
     if ($formSave) {
+      error_log("Saving the form");
+
       if ($debug) {
         echo xl("This module is in test mode. The database will not be changed.",'','<p><b>',"</b><p>\n");
       }
@@ -449,6 +455,7 @@ function editNote(feid) {
           arSetupSecondary($patient_id, $encounter_id, $debug);
         }
 
+        error_log("Are we even getting here???");
      // Clear Denied if needed... 
       if(!$isDenied and ($denied_state=='1'))
       {
