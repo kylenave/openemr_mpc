@@ -189,6 +189,7 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
       $amount = sprintf('%01.2f', $row['fee']);
 
       $codesItem=array();
+      $codesItem['adj']=0;
       $code = $row['code'];
 
       if (! $code) $code = "Unknown";
@@ -204,9 +205,17 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
       
       $codesItem['code']= $code;
       $codesItem['id'] = $row['id'];
-      $codesItem['chg'] += $amount;
-      $codesItem['bal'] += $amount;
-
+      if(array_key_exists('chg', $codesItem)){
+         $codesItem['chg'] += $amount;
+      }else{
+         $codesItem['chg'] = $amount;
+      }
+      if(array_key_exists('bal', $codesItem)){
+         $codesItem['bal'] += $amount;
+      }else{
+         $codesItem['bal'] = $amount;
+      }
+         
     // Pass the code type, code and code_text fields
     // Although not all used yet, useful information
     // to improve the statement reporting etc.
@@ -218,7 +227,7 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
     // Add the details if they want 'em.
     if ($with_detail) 
     {
-      if (! $codesItem['dtl'])
+      if (!array_key_exists('dtl', $codesItem))
       {
          $codesItem['dtl'] = array();
       }
@@ -238,7 +247,7 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
   // Get payments and adjustments. (includes copays)
   $res = sqlStatement("SELECT " .
     "a.code_type, a.code, a.modifier, a.memo, a.payer_type, a.adj_amount, a.pay_amount, a.reason_code, " .
-    "a.post_time, a.session_id, a.sequence_no, a.account_code, " .
+    "a.post_time, a.session_id, a.sequence_no, a.account_code, a.follow_up, a.follow_up_note, " .
     "s.payer_id, s.reference, s.check_date, s.deposit_date, a.billing_id " .
     ",i.name, a.pr_amount, a.pr_code " .
     "FROM ar_activity AS a " .
@@ -307,7 +316,7 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
       {
          $tmp['chg'] = 0 - $arow['adj_amount'];
          // $tmp['rsn'] = (empty($row['memo']) || empty($row['session_id'])) ? 'Unknown adjustment' : $row['memo'];
-         $tmp['rsn'] = (empty($arow['memo']) ? 'Unknown adjustment' : $arow['memo']);
+         $tmp['rsn'] = (empty($arow['memo']) ? (!empty($arow['follow_up_note'])? $arow['follow_up_note'] : 'Unknown adjustment') : $arow['memo']);
          $tmpkey = $paydate . $keysuff1++;
       }
       else 

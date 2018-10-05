@@ -64,7 +64,6 @@ $debug = 0; // set to 1 for debugging mode
      $commandSuffix = " {} +";
 
      $totalCommand = $commandToFindFiles . $commandToFilterFiles . $commandSuffix;
-error_log($totalCommand);
 
      return shell_exec($totalCommand);
   }
@@ -267,6 +266,7 @@ function editNote(feid) {
     $patient_id        = 0 + $ferow['pid'];
     $encounter_id      = 0 + $ferow['encounter'];
     $denied_state      = $ferow['external_id'];
+    $denied_auth       = $ferow['denial_auth'];
     $svcdate           = substr($ferow['date'], 0, 10);
     $form_payer_id     = 0 + $_POST['form_payer_id'];
     $form_reference    = $_POST['form_reference'];
@@ -416,14 +416,26 @@ function editNote(feid) {
      // Clear Denied if needed... 
       if(!$_POST['isDenied'] and ($denied_state=='1'))
       {
-          arClearDeniedFlag($patient_id, $encounter_id, "Denied manually cleared.", $_SESSION['authUser']);
+          arClearDeniedFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
           $denied_state='0';
       }
       
-      if($_POST['isDenied'] and ($denied_state!= '1'))
+      if(!$_POST['isDeniedAuth'] and ($denied_state=='1'))
       {
-          arSetDeniedFlag($patient_id, $encounter_id, "Claim manually denied.", $_SESSION['authUser']);
+          arClearAuthFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
+          $denied_auth='0';
+      }
+      
+      if($_POST['isDenied'] and ($denied_auth!= '1'))
+      {
+          arSetDeniedFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
           $denied_state='1';
+      }
+
+      if($_POST['isDeniedAuth'] and ($denied_auth!= '1'))
+      {
+          arSetAuthFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
+          $denied_auth='1';
       }
 
       echo "<script language='JavaScript'>\n";
@@ -520,7 +532,11 @@ while($data = sqlFetchArray($res))
     echo "$patient_id.$encounter_id";
 ?>
   </td>
-<td <?php if($denied_state=='1') echo 'bgcolor="#ffcccc"'; ?>><label><input type="checkbox" name="isDenied" <?php if($denied_state=='1') echo "checked=true" ?> >Claim is Denied <?php echo "(Payer ClmID: $payer_claim_id )" ?></label></td>
+<td <?php if($denied_state=='1') echo 'bgcolor="#ffcccc"'; ?>>
+     <label><input type="checkbox" name="isDenied" <?php if($denied_state=='1') echo "checked=true" ?> >Claim is Denied <?php echo "(Payer ClmID: $payer_claim_id )" ?></label>
+&nbsp;&nbsp;&nbsp;
+     <label><input type="checkbox" name="isDeniedAuth" <?php if($denied_auth=='1') echo "checked=true" ?> >Authorization Issue</label>
+</td>
  </tr>
 
  <tr>
@@ -839,7 +855,6 @@ echo "</table>";
 //Show EOB INFORMATION HERE
 echo "<pre>";
 $eobText = getEobText($patient_id, $encounter_id);
-error_log($eobText);
 echo $eobText;
 ?>
 </pre>
