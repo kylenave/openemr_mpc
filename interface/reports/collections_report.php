@@ -566,6 +566,8 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
   $rows = array();
   $where = "";
   $sqlArray = array();
+
+    //EXCEL EXPORT//
     if ($_POST['form_export'] || $_POST['form_csvexport']) {
        
       $where = "( 1 = 2";
@@ -585,7 +587,10 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
          }
       }
       $where .= ' )';
-    }
+    }//END EXCEL/DATA EXPORT
+
+
+    //Applicable Date for query
     if ($form_date) {
       if ($where) $where .= " AND ";
       if ($form_to_date) {
@@ -597,11 +602,15 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
         array_push($sqlArray, $form_date.' 00:00:00', $form_date.' 23:59:59');
       }
     }
+
+    //SPECIFIC Facility
     if ($form_facility) {
       if ($where) $where .= " AND ";
       $where .= "f.facility_id = ? ";
       array_push($sqlArray, $form_facility);
     }
+
+
     # added for filtering by provider (TLH)
     if ($form_provider) {
       if ($where) $where .= " AND ";
@@ -612,6 +621,7 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
     if (! $where) {
       $where = "1 = 1";
     }
+
     # added provider from encounter to the query (TLH)
     $query = "SELECT f.id, f.date, f.pid, CONCAT(w.lname, ', ', w.fname) AS provider_id, f.encounter, f.last_level_billed, fac.name as facility, " .
       "f.last_level_closed, f.last_stmt_date, f.stmt_count, f.invoice_refno, f.external_id, f.denial_auth, " .
@@ -652,6 +662,7 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
       if ($_POST['form_refresh'] && ! $is_all) {
         if ($pt_balance == 0) continue;
       }
+
       if ($_POST['form_category'] == 'Credits') {
         if ($pt_balance > 0) continue;
       }
@@ -732,7 +743,8 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
       // This computes the invoice's total original charges and adjustments,
       // date of last activity, and determines if insurance has responded to
       // all billing items.
-      $invlines = ar_get_invoice_summary($patient_id, $encounter_id, true);
+      // UPDATED TO USE NEW INVOICE SUMMARY 10/14/18 KBN
+      $invlines = ar_get_invoice_summary2($patient_id, $encounter_id, true);
 
       // if ($encounter_id == 185) { // debugging
       //   echo "\n<!--\n";
@@ -1085,7 +1097,8 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
 
     # The CSV detail line is written here added conditions for checked items (TLH).
       $balance = $row['charges'] + $row['adjustments'] - $row['paid'];
-     if($balance >0) {
+     //if($balance >0) {
+     if(true) {
       // echo '"' . $insname                             . '",';
       echo '"' . $row['ins1']                         . '",';
       echo '"' . $ptname                              . '",';
