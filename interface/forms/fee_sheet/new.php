@@ -85,12 +85,19 @@ function echoServiceLines() {
     $modifier = $li['hidden']['mod'];
     $billed   = $li['hidden']['billed'];
     $ndc_info = isset($li['ndc_info']) ? $li['ndc_info'] : '';
+    if(isset($li['ndcnum']))
+    {
+        $ndcnum = $li['ndcnum'];
+        $ndcuom = $li['ndcuom'];
+        $ndcqty = $li['ndcqty'];
+
+        $ndc_info = 'N4' . trim($ndcnum) . '   ' . $ndcuom .  trim($ndcqty);
+    }
     $pricelevel = $li['pricelevel'];
     $justify  = $li['justify'];
 
     $strike1 = $li['del'] ? "<strike>" : "";
     $strike2 = $li['del'] ? "</strike>" : "";
-
     echo " <tr>\n";
 
     echo "  <td class='billcell'>$strike1" .
@@ -1468,8 +1475,7 @@ if ($billresult) {
       $authorized = $bline['auth'];
       $ndc_info   = '';
       if ($bline['ndcnum']) {
-        $ndc_info = 'N4' . trim($bline['ndcnum']) . '   ' . $bline['ndcuom'] .
-        trim($bline['ndcqty']);
+        $ndc_info = 'N4' . trim($bline['ndcnum']) . '   ' . $bline['ndcuom'] .  trim($bline['ndcqty']);
       }
       $justify    = $bline['justify'];
       $notecodes  = trim($bline['notecodes']);
@@ -1534,7 +1540,6 @@ if (isset($_POST['bill'])) {
     $units = max(1, intval(trim($iter['units'])));
     $fee = formatMoneyNumber((0 + trim($iter['price'])) * $units);
     //the date is passed as $ndc_info, since this variable is not applicable in the case of copay.
-    $ndc_info = '';
     if ($iter['code_type'] == 'COPAY'){
       $ndc_info = date("Y-m-d");
       if($fee > 0)
