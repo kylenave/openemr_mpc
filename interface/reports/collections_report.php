@@ -30,6 +30,7 @@ $sanitize_all_escapes=true;
  
 require_once("../globals.php");
 require_once("../../library/patient.inc");
+require_once("../../library/billing.inc");
 require_once("../../library/invoice_summary.inc.php");
 require_once("../../library/sl_eob.inc.php");
 require_once("../../library/formatting.inc.php");
@@ -56,6 +57,7 @@ $is_ageby_lad   = strpos($_POST['form_ageby'], 'Last') !== false;
 $form_facility  = $_POST['form_facility'];
 $form_provider  = $_POST['form_provider'];
 $form_payer_id  = $_POST['form_payer_id'];
+$form_ar_user   = $_POST['form_ar_user'];
 
 if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport']) {
   if ($is_ins_summary) {
@@ -84,14 +86,14 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
     $form_cb_err      = $_POST['form_cb_err']      ? true : false;
   }
 } else {
-  $form_cb_ssn      = true;
-  $form_cb_dob      = false;
-  $form_cb_pubpid   = false;
+  $form_cb_ssn      = false;
+  $form_cb_dob      = true;
+  $form_cb_pubpid   = true;
   $form_cb_adate    = false;
-  $form_cb_policy   = false;
+  $form_cb_policy   = true;
   $form_cb_phone    = true;
   $form_cb_city     = false;
-  $form_cb_ins1     = false;
+  $form_cb_ins1     = true;
   $form_cb_referrer = false;
   $form_cb_idays    = false;
   $form_cb_err      = false;
@@ -253,6 +255,16 @@ function endInsurance($insrow) {
 function getInsName($payerid) {
   $tmp = sqlQuery("SELECT name FROM insurance_companies WHERE id = ? ", array($payerid));
   return $tmp['name'];
+}
+
+function getInsArUser($payerid) {
+  $tmp = sqlQuery("SELECT username FROM ar_assignment WHERE payer_id = ? ", array($payerid));
+
+  if($tmp){
+     return $tmp['username'];
+  }
+
+  return $tmp;
 }
 
 // In the case of CSV export only, a download will be forced.
@@ -454,13 +466,25 @@ function checkAll(checked) {
                                echo "    <option value='0'>-- " . xlt('All') . " --</option>\n";
                                foreach ($insurancei as $iid => $iname) {
                                  echo "<option value='" . attr($iid) . "'";
-                                 if ($iid == $_POST['form_payer_id']) echo " selected";
+                                 if ($iid == $form_payer_id){ 
+                                    echo " selected";
+				    $ins_co_name = $iname;
+				 }
                                     echo ">" . text($iname) . "</option>\n";
-                                 if ($iid == $_POST['form_payer_id']) $ins_co_name = $iname;
                                }
                                echo "   </select>\n";
                         ?>            
 						</td>
+<td><select name='form_ar_user'>
+<option value='0'>--All--</option>
+<?php 
+$arUsers = getArUsers();
+foreach($arUsers as $user)
+{
+   echo "<option value='" . attr($user) . "'> " . text($user) . "</option>\n";
+} ?>
+<option value='-'>Other</option>
+</select></td>
 					</tr>
 
 					<tr>
@@ -497,9 +521,9 @@ function checkAll(checked) {
                                while ($urow = sqlFetchArray($ures)) {
                                $provid = $urow['id'];
                                echo "    <option value='" . attr($provid) . "'";
-                                if ($provid == $_POST['form_provider']) echo " selected";
+                                if ($provid == $form_provider) echo " selected";
                                 echo ">" . text($urow['lname']) . ", " . text($urow['fname']) . "\n";
-                                if ($provid == $_POST['form_provider']) $provider_name = $urow['lname'] . ", " . $urow['fname'];
+                                if ($provid == $form_provider) $provider_name = $urow['lname'] . ", " . $urow['fname'];
                                }
 
                                echo "   </select>\n";
@@ -677,6 +701,8 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
       $payerids = array();
       $insposition = 0;
       $insname = '';
+      $insArUser='';
+      $ar_other = true; 
       if (! $duncount) {
         for ($i = 1; $i <= 3; ++$i) {
           $tmp = arGetPayerID($patient_id, $svcdate, $i);
@@ -687,15 +713,28 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
         if ($duncount < 0) {
           if (!empty($payerids[$last_level_closed])) {
             $insname = getInsName($payerids[$last_level_closed]);
+            if($form_ar_user != '0'){
+		$insArUser= getInsArUser($payerids[$last_level_closed]);
+                if($insArUser!==false)$ar_other = false; 
+	    }
             $insposition = $last_level_closed + 1;
           }
         }
+      }
+
+      if($ar_other)
+      {
+         if($form_ar_user != '0'){
+	    $insArUser= getInsArUser($payerids[0]);
+            if($insArUser!==false)$ar_other = false; 
+         }
       }
 
       // Skip invoices not in the desired "Due..." category.
       //
       if ($is_due_ins && $duncount >= 0) continue;
       if ($is_due_pt  && $duncount <  0) continue;
+      if ($form_ar_user != '0' && ( ($form_ar_user != '-' && $form_ar_user != $insArUser) || ($form_ar_user=='-' && !$ar_other))) continue;
       if ($is_denied && !($encounterDenied && !$encounterDeniedAuth)) continue;
       if ($is_denied_auth && !($encounterDenied && $encounterDeniedAuth)) continue;
 
