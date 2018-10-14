@@ -419,4 +419,18 @@ function doVoid($patient_id, $encounter_id, $purge=false, $time='') {
       array($new_invoice_refno, $patient_id, $encounter_id));
   }
 }
+
+function getArUsers() {
+    $returnval = array();
+
+    if (true) {
+        $sql = "select distinct username from ar_assignment";
+        $rez = sqlStatement($sql);
+        for($iter=0; $row=sqlFetchArray($rez); $iter++) {
+            $returnval[] = $row['username'];
+        }
+    }
+    return $returnval;
+}
+
 ?>
