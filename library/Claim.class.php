@@ -58,6 +58,7 @@ class Claim {
   var $dbPayerType;
   var $dbPayerId;
   var $hasMildCode = false;
+  var $needsReferringProvider = false;
 
   function loadPayerInfo(&$billrow) {
     global $sl_err;
@@ -234,6 +235,13 @@ class Claim {
       {
          $this->hasMildCode=true;
       }
+
+      $referringProviderCodes = array('76000', '77002', '77003', '76942', '95873', '95970', '95972');
+
+      if(in_array($row['code'], $referringProviderCodes))
+      {
+         $this->needsReferringProvider = true;
+      }
     }
 
     $resMoneyGot = sqlStatement("SELECT pay_amount as PatientPay,session_id as id,".
@@ -262,25 +270,13 @@ class Claim {
       "LIMIT 1";
 
     $provider_id = $this->encounter['provider_id'];
-
-    if ($this->encounter['facility_id']=='9') {
-
-      if ($this->payers[0]['company']['cms_id'] == 'MCRIL') {
-         
-         if($provider_id=='16' || $provider_id=='10') {
-            $sql = "SELECT * FROM facility WHERE " .
-             "id = '" . addslashes('3') . "' " .
-             "LIMIT 1";
-         }
-      }
-    } 
     $this->facility = sqlQuery($sql);
 
-    // ALL MEDICAID UDS MUST GO OUT UNDER SOTO FOR NOW
-    if($hasUdsCode && $this->payers[0]['company']['cms_id'] == 'MCDIL')
-    {
-	$this->encounter['provider_id']='10';
-    }
+    // 10/14 NO LONGER TRUE: ALL MEDICAID UDS MUST GO OUT UNDER SOTO FOR NOW
+    //if($hasUdsCode && $this->payers[0]['company']['cms_id'] == 'MCDIL')
+    //{
+//	$this->encounter['provider_id']='10';
+    //}
 
 
     $sql = "SELECT count(*) as count from billing b where b.code_type='CPT4' and b.code like 'L%' and b.activity='1' and b.encounter='" . $this->encounter['encounter'] . "'";
@@ -360,7 +356,7 @@ class Claim {
 
     if(!$billing_options_id){
 
-       if($hasUdsCode){
+       if($hasUdsCode || $this->needsReferringProvider){
           $referrer_id='6';
        }else
        { 
