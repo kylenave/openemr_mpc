@@ -194,6 +194,7 @@ use ESign\Api;
  $disallowed['pre'] = !(acl_check('patients', 'med'));
  $disallowed['eob'] = !(acl_check('acct', 'eob'));
 
+
  // Helper functions for treeview generation.
  function genTreeLink($frame, $name, $title, $mono=false) {
   global $primary_docs, $disallowed;
@@ -292,6 +293,15 @@ function genPopupsList($style='') {
 <option value='../patient_file/addr_label.php'><?php xl('Address Label','e'); ?></option>
 <?php } ?>
 </select>
+<?php
+}
+
+function genEncounter()
+{
+?>
+Encounter: 
+   <input id="encounter" type="entry" size="7" name="encounter" class='encounter'  />
+
 <?php
 }
 
@@ -682,6 +692,21 @@ function clearactive() {
   }
  }
  
+// Process a click to go to an encounter.
+function toencounter(pid, pubpid, pname, enc, datestr, dobstr) {
+ top.restoreSession();
+ encurl = 'patient_file/encounter/encounter_top.php?set_encounter=' + enc + '&pid=' + pid;
+ setPatient(pname,pid,pubpid,'',dobstr);
+ <?php if ($GLOBALS['new_tabs_layout']) { ?>
+  setEncounter(datestr, enc, 'enc');
+  loadFrame('enc2', 'enc', encurl);
+ <?php } else  { ?>
+  var othername = (window.name == 'RTop') ? 'RBot' : 'RTop';
+  setEncounter(datestr, enc, othername);
+  parent.frames[othername].location.href = '../' + encurl;
+ <?php } ?>
+}
+
   //
   // Commented out this code block are part of the removal of the athletic team code TLH
   // 
@@ -1400,6 +1425,7 @@ if (!empty($reg)) {
     <?php if (acl_check('admin','super')) { ?>
       <li><a class="collapsed_lv2"><span><?php echo xlt('Billing') ?></span></a>
         <ul>
+          <?php genMiscLink('RTop','rep','0',xl('Missing Encounters'),'reports/missing_encounters_report.php'); ?>
           <?php genMiscLink('RTop','rep','0',xl('Coding Errors'),'reports/code_error_report.php'); ?>
           <?php genMiscLink('RTop','rep','0',xl('Demographic Errors'),'reports/demographic_error_report.php'); ?>
           <?php genMiscLink('RTop','rep','0',xl('Denied Claims'),'reports/denied_claims.php'); ?>
@@ -1408,6 +1434,7 @@ if (!empty($reg)) {
           <?php genMiscLink('RTop','rep','0',xl('AR Summary'),'reports/ar_summary_report.php'); ?>
           <?php genMiscLink('RTop','rep','0',xl('AR Summary w/Patient Balance'),'reports/ar_summary_report_patient.php'); ?>
           <?php genMiscLink('RTop','rep','0',xl('Template'),'reports/report_template.php'); ?>
+          <?php genMiscLink('RTop','rep','0',xl('Test'),'reports/test_report.php'); ?>
         </ul>
       </li>
     <?php } ?>
@@ -1491,6 +1518,14 @@ function save_setting (cb_frames) {
 	    }
     }
 }
+
+$('.encounter').keyup(function (e) {
+    if (e.keyCode === 13) {
+       toencounter(6075, 6075, "Tester2 Patient" , '22697', "04/23/2018" , "01/14/1972");
+    }
+  });
+
+
 </script>
 
 </body>
