@@ -433,6 +433,27 @@ function arSetDeniedFlag($patient_id, $encounter_id, $note='', $userId='1')
    }
 }
 
+function arClearAuthFlag($patient_id, $encounter_id,$note='', $userId='1')
+{
+   sqlStatement("UPDATE form_encounter set denial_auth='0' where encounter='$encounter_id' and pid='$patient_id'");   
+
+   if($note!='' && $encounter_id)
+   {
+      $datetime = date('Y-m-d H:i:s');
+      sqlInsert('INSERT INTO billing_notes (date, encounter, user_id, comments) VALUES (?,?,?,?)', array($datetime, $encounter_id, $userId, $note));
+   }
+}
+
+function arSetAuthFlag($patient_id, $encounter_id, $note='', $userId='1')
+{
+   sqlStatement("UPDATE form_encounter set denial_auth='1' where encounter='$encounter_id' and pid='$patient_id'");   
+
+   if($note!='' && $encounter_id)
+   {
+      $datetime = date('Y-m-d H:i:s');
+      sqlInsert('INSERT INTO billing_notes (date, encounter, user_id, comments) VALUES (?,?,?,?)', array($datetime, $encounter_id, $userId, $note));
+   }
+}
 function arGetPayerClaimId($encounter_id)
 {
    $res = sqlQuery("Select c.payer_claim_id from claims c where c.encounter_id='$encounter_id' and c.version = " .
