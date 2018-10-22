@@ -592,6 +592,7 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
   $sqlArray = array();
 
     //EXCEL EXPORT//
+/*
     if ($_POST['form_export'] || $_POST['form_csvexport']) {
        
       $where = "( 1 = 2";
@@ -612,7 +613,7 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
       }
       $where .= ' )';
     }//END EXCEL/DATA EXPORT
-
+*/
 
     //Applicable Date for query
     if ($form_date) {
@@ -1136,8 +1137,7 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
 
     # The CSV detail line is written here added conditions for checked items (TLH).
       $balance = $row['charges'] + $row['adjustments'] - $row['paid'];
-     //if($balance >0) {
-     if(true) {
+     if($balance != 0) {
       // echo '"' . $insname                             . '",';
       echo '"' . $row['ins1']                         . '",';
       echo '"' . $ptname                              . '",';
