@@ -1433,6 +1433,7 @@ if (!empty($reg)) {
           <?php genMiscLink('RTop','rep','0',xl('Follow Up Claims'),'reports/follow_up_claims.php'); ?>
           <?php genMiscLink('RTop','rep','0',xl('AR Summary'),'reports/ar_summary_report.php'); ?>
           <?php genMiscLink('RTop','rep','0',xl('AR Summary w/Patient Balance'),'reports/ar_summary_report_patient.php'); ?>
+          <?php genMiscLink('RTop','rep','0',xl('UnpaidVisits'),'reports/unpaid_visits_by_patient.php'); ?>
           <?php genMiscLink('RTop','rep','0',xl('Template'),'reports/report_template.php'); ?>
           <?php genMiscLink('RTop','rep','0',xl('Test'),'reports/test_report.php'); ?>
         </ul>
