@@ -34,7 +34,7 @@ require_once("$srcdir/formdata.inc.php");
 // refreshing or starting a new script.
 if (isset($_POST['new_login_session_management'])) {
   // This is a new login, so create a new session id and remove the old session
-  session_regenerate_id(true);
+  session_regenerate_id(false);
 }
 else {
   // This is not a new login, so create a new session id and do NOT remove the old session

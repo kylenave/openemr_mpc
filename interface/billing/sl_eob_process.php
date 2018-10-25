@@ -330,11 +330,11 @@ $Denied=false;
             }
             writeMessageLine($bgcolor, 'errdetail', "Not posting adjustments for denied claims, please follow up manually!");
 } // END OF DENIAL CASE
-        else if ($csc == '22') 
+else if ($csc == '22') 
 {
-            $inverror = true;
-            writeMessageLine($bgcolor, 'errdetail', "Payment reversals are not automated, please enter manually!");
-                      updateClaim(true, $pid, $encounter, $_REQUEST['InsId'], substr($inslabel,3),7,0,"Payment Reversal");
+        $inverror = true;
+        writeMessageLine($bgcolor, 'errdetail', "Payment reversals are not automated, please enter manually!");
+        updateClaim(true, $pid, $encounter, $_REQUEST['InsId'], substr($inslabel,3),22,0,"Payment Reversal");
 }
 
         if ($out['warnings']) 
@@ -519,7 +519,14 @@ foreach ($out['svc'] as $svc)
             $class = $error ? 'errdetail' : 'newdetail';
 
             // Report Allowed Amount.
-            if ($svc['allowed']) {
+            if (array_key_exists('allowed', $svc)) {
+                $allowed_amount = $svc['allowed'];
+                if (!$error && !$debug) 
+		{
+                   arPostPayment($pid, $encounter,$InsertionId[$out['check_number']], 0.0,//$InsertionId[$out['check_number']] gives the session id
+                                 $svc['code'], $svc['mod'], substr($inslabel,3), $out['check_number'], $debug,'',$codetype, $group, $billing_id, $allowed_amount);
+		}
+
                 // A problem here is that some payers will include an adjustment
                 // reflecting the allowed amount, others not.  So here we need to
                 // check if the adjustment exists, and if not then create it.  We
@@ -540,6 +547,8 @@ foreach ($out['svc'] as $svc)
                 
 		writeMessageLine($bgcolor, 'infdetail',
                     'Allowed amount is ' . sprintf("%.2f", $svc['allowed']));
+            }else{
+                $allowed_amount = 0.0;
             }
 
             // Report miscellaneous remarks.
@@ -556,7 +565,7 @@ foreach ($out['svc'] as $svc)
                 if (!$error && !$debug) 
 		{
                    arPostPayment($pid, $encounter,$InsertionId[$out['check_number']], $svc['paid'],//$InsertionId[$out['check_number']] gives the session id
-                                 $svc['code'], $svc['mod'], substr($inslabel,3), $out['check_number'], $debug,'',$codetype, $group, $billing_id);
+                                 $svc['code'], $svc['mod'], substr($inslabel,3), $out['check_number'], $debug,'',$codetype, $group, $billing_id );
                 }
                 $invoice_total -= $svc['paid'];
                 $description = "$inslabel/" . $out['check_number'] . ' payment';

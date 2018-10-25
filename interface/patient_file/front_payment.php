@@ -182,6 +182,7 @@ if ($_POST['form_save']) {
                                 $Codetype=$RowSearch['code_type'];
 				$Code=$RowSearch['code'];
 				$Modifier=$RowSearch['modifier'];
+				$BillingId=$RowSearch['id'];
 			  }
 			 else
 			  {
@@ -251,21 +252,22 @@ if ($_POST['form_save']) {
 					  array($form_pid,$enc));
 					 while($RowSearch = sqlFetchArray($ResultSearchNew))
 					  {
+						$BillingId=$RowSearch['id'];
                                                 $Codetype=$RowSearch['code_type'];
 						$Code=$RowSearch['code'];
 						$Modifier =$RowSearch['modifier'];
 						$Fee =$RowSearch['fee'];
 						
 						$resMoneyGot = sqlStatement("SELECT sum(pay_amount) as MoneyGot FROM ar_activity where pid =? ".
-							"and code_type=? and code=? and modifier=? and encounter =? and !(payer_type=0 and account_code='PCP')",
-						array($form_pid,$Codetype,$Code,$Modifier,$enc));
+							"and code_type=? and code=? and modifier=? and billing_id=? and encounter =? and !(payer_type=0 and account_code='PCP')",
+						array($form_pid,$Codetype,$Code,$Modifier,$BillingId,$enc));
 						//new fees screen copay gives account_code='PCP'
 						$rowMoneyGot = sqlFetchArray($resMoneyGot);
 						$MoneyGot=$rowMoneyGot['MoneyGot'];
 
 						$resMoneyAdjusted = sqlStatement("SELECT sum(adj_amount) as MoneyAdjusted FROM ar_activity where ".
-						  "pid =? and code_type=? and code=? and modifier=? and encounter =?",
-						  array($form_pid,$Codetype,$Code,$Modifier,$enc));
+						  "pid =? and code_type=? and code=? and modifier=? and billing_id=? and encounter =?",
+						  array($form_pid,$Codetype,$Code,$Modifier,$BillingId,$enc));
 						$rowMoneyAdjusted = sqlFetchArray($resMoneyAdjusted);
 						$MoneyAdjusted=$rowMoneyAdjusted['MoneyAdjusted'];
 						
@@ -284,6 +286,7 @@ if ($_POST['form_save']) {
 								$amount=0;
 						   }
                           sqlBeginTrans();
+error_log("BID: " . $BillingId);
                           $sequence_no = sqlQuery( "SELECT IFNULL(MAX(sequence_no),0) + 1 AS increment FROM ar_activity WHERE pid = ? AND encounter = ?", array($form_pid, $enc));
 						  sqlStatement("insert into ar_activity set "    .
 							"pid = ?"       .
@@ -292,6 +295,7 @@ if ($_POST['form_save']) {
                                                         ", code_type = ?"      .
 							", code = ?"      .
 							", modifier = ?"      .
+							", billing_id = ?" .
 							", payer_type = ?"   .
 							", post_time = now() " .
 							", post_user = ?" .
@@ -299,7 +303,7 @@ if ($_POST['form_save']) {
 							", pay_amount = ?" .
 							", adj_amount = ?"    .
 							", account_code = 'PP'",
-							array($form_pid,$enc,$sequence_no['increment'],$Codetype,$Code,$Modifier,0,$_SESSION['authUserID'],$payment_id,$insert_value,0));
+							array($form_pid,$enc,$sequence_no['increment'],$Codetype,$Code,$Modifier,$BillingId,0,$_SESSION['authUserID'],$payment_id,$insert_value,0));
                             sqlCommitTrans();
 						 }//if
 					  }//while
@@ -307,6 +311,7 @@ if ($_POST['form_save']) {
 					  {
                           sqlBeginTrans();
                           $sequence_no = sqlQuery( "SELECT IFNULL(MAX(sequence_no),0) + 1 AS increment FROM ar_activity WHERE pid = ? AND encounter = ?", array($form_pid, $enc));
+error_log("BID2: " . $BillingId);
                           sqlStatement("insert into ar_activity set "    .
 							"pid = ?"       .
 							", encounter = ?"     .
@@ -314,6 +319,7 @@ if ($_POST['form_save']) {
                                                         ", code_type = ?"      .
 							", code = ?"      .
 							", modifier = ?"      .
+							", billing_id = ?" .
 							", payer_type = ?"   .
 							", post_time = now() " .
 							", post_user = ?" .
@@ -321,7 +327,7 @@ if ($_POST['form_save']) {
 							", pay_amount = ?" .
 							", adj_amount = ?"    .
 							", account_code = 'PP'",
-							array($form_pid,$enc,$sequence_no['increment'],$Codetype,$Code,$Modifier,0,$_SESSION['authUserID'],$payment_id,$amount,0));
+							array($form_pid,$enc,$sequence_no['increment'],$Codetype,$Code,$Modifier,$BillingId,0,$_SESSION['authUserID'],$payment_id,$amount,0));
                           sqlCommitTrans();
 					  }
 
@@ -1040,7 +1046,7 @@ function make_insurance()
 
   // Get the unbilled service charges and payments by encounter for this patient.
   //
-  $query = "SELECT fe.encounter, b.code_type, b.code, b.modifier, b.fee, " .
+  $query = "SELECT fe.encounter, b.code_type, b.code, b.modifier, b.fee, b.id, " .
     "LEFT(fe.date, 10) AS encdate ,fe.last_level_closed " .
     "FROM  form_encounter AS fe left join billing AS b  on " .
     "b.pid = ? AND b.activity = 1  AND " .//AND b.billed = 0

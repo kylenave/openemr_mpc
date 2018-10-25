@@ -107,6 +107,7 @@ function DistributionInsert($CountRow,$created_time,$user_id)
 		"', modified_time = '"  . trim($created_time					) .
 		"', pay_amount = '" . trim(formData("Payment$CountRow"   ))  .
 		"', adj_amount = '"    . 0 .
+		"', billing_id = '"    . trim(formData("HiddenBillingId$CountRow")) .
 		"', account_code = '" . "$AccountCode"  .
 		"'");
 	  sqlCommitTrans();
@@ -141,6 +142,7 @@ function DistributionInsert($CountRow,$created_time,$user_id)
 		"', modified_time = '"  . trim($created_time					) .
 		"', pay_amount = '" . 0  .
 		"', adj_amount = '"    . trim(formData("AdjAmount$CountRow"   )) .
+		"', billing_id = '"    . trim(formData("HiddenBillingId$CountRow")) .
 		"', memo = '" . "$AdjustString"  .
 		"', account_code = '" . "$AccountCode"  .
 		"'");
@@ -165,8 +167,11 @@ function DistributionInsert($CountRow,$created_time,$user_id)
 		"', modified_time = '"  . trim($created_time					) .
 		"', pay_amount = '" . 0  .
 		"', adj_amount = '"    . 0 .
+		"', billing_id = '"    . trim(formData("HiddenBillingId$CountRow")) .
 		"', memo = '"    . "Deductible $".trim(formData("Deductible$CountRow"   )) .
 		"', account_code = '" . "Deduct"  .
+                "', pr_code='" . 1 . 
+                "', pr_amount='" . trim(formData("Deductible$CountRow"   )) .
 		"'");
 	   sqlCommitTrans();
 	  $Affected='yes';
@@ -189,6 +194,7 @@ function DistributionInsert($CountRow,$created_time,$user_id)
 		"', modified_time = '"  . trim($created_time					) .
 		"', pay_amount = '" . trim(formData("Takeback$CountRow"   ))*-1  .
 		"', adj_amount = '"    . 0 .
+		"', billing_id = '"    . trim(formData("HiddenBillingId$CountRow")) .
 		"', account_code = '" . "Takeback"  .
 		"'");
 	   sqlCommitTrans();
@@ -197,8 +203,13 @@ function DistributionInsert($CountRow,$created_time,$user_id)
   if (isset($_POST["FollowUp$CountRow"]) && $_POST["FollowUp$CountRow"]=='y')
    {
            $FollowUpSet=true;
+           $encounter= trim(formData("HiddenEncounter$CountRow"   ));
+           $pid=trim(formData('hidden_patient_code' ));
+           $reason= trim(formData("FollowUpReason$CountRow"   ));
+
+           arSetDeniedFlag($pid, $encounter, $reason);
 	   sqlBeginTrans();
-	   $sequence_no = sqlQuery( "SELECT IFNULL(MAX(sequence_no),0) + 1 AS increment FROM ar_activity WHERE pid = ? AND encounter = ?", array(trim(formData('hidden_patient_code' )), trim(formData("HiddenEncounter$CountRow"   ))));
+	   $sequence_no = sqlQuery( "SELECT IFNULL(MAX(sequence_no),0) + 1 AS increment FROM ar_activity WHERE pid = ? AND encounter = ?", array($pid, $encounter) );
 	   sqlInsert("insert into ar_activity set "    .
 		"pid = '"       . trim(formData('hidden_patient_code' )) .
 		"', encounter = '"     . trim(formData("HiddenEncounter$CountRow"   ))  .
@@ -213,6 +224,7 @@ function DistributionInsert($CountRow,$created_time,$user_id)
 		"', modified_time = '"  . trim($created_time					) .
 		"', pay_amount = '" . 0  .
 		"', adj_amount = '"    . 0 .
+		"', billing_id = '"    . trim(formData("HiddenBillingId$CountRow")) .
 		"', follow_up = '"    . "y" .
 		"', follow_up_note = '"    . trim(formData("FollowUpReason$CountRow"   )) .
 		"'");

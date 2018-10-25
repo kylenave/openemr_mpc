@@ -1,8 +1,7 @@
 <?php
 /**
- * Report to view the Direct Message log.
  *
- * Copyright (C) 2013 Brady Miller <brady@sparmy.com>
+ * Copyright (C) 2006-2016 Rod Roark <rod@sunsetsystems.com>
  *
  * LICENSE: This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,38 +15,56 @@
  * along with this program. If not, see <http://opensource.org/licenses/gpl-license.php>;.
  *
  * @package OpenEMR
- * @author  Brady Miller <brady@sparmy.com>
  * @link    http://www.open-emr.org
  */
 
-//SANITIZE ALL ESCAPES
-$sanitize_all_escapes=true;
-//
+$report_name = "Test Report";
+$report_file = "test_report";
 
-//STOP FAKE REGISTER GLOBALS
+$sanitize_all_escapes=true;
 $fake_register_globals=false;
-//
 
 require_once("../globals.php");
-?>
+require_once("$srcdir/patient.inc");
+require_once("$srcdir/acl.inc");
+require_once("$srcdir/invoice_summary.inc.php");
+require_once("$srcdir/formatting.inc.php");
+require_once "$srcdir/options.inc.php";
+require_once "$srcdir/formdata.inc.php";
+require_once "$srcdir/appointments.inc.php";
+require_once "$srcdir/report.inc";
 
+$grand_total_units  = 0;
+$grand_total_amt_billed  = 0;
+$grand_total_amt_paid  = 0;
+$grand_total_amt_adjustment  = 0;
+$grand_total_amt_balance  = 0;
+
+
+  if (! acl_check('acct', 'rep')) die(xlt("Unauthorized access."));
+
+  $form_from_date = fixDate($_POST['form_from_date'], date('Y-m-d'));
+  $form_to_date   = fixDate($_POST['form_to_date']  , date('Y-m-d'));
+  $form_facility  = $_POST['form_facility'];
+  $form_provider  = $_POST['form_provider'];
+
+  if ($_POST['form_csvexport']) {
+    header("Pragma: public");
+    header("Expires: 0");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    header("Content-Type: application/force-download");
+    header("Content-Disposition: attachment; filename=".$report_file."_".attr($form_from_date)."--".attr($form_to_date).".csv");
+    header("Content-Description: File Transfer");
+    // CSV headers:
+    } // end export
+  else {
+?>
 <html>
-
 <head>
-<?php html_header_show();
-$logstart = (isset($_POST['logstart'])) ? $_POST['logstart'] : 0;
-if (isset($_POST['lognext']) && $_POST['lognext']) $logtop = $logstart + $_POST['lognext'];
-else $logtop = 0;
-?>
-
 <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
-
-<title>Coding Errors</title>
-
-<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-1-7-2/index.js"></script>
+<?php html_header_show();?>
 
 <style type="text/css">
-
 /* specifically include & exclude from printing */
 @media print {
     #report_parameters {
@@ -58,8 +75,8 @@ else $logtop = 0;
         visibility: visible;
         display: inline;
     }
-    #report_results table {
-       margin-top: 0px;
+    #report_results {
+       margin-top: 30px;
     }
 }
 
@@ -70,148 +87,259 @@ else $logtop = 0;
         display: none;
     }
 }
-
 </style>
+
+<script type="text/javascript" src="../../library/dialog.js?v=<?php echo $v_js_includes; ?>"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-1-9-1/index.js"></script>
+<script type="text/javascript" src="../../library/js/common.js?v=<?php echo $v_js_includes; ?>"></script>
+<script type="text/javascript" src="../../library/js/jquery-ui.js"></script>
+<script type="text/javascript" src="../../library/js/report_helper.js?v=<?php echo $v_js_includes; ?>"></script>
+
+<title><?php echo xlt($report_name) ?></title>
+
+<script language="JavaScript">
+
+ $(document).ready(function() {
+  oeFixedHeaderSetup(document.getElementById('mymaintable'));
+  var win = top.printLogSetup ? top : opener.top;
+  win.printLogSetup(document.getElementById('printbutton'));
+ });
+
+</script>
+
 </head>
 
-<body class="body_top">
-
-<span class='title'>Coding Errors</span>
-
-<form method='post' name='theform' id='theform' action='direct_message_log.php' onsubmit='return top.restoreSession()'>
-<input type='hidden' name='lognext' id='lognext' value=''>
-
+<body leftmargin='0' topmargin='0' marginwidth='0' marginheight='0' class="body_top">
+<span class='title'><?php echo xlt('Report'); ?> - <?php echo xlt($report_name); ?></span>
+<form method='post' action='<?php echo xlt($report_file); ?>.php' id='theform'>
 <div id="report_parameters">
+<input type='hidden' name='form_refresh' id='form_refresh' value=''/>
+<input type='hidden' name='form_csvexport' id='form_csvexport' value=''/>
 <table>
  <tr>
-  <td width='470px'>
+  <td width='70%'>
 	<div style='float:left'>
+	<table class='text'>
+	   <tr>
+	        <td class='label'> <?php echo xlt('Facility'); ?>: </td>
+  	        <td> <?php dropdown_facility($form_facility, 'form_facility', true); ?> </td>
+                <td><?php echo xlt('Provider'); ?>:</td>
+                <td><?php generateProviderSelection($_POST['form_provider']); ?> </td> 
+            </tr>
+            <tr>
+                 <td colspan="2"> <?php echo xlt('From'); ?>:&nbsp;&nbsp;&nbsp;&nbsp;
+                           <input type='text' name='form_from_date' id="form_from_date" size='10' value='<?php echo attr($form_from_date) ?>'
+                                onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)' title='yyyy-mm-dd'>
+                           <img src='../pic/show_calendar.gif' align='absbottom' width='24' height='22'
+                                id='img_from_date' border='0' alt='[?]' style='cursor:pointer'
+                                title='<?php echo xla("Click here to choose a date"); ?>'>
+                        </td>
+                        <td class='label'>
+                           <?php echo xlt('To'); ?>:
+                        </td>
+                        <td>
+                           <input type='text' name='form_to_date' id="form_to_date" size='10' value='<?php echo attr($form_to_date) ?>'
+                                onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)' title='yyyy-mm-dd'>
+                           <img src='../pic/show_calendar.gif' align='absbottom' width='24' height='22'
+                                id='img_to_date' border='0' alt='[?]' style='cursor:pointer'
+                                title='<?php echo xla("Click here to choose a date"); ?>'>
+                        </td>
+                        <td>
+                           <input type='checkbox' name='form_details'<?php  if ($_POST['form_details']) echo ' checked'; ?>>
+                           <?php echo xlt('Important Codes'); ?>
+                        </td>
+		</tr>
+	</table>
+	</div>
+  </td>
+  <td align='left' valign='middle' height="100%">
+	<table style='border-left:1px solid; width:100%; height:100%' >
+  	   <tr>
+	      <td>
+  		  <div style='margin-left:15px'>
+		  <a href='#' class='css_button' onclick='$("#form_refresh").attr("value","true"); $("#form_csvexport").attr("value",""); $("#theform").submit();'>
+		  <span> <?php echo xlt('Submit'); ?> </span> </a>
 
+		<?php if ($_POST['form_refresh'] || $_POST['form_csvexport']) { ?>
+		<div id="controls">
+		<a href='#' class='css_button' id='printbutton'> <span> <?php echo xlt('Print'); ?> </span> </a>
+		<a href='#' class='css_button' onclick='$("#form_refresh").attr("value",""); $("#form_csvexport").attr("value","true"); $("#theform").submit();'>
+		<span> <?php echo xlt('CSV Export'); ?> </span> </a> </div>
+		<?php } ?>
+		</div>
+		</td>
+  	   </tr>
+	</table>
   </td>
  </tr>
 </table>
-</div>  <!-- end of search parameters -->
+</div> <!-- end of parameters -->
 
-<br>
+<?php
+}
+   // end not export
+
+  if ($_POST['form_refresh'] || $_POST['form_csvexport']) {
+    $columns = array("encounter"=>"encounter", "pid"=>"pid","date"=>"date");
+    $moneyFormat = array();
+    $calcGrandTotals = array();
+    $grandTotals = array();
+
+    foreach($columns as $label=>$cindex)
+    {
+       if(!array_key_exists($label, $moneyFormat)) { $moneyFormat[$label] = false; }
+       if(!array_key_exists($label, $calcGrandTotals)) { $moneyFormat[$label] = false; }
+       if(!array_key_exists($label, $grandTotals)) { $moneyFormat[$label] = 0; }
+    }
+
+    $rows = array();
+    $from_date = $form_from_date;
+    $to_date   = $form_to_date;
+    $sqlBindArray = array();
+    $query = "select fe.encounter, fe.pid, fe.date from form_encounter fe " .
+        "WHERE " .
+        "fe.date >=  ? AND fe.date <= ?";
+   array_push($sqlBindArray,"$from_date 00:00:00","$to_date 23:59:59");
+    // If a facility was specified.
+      if ($form_facility) {
+        $query .= " AND fe.facility_id = ?";
+       array_push($sqlBindArray,$form_facility);
+      }
+    // If a provider was specified.
+      if ($form_provider) {
+        $query .= " AND fe.provider_id = ?";
+        array_push($sqlBindArray,$form_provider);
+      }
+      // If selected important codes
+      if($_POST['form_details']) {
+        $query .= " AND c.financial_reporting = '1'";
+      }
+      $res = sqlStatement($query,$sqlBindArray);
+
+      while ($erow = sqlFetchArray($res)) 
+{
+      $row = array();
+      foreach($columns as $x => $x_value) {
+         $row[$x] = $erow[$x_value];
+      }
+
+      $rows[$erow['encounter']] = $row;
+}
 
 
-
-<div id="report_results">
-<table>
-
+    if ($_POST['form_csvexport']) {
+       // CSV headers:
+       foreach($columns as $x => $x_value) { echo '"'.$x.'",'; }
+       echo "\n";
+    } else {
+?> <div id="report_results">
+<table id='mymaintable'>
  <thead>
-
-  <th align='center'>
-   <?php echo xlt('Employee'); ?>
-  </th>
-
-  <th align='center'>
-   <?php echo xlt('Last Name'); ?>
-  </th>
-  <th align='center'>
-   <?php echo xlt('First Name'); ?>
-  </th>
-
-  <th align='center'>
-   <?php echo xlt('Date of Svc'); ?>
-  </th>
-
-  <th align='center'>
-   <?php echo xlt('Provider'); ?>
-  </th>
-
-  <th align='center'>
-   <?php echo xlt('Facility'); ?>
-  </th>
-
-  <th align='center'>
-   <?php echo xlt('Code'); ?>
-  </th>
-
-  <th align='center'>
-   <?php echo xlt('Modifier'); ?>
-  </th>
-  <th align='center'>
-   <?php echo xlt('Justify'); ?>
-  </th>
-  <th align='center'>
-   <?php echo xlt('Charge'); ?>
-  </th>
-  <th align='center'>
-   <?php echo xlt('Price'); ?>
-  </th>
-
+<?php foreach($columns as $x => $x_value) { echo "<th>" . xlt($x)."</th>\n"; } ?>
  </thead>
- <tbody>  <!-- added for better print-ability -->
-<?php
+ <?php
+              }
+     $orow = -1;
 
- $res = sqlStatement("
-select distinct atlas.fname as employee, p.lname, p.fname, fe.date as dos, doc.lname as provider, fac.name as facility, b.code, b.modifier, b.fee as chargeAmount, pr.pr_price, b.justify
+     foreach ($rows as $key => $row) 
+{
+     $print = '';
+     $csv = '';
 
-from patient_data p
-left join form_encounter fe
-   on fe.pid=p.pid
-left join billing b
-   on b.encounter=fe.encounter and b.activity='1'
-left join users doc
-   on doc.id=fe.provider_id
-left join facility fac
-   on fac.id = fe.facility_id
-left join insurance_data i
-   on i.pid=p.pid and i.type='primary'
-left join codes c
-   on b.code=c.code
-left join prices pr
-   on pr.pr_id=c.id
-left join users atlas
-   on atlas.id=b.user
-where
-p.pid!='1' AND
-((fe.provider_id='' or fe.provider_id is null) and b.activity='1' and b.fee>0)
-or
-(
-   b.billed = '0' and p.pid>'1'
-and 
-(
-#Fee not doubled Errors
-(
-   b.modifier='50' and b.fee=pr.pr_price
-)
-or
-( #no justification
-   b.code_type='CPT4' and b.justify=''
-)
-))
-order by atlas.fname
-");
+$bgcolor = "#FFDDDD";
 
- $logstart = 0;
- while ($row = sqlFetchArray($res)) {
-?>
- <tr>
-      <td align='center'><?php echo text($row['employee']); ?></td>
-      <td align='center'><?php echo text($row['lname']); ?></td>
-      <td align='center'><?php echo text($row['fname']); ?></td>
-      <td align='center'><?php echo text($row['dos']); ?></td>
-      <td align='center'><?php echo text($row['provider']); ?></td>
-      <td align='center'><?php echo text($row['facility']); ?></td>
-      <td align='center'><?php echo text($row['code']); ?></td>
-      <td align='center'><?php echo text($row['modifier']); ?></td>
-      <td align='center'><?php echo text($row['justify']); ?></td>
-      <td align='center'><?php echo text($row['chargeAmount']); ?></td>
-      <td align='center'><?php echo text($row['pr_price']); ?></td>
+$print = "<tr bgcolor='$bgcolor'>";
+foreach($columns as $x => $x_value) { 
+   $print .= "<td class='detail'>". text($moneyFormat[$x]?oeFormatMoney($row[$x]):$row[$x]) ."</td>";
+} 
+$print .= "</tr>\n";
 
- </tr>
-<?php
- } // $row = sqlFetchArray($res) while
-?>
-</tbody>
-</table>
-</div>  <!-- end of search results -->
+$pid=$row['pid'];
+$encounter=$row['encounter'];
+$print .= $pid . "." . $encounter . "\n";
+$codes = ar_get_invoice_summary2($pid, $encounter, true);
 
-<input type='hidden' name='logstart' id='logstart' value='<?php echo text($logstart); ?>'>
+foreach ($codes as $billing_id => $cdata)
+{
+    $print .= "Billing Id: " . $billing_id . "\n";
+    foreach($cdata as $cat_name => $values_arr) {
+        if(!is_array($values_arr))
+        {
+           $print .= $cat_name . ': ' . $values_arr . "\n";
+        }else{
+           foreach($values_arr as $cat_name2 => $values_arr2) {
+              foreach($values_arr2 as $cat_name3 => $value) {
+                 $print .= $cat_name . " - " . $cat_name2 . " - " . $cat_name3 . ': ' . $value . "\n";
+              }
+           }
+        }
+    }
+}
+
+
+$csv = '"'; 
+foreach($columns as $x => $x_value) { 
+   $csv .= text($moneyFormat[$x]?oeFormatMoney($row[$x]):$row[$x]) . '","';
+} 
+$csv .= '"' . "\n";
+
+$bgcolor = ((++$orow & 1) ? "#ffdddd" : "#ddddff");
+
+        if ($_POST['form_csvexport']) { echo $csv; }
+	else { echo $print;
+ }
+     
+}
+       if (!$_POST['form_csvexport']) {
+         echo "<tr bgcolor='#ffffff'>\n";
+         echo " <td class='detail'>" . xlt("Grand Total") . "</td>\n";
+
+foreach($columns as $x => $x_value) { 
+   if($computeGrandTotals[$x]){
+         echo " <td class='detail'>" . text($moneyFormat[$x]?oeFormatMoney($grandTotals[$x]):$grandTotals[$x]) . "</td>\n";
+   }else{
+         echo " <td class='detail'></td>\n";
+   }
+
+}
+         echo " </tr>\n";
+          ?>
+                </table>    </div>
+        <?php
+      }
+	}
+
+  if (! $_POST['form_csvexport']) {
+       if ( $_POST['form_refresh'] && count($print) != 1)
+	{
+		echo "<span style='font-size:10pt;'>";
+                echo xlt('No matches found. Try search again.');
+                echo "</span>";
+		echo '<script>document.getElementById("report_results").style.display="none";</script>';
+		echo '<script>document.getElementById("controls").style.display="none";</script>';
+		}
+		
+if (!$_POST['form_refresh'] && !$_POST['form_csvexport']) { ?>
+<div class='text'>
+ 	<?php echo xlt('Please input search criteria above, and click Submit to view results.' ); ?>
+</div>
+<?php } ?>
 </form>
-
 </body>
-</html>
 
+<!-- stuff for the popup calendar -->
+
+<link rel='stylesheet' href='<?php echo $css_header ?>' type='text/css'>
+<style type="text/css">@import url(../../library/dynarch_calendar.css);</style>
+<script type="text/javascript" src="../../library/dynarch_calendar.js"></script>
+<?php include_once("{$GLOBALS['srcdir']}/dynarch_calendar_en.inc.php"); ?>
+<script type="text/javascript" src="../../library/dynarch_calendar_setup.js"></script>
+<script language="Javascript">
+ Calendar.setup({inputField:"form_from_date", ifFormat:"%Y-%m-%d", button:"img_from_date"});
+ Calendar.setup({inputField:"form_to_date", ifFormat:"%Y-%m-%d", button:"img_to_date"});
+ top.restoreSession();
+</script>
+</html>
+<?php
+  } // End not csv export
+?>
