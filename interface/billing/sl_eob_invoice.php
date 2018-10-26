@@ -408,6 +408,7 @@ if ($formSave || $_POST['form_cancel'] || $formReopen || $formAddAttachment) {
             }
 
             if ($thispay) {
+error_log("Posting payment with bid: " . $bid);
                 arPostPayment($patient_id, $encounter_id, $session_id,
                     $thispay, $code, '', $payer_type, '', $debug, '', $thiscodetype, 0, $bid);
                 $paytotal += $thispay;
@@ -439,6 +440,7 @@ if ($formSave || $_POST['form_cancel'] || $formReopen || $formAddAttachment) {
                     }
 
                 }
+error_log("Posting adjustment with bid: " . $bid);
                 arPostAdjustment($patient_id, $encounter_id, $session_id,
                     $thisadj, $code, '', $payer_type, $reason, $debug, '', $thiscodetype, 0, $bid);
             }
@@ -751,7 +753,7 @@ $encount = 0;
 foreach ($codes as $billing_id => $cdata) {
     ++$encount;
     $bgcolor = "#" . (($encount & 1) ? "ddddff" : "ffdddd");
-    $dispcode = $cdata['code'];
+    $dispcode = $cdata['code']."(".$billing_id.")";
 
     // remember the index of the first entry whose code is not "CO-PAY", i.e. it's a legitimate proc code
     if ($firstProcCodeIndex == -1 && strcmp($dispcode, "CO-PAY") != 0) {
@@ -854,6 +856,7 @@ if (isset($ddata['plv'])) {
    <input type="hidden" name="form_line[<?php echo $billing_id ?>][ins]" value="<?php echo $cdata['ins'] ?>">
    <input type="hidden" name="form_line[<?php echo $billing_id ?>][code_type]" value="<?php echo $cdata['code_type'] ?>">
    <input type="hidden" name="form_line[<?php echo $billing_id ?>][code]" value="<?php echo $cdata['code'] ?>">
+   <input type="hidden" name="form_line[<?php echo $billing_id ?>][billing_id]" value="<?php echo $billing_id ?>">
    <?php printf("%.2f", $cdata['bal'])?>&nbsp;
   </td>
   <td class="detail">
