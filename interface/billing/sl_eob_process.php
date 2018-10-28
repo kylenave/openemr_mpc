@@ -672,6 +672,7 @@ foreach ($out['svc'] as $svc)
 		           $allowToMoveOn=true;
                         }else{
 		           $allowToMoveOn=false;
+			}
 
 	 	        $reason .= sprintf("(%.2f)", $adj['amount']);
 	 	        $reason .= " {$allowedToMoveOn} ";
@@ -729,20 +730,25 @@ foreach ($out['svc'] as $svc)
         // determine if any of them are still missing an insurance response
         // (if so, then insurance is not yet done with the claim).
         $insurance_done = $allowToMoveOn;
-$insurance_done=true;
+
+/* This logic was based on the incorrect assumption that codes only show up if previously adjudicated. In fact, the array contains all billed codes.
         foreach ($codes as $code => $prev) {
-      // writeOldDetail($prev, $arrow['name'], $invnumber, $service_date, $code, $bgcolor);
+      	   // writeOldDetail($prev, $arrow['name'], $invnumber, $service_date, $code, $bgcolor);
            // writeOldDetail($prev, $patient_name, $invnumber, $service_date, $prev['code'], $bgcolor);
             $got_response = false;
+	    $had_previous = false;
             foreach ($prev['dtl'] as $ddata) 
 	    {
+		$had_previous = true;
                 if ($ddata['pmt'] || $ddata['rsn'])
 		{ 
 		   $got_response = true;
 		}
             }
-            if (!$got_response) $insurance_done = false;
+
+            if ($had_previous && !$got_response) $insurance_done = false;
         }
+*/
 
         $claimState = '[DEBUG] ' . $inslabel;
 
