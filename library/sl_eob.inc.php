@@ -361,6 +361,45 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
     return;
   }
 
+  function arPostPatientResponsibility($patient_id, $encounter_id, $session_id, $amount, $code, $modifier, $payer_type, $reason, $debug, $time='', $codetype='', $group=-1, $billing_id=-1) {
+    if (empty($time)) $time = date('Y-m-d H:i:s');
+
+    $codeonly = $code;
+    $tmp = strpos($code, ':');
+    if ($tmp) 
+    {
+      $modifier = substr($code, $tmp+1);
+      $code = substr($code, 0, $tmp);
+    }
+    
+    sqlBeginTrans();
+    $sequence_no = sqlQuery( "SELECT IFNULL(MAX(sequence_no),0) + 1 AS increment FROM ar_activity WHERE pid = ? AND encounter = ?", array($patient_id, $encounter_id));
+    $query = "INSERT INTO ar_activity ( " .
+      "pid, encounter, sequence_no, code_type, code, modifier, payer_type, post_user, post_time, " .
+      "session_id, memo, adj_amount, billing_id, pr_code, pr_amount " .
+      ") VALUES ( " .
+      "'$patient_id', " .
+      "'$encounter_id', " .
+      "'{$sequence_no['increment']}', " .
+      "'$codetype', " .
+      "'$code', " .
+      "'$modifier', " .
+      "'$payer_type', " .
+      "'" . $_SESSION['authUserID'] . "', " .
+      "'$time', " .
+      "'$session_id', " .
+      "'$reason', " .
+      "'0.0', " .
+      "'$billing_id', " .
+      "'$group' " .
+      "'$amount', " .
+      ")";
+    sqlStatement($query);
+    sqlCommitTrans();
+    return;
+}
+
+
   function arGetPayerID($patient_id, $date_of_service, $payer_type) {
     if ($payer_type < 1 || $payer_type > 3) return 0;
     $tmp = array(1 => 'primary', 2 => 'secondary', 3 => 'tertiary');

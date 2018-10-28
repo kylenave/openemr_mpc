@@ -643,11 +643,19 @@ foreach ($out['svc'] as $svc)
 		{
                     if ($primary) 
 		    {
+		        $postAmount = $adj['amount'];
+			$reason_code = $adj['reason_code'];
+
                         $reason = "$inslabel ptresp: "; // Reasons should be 25 chars or less.
                         if ($adj['reason_code'] == '1') $reason = "$inslabel dedbl: ";
                         else if ($adj['reason_code'] == '2') $reason = "$inslabel coins: ";
                         else if ($adj['reason_code'] == '3') $reason = "$inslabel copay: ";
                         $description .= sprintf(" ($%.2f)", $adj['amount']);
+
+                        if (!$error && !$debug) {
+			   arPostPatientResponsibility($pid, $encounter, $InsertionId[$out['check_number']], $postAmount, $svc['code'], $svc['mod'],
+                                substr($inslabel,3), $reason, $debug, '', $codetype, $reason_code, $billing_id);
+			}
                     }
                     else 
 		    {
@@ -664,22 +672,21 @@ foreach ($out['svc'] as $svc)
 		           $allowToMoveOn=true;
                         }else{
 		           $allowToMoveOn=false;
-			}
-                    }
 
-                    $reason .= sprintf("(%.2f)", $adj['amount']);
-		    $reason .= " {$allowedToMoveOn} ";
-                    // Post a zero-dollar adjustment just to save it as a comment.
+	 	        $reason .= sprintf("(%.2f)", $adj['amount']);
+	 	        $reason .= " {$allowedToMoveOn} ";
+                        // Post a zero-dollar adjustment just to save it as a comment.
 
 
-                    if (!$error && !$debug) 
-		    {
-                        arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], $postAmount, $svc['code'], $svc['mod'],
-                        	substr($inslabel,3), $reason, $debug, '', $codetype, $group, $billing_id);
-                    }
-                    //writeMessageLine($bgcolor2, $class, $description_prefix . $description . ' ' . sprintf("%.2f", $adj['amount']));
-                    $invoice_total -= $postAmount;
-                    writeDetailLine($bgcolor, $class, $patient_name, $invnumber, $svc['code'], $production_date, $description, 0 - $postAmount, ($error ? '' : $invoice_total));
+                        if (!$error && !$debug) 
+		        {
+                            arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], $postAmount, $svc['code'], $svc['mod'],
+                         	substr($inslabel,3), $reason, $debug, '', $codetype, $group, $billing_id);
+                        } 
+
+                        $invoice_total -= $postAmount;
+                        writeDetailLine($bgcolor, $class, $patient_name, $invnumber, $svc['code'], $production_date, $description, 0 - $postAmount, ($error ? '' : $invoice_total));
+		    }
                 }
                 // Other group codes for primary insurance are real adjustments.
                 else 
