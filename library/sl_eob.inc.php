@@ -361,7 +361,7 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
     return;
   }
 
-  function arPostPatientResponsibility($patient_id, $encounter_id, $session_id, $amount, $code, $modifier, $payer_type, $reason, $debug, $time='', $codetype='', $group=-1, $billing_id=-1) {
+  function arPostPatientResponsibility($patient_id, $encounter_id, $session_id, $amount, $code, $modifier, $payer_type, $reason, $debug, $time='', $codetype='', $pr_code=-1, $billing_id=-1) {
     if (empty($time)) $time = date('Y-m-d H:i:s');
 
     $codeonly = $code;
@@ -391,8 +391,8 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
       "'$reason', " .
       "'0.0', " .
       "'$billing_id', " .
-      "'$group' " .
-      "'$amount', " .
+      "'$pr_code', " .
+      "'$amount' " .
       ")";
     sqlStatement($query);
     sqlCommitTrans();
