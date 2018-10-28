@@ -630,8 +630,9 @@ foreach ($out['svc'] as $svc)
 		    $Denied=true;
 		}
 
+$PatientHasNoteMetSpendDownReqt = '178';
 
-                if((!$ignoreSvcLine) && $svc['chg'] <= $adj['amount'] && !in_array($svc['code'], $acceptableAdjustCodes) and $adj['group_code']!= 'PR')
+                if((!$ignoreSvcLine) && $svc['chg'] <= $adj['amount'] && !in_array($svc['code'], $acceptableAdjustCodes) and $adj['group_code']!= 'PR' and $adj['reason_code']!=$PatientHasNoteMetSpendDownReqt)
                 {
                     arSetDeniedFlag($pid, $encounter, "Claim Set to Denied because there was an adjustment for the full charge amount or more and it was not on the approved code list (i.e. S0020, A4550, etc)");
 		    $Denied=true;
@@ -639,10 +640,8 @@ foreach ($out['svc'] as $svc)
 
 
 		//PR Responsibility adjustments should be ignored as should secondary
-                if ($adj['group_code'] == 'PR' || !$primary) 
+                if ($adj['group_code'] == 'PR') 
 		{
-                    if ($primary) 
-		    {
 		        $postAmount = $adj['amount'];
 			$reason_code = $adj['reason_code'];
 
@@ -657,9 +656,9 @@ foreach ($out['svc'] as $svc)
                                 substr($inslabel,3), $reason, $debug, '', $codetype, $reason_code, $billing_id);
 			}
                         writeDetailLine($bgcolor, $class, $patient_name, $invnumber, $svc['code'], $production_date, $description, 0 - $postAmount, ($error ? '' : $invoice_total));
-                    }
-                    else 
-		    {
+		}
+                else if (!$primary) 
+		{
                         $reason = "$inslabel note " . $adj['group_code'].$adj['reason_code'] . ': ';
 		        $postAmount = 0;
 
@@ -667,13 +666,6 @@ foreach ($out['svc'] as $svc)
                         {
 		           $postAmount = $adj['amount'];
                         }
-
-		        if($adj['reason_code']=='178')
-                        {
-		           $allowToMoveOn=true;
-                        }else{
-		           $allowToMoveOn=false;
-			}
 
 	 	        $reason .= sprintf("(%.2f)", $adj['amount']);
 	 	        $reason .= " {$allowedToMoveOn} ";
@@ -688,7 +680,7 @@ foreach ($out['svc'] as $svc)
 
                         $invoice_total -= $postAmount;
                         writeDetailLine($bgcolor, $class, $patient_name, $invnumber, $svc['code'], $production_date, $description, 0 - $postAmount, ($error ? '' : $invoice_total));
-		    }
+		    
                 }
                 // Other group codes for primary insurance are real adjustments.
                 else 
@@ -730,7 +722,7 @@ foreach ($out['svc'] as $svc)
         // Report any existing service items not mentioned in the ERA, and
         // determine if any of them are still missing an insurance response
         // (if so, then insurance is not yet done with the claim).
-        $insurance_done = $allowToMoveOn;
+        $insurance_done = $allowToMoveOn && !$Denied;
 
 /* This logic was based on the incorrect assumption that codes only show up if previously adjudicated. In fact, the array contains all billed codes.
         foreach ($codes as $code => $prev) {
