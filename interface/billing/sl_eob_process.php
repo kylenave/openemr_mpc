@@ -656,6 +656,7 @@ foreach ($out['svc'] as $svc)
 			   arPostPatientResponsibility($pid, $encounter, $InsertionId[$out['check_number']], $postAmount, $svc['code'], $svc['mod'],
                                 substr($inslabel,3), $reason, $debug, '', $codetype, $reason_code, $billing_id);
 			}
+                        writeDetailLine($bgcolor, $class, $patient_name, $invnumber, $svc['code'], $production_date, $description, 0 - $postAmount, ($error ? '' : $invoice_total));
                     }
                     else 
 		    {
