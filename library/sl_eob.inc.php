@@ -240,7 +240,7 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
   
   // Post a payment, new style.
   //
-  function arPostPayment($patient_id, $encounter_id, $session_id, $amount, $code, $modifier, $payer_type, $memo, $debug, $time='', $codetype='', $group=-1, $billing_id=-1) {
+  function arPostPayment($patient_id, $encounter_id, $session_id, $amount, $code, $modifier, $payer_type, $memo, $debug, $time='', $codetype='', $group=-1, $billing_id=-1, $allowed_amount=-1) {
     if (empty($time)) $time = date('Y-m-d H:i:s');
 
     $codeonly = $code;
@@ -255,7 +255,7 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
     $sequence_no = sqlQuery( "SELECT IFNULL(MAX(sequence_no),0) + 1 AS increment FROM ar_activity WHERE pid = ? AND encounter = ?", array($patient_id, $encounter_id));
     $query = "INSERT INTO ar_activity ( " .
       "pid, encounter, sequence_no, code_type, code, modifier, payer_type, post_time, post_user, " .
-      "session_id, memo, pay_amount, billing_id, billing_group " .
+      "session_id, memo, pay_amount, billing_id, billing_group, allowed_amount " .
       ") VALUES ( " .
       "'$patient_id', " .
       "'$encounter_id', " .
@@ -270,7 +270,8 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
       "'$memo', " .
       "'$amount', " .
       "'$billing_id', " .
-      "'$group' " .
+      "'$group', " .
+      "'$allowed_amount' " .
       ")";
     sqlStatement($query);
     sqlCommitTrans();
