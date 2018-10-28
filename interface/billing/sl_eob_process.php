@@ -672,6 +672,7 @@ foreach ($out['svc'] as $svc)
 		           $allowToMoveOn=true;
                         }else{
 		           $allowToMoveOn=false;
+			}
 
 	 	        $reason .= sprintf("(%.2f)", $adj['amount']);
 	 	        $reason .= " {$allowedToMoveOn} ";
