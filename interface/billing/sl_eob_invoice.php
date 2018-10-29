@@ -459,10 +459,6 @@ error_log("Posting adjustment with bid: " . $bid);
             arSetupSecondary($patient_id, $encounter_id, $debug);
         }
 
-        error_log("Are we even getting here???");
-        error_log("Is Denied: " . $isDenied . " - " . $denied_state);
-        error_log("Is Auth: " . $isDeniedAuth . " - " . $denied_auth);
-        // Clear Denied if needed...
         if (!$isDenied and ($denied_state == '1')) {
             arClearDeniedFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
             $denied_state = '0';
@@ -482,6 +478,7 @@ error_log("Posting adjustment with bid: " . $bid);
         if ($isDeniedAuth and ($denied_auth != '1')) {
             error_log("Setting Auth Flag");
             arSetAuthFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
+            arSetDeniedFlag($patient_id, $encounter_id, "", $_SESSION['authUser']);
             $denied_auth = '1';
         }
 
