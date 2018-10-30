@@ -189,7 +189,7 @@ $grand_total_amt_balance  = 0;
     $from_date = $form_from_date;
     $to_date   = $form_to_date;
     $sqlBindArray = array();
-    $query = "select date(bn.date) as date, u.fname as user, count(*) as count from billing_notes bn left join users u on u.id=bn.user_id " .
+    $query = "select date(bn.date) as date, u.fname as user, count(distinct encounter) as count from billing_notes bn left join users u on u.id=bn.user_id " .
         "WHERE " .
         "bn.date >=  ? AND bn.date <= ?";
    array_push($sqlBindArray,"$from_date 00:00:00","$to_date 23:59:59");
