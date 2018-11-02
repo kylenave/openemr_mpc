@@ -246,6 +246,8 @@ if ($pid && $encounter)
             // }
         }
 
+$hasAnesthesiaCode = false;
+$anesthesiaCodes = array('00300','00400','00800','01200','01250','01380','01462','01610','01730','01810','01935','01936','01991','01992');
         $hasPayment=false;
 
         if($csc == '1')
@@ -254,6 +256,8 @@ if ($pid && $encounter)
 	    {
                 if($svc['paid'] !=  0) $hasPayment=true;
 
+
+                if (in_array($svc['code'], $anesthesiaCodes)) $hasAnesthesiaCode = true;
                 //if($svc['allowed']) $hasPayment=true;
 
                 foreach ($svc['adj'] as $adj) 
@@ -266,13 +270,22 @@ if ($pid && $encounter)
             }
         }
 
+$ignoreDenial = false;
 $Denied=false;
+$primaryPayer = $out['payer_id'];
+
         if ($csc == '4' || ($csc=='1' && !$hasPayment)) 
         {
             //Denial case, code is stored in the claims table for display in the billing manager screen with reason explained.
-            
+
+//Check for allowed denials
+//Aetna and Coventry don't pay for anesthesia
+$aetnaPayers = array('207', '208', '209', '210', '211', '240', '241');
+if($primaryPayer && in_array($primaryPayer, $aetnaPayers)) $ignoreDenial = true;
+           
+ 
             $inverror = true;
-            if (!$debug) 
+            if (!$debug && !$ignoreDenial) 
 	    {
                 if ($pid && $encounter) 
 		{
@@ -597,6 +610,7 @@ foreach ($out['svc'] as $svc)
 		$acceptableAdjustCodes[]='A4550';
 		$acceptableAdjustCodes[]='A4220';
 		$acceptableAdjustCodes[]='77002';
+		$acceptableAdjustCodes[]='77003';
 		$acceptableAdjustCodes[]='Q9966';
 	    $totalAdjAmount = 0.0;
             foreach ($svc['adj'] as $adj) 
@@ -655,17 +669,12 @@ $PatientHasNoteMetSpendDownReqt = '178';
 			   arPostPatientResponsibility($pid, $encounter, $InsertionId[$out['check_number']], $postAmount, $svc['code'], $svc['mod'],
                                 substr($inslabel,3), $reason, $debug, '', $codetype, $reason_code, $billing_id);
 			}
-                        writeDetailLine($bgcolor, $class, $patient_name, $invnumber, $svc['code'], $production_date, $description, 0 - $postAmount, ($error ? '' : $invoice_total));
+                        writeDetailLine($bgcolor, $class, $patient_name, $invnumber, $svc['code'], $production_date, $description, 0 , ($error ? '' : $invoice_total));
 		}
                 else if (!$primary) 
 		{
                         $reason = "$inslabel note " . $adj['group_code'].$adj['reason_code'] . ': ';
 		        $postAmount = 0;
-
-		        if($adj['group_code']=='CO'&&$adj['reason_code']=='45')
-                        {
-		           $postAmount = $adj['amount'];
-                        }
 
 	 	        $reason .= sprintf("(%.2f)", $adj['amount']);
 	 	        $reason .= " {$allowedToMoveOn} ";
@@ -687,7 +696,7 @@ $PatientHasNoteMetSpendDownReqt = '178';
 		{
                     if (!$error && !$debug) 
 		    {
-			$reason = "$inslabel note " . $adj['group_code'].$adj['reason_code'] . ': ';
+			$reason = "$inslabel Note " . $adj['group_code'].$adj['reason_code'] . ': ';
 			$reason .= sprintf("(%.2f).", $adj['amount']);
 
 		        $postAdjAmount = $adj['amount'];
@@ -745,12 +754,14 @@ $PatientHasNoteMetSpendDownReqt = '178';
 
         $claimState = '[DEBUG] ' . $inslabel;
 
+        $secondaryPayer =  arGetPayerID($pid, $service_date, 2);
+
         // Cleanup: If all is well, mark Ins<x> done and check for secondary billing.
         if (!$debug && $insurance_done) 
 	{
             $level_done = 0 + substr($inslabel, 3);
 
-            if($out['crossover']==1)
+            if($out['crossover']==1 && $secondaryPayer)
             {
 
 		if($Denied)
@@ -799,7 +810,8 @@ $PatientHasNoteMetSpendDownReqt = '178';
              }
              
 	     // Check for secondary insurance.
-             if (!$Denied && $primary && arGetPayerID($pid, $service_date, 2)) 
+//KBN TODO: Add check for balance...if zero, set to closed, otherwise go to secondary
+             if (!$Denied && $primary && $secondaryPayer && $invoice_total > 0.01) 
 	     {
                  arSetupSecondary($pid, $encounter, $debug,$out['crossover']);
               
