@@ -735,7 +735,7 @@ if(is_array($ret))
     // Let's filter out any fully paid claims
     $res = sqlQuery("select sum(fee) as charges from billing where activity='1' and encounter = ?", array($iter['enc_encounter']));
     $charges = $res['charges'];
-    $res = sqlQuery("select sum(pay_amount) + sum(adj_amount) as payments from ar_activity where encounter = ?", array($iter['enc_encounter']));
+    $res = sqlQuery("select sum(pay_amount) + sum(adj_amount) as payments from ar_activity where encounter = ? and billing_id is not null", array($iter['enc_encounter']));
     $payments = $res['payments'];
     $enc_balance = $charges - $payments;
 
