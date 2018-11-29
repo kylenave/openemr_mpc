@@ -47,9 +47,9 @@ class FeeSheetHtml extends FeeSheet {
     $def_facility = 0 + $drow['facility_id'];
     //
     $sqlarr = array($def_facility);
-    $query = "SELECT id, lname, fname, facility_id FROM users WHERE " .
+    $query = "SELECT id, lname, fname, facility_id, active FROM users WHERE " .
       "( authorized = 1 OR info LIKE '%provider%' ) AND username != '' " .
-      "AND active = 1 AND ( info IS NULL OR info NOT LIKE '%Inactive%' )";
+      "AND ( info IS NULL OR info NOT LIKE '%Inactive%' )";
     // If restricting to providers matching user facility...
     $restrict_provider_facility = false;
     if(array_key_exists('gbl_restrict_provider_facility', $GLOBALS))
@@ -71,6 +71,12 @@ class FeeSheetHtml extends FeeSheet {
     $s .= "<option value=''>" . text($toptext) . "</option>";
     while ($row = sqlFetchArray($res)) {
       $provid = $row['id'];
+
+      if($row['active']=='0' && $provid != $default)
+      {
+         continue;
+      }
+ 
       $s .= "<option value='" . attr($provid) . "'";
       if ($provid == $default) $s .= " selected";
       $s .= ">";
