@@ -284,7 +284,26 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
 
     $code = $thisIndex;
 
-    if(!$codes[$code]) continue;
+    if(!$codes[$code])
+    {
+      //Add to the unknowns...
+       if(!$codes[0])
+       {
+	   $codeItem=array();
+	   $codeItem['adj'] = 0;
+	   $codeItem['code'] = 'unknown';
+	   $codeItem['id'] = 0;
+	   $codeItem['chg'] = 0;
+	   $codeItem['bal'] = 0;
+	   $codeItem['code_type'] = "";
+	   $codeItem['modifier'] = "";
+	   $codeItem['code_text'] = "";
+
+           $codes[0] = $codeItem;
+       }
+
+       $code=0;
+    }
 
     $ins_id = 0 + $arow['payer_id'];
     $codes[$code]['bal'] -= $arow['pay_amount'];
