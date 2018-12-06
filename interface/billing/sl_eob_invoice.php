@@ -277,6 +277,7 @@ if (!$trans_id) {
 $ferow = sqlQuery("SELECT e.*, p.fname, p.mname, p.lname " .
     "FROM form_encounter AS e, patient_data AS p WHERE " .
     "e.id = '$trans_id' AND p.pid = e.pid");
+
 if (empty($ferow)) {
     die("There is no encounter with form_encounter.id = '$trans_id'.");
 }
@@ -284,6 +285,16 @@ if (empty($ferow)) {
 $patient_id = 0 + $ferow['pid'];
 $encounter_id = 0 + $ferow['encounter'];
 $denied_state = $ferow['external_id'];
+
+$brow = sqlQuery("SELECT * FROM billing where " .
+        "encounter='$encounter_id' and activity='1' and billed='0' and fee>0");
+
+$encounter_open = true;
+
+if (empty($brow)){
+   $encounter_open=false;
+}
+
 $denied_auth = $ferow['denial_auth'];
 $svcdate = substr($ferow['date'], 0, 10);
 $form_payer_id = 0 + $_POST['form_payer_id'];
@@ -332,6 +343,7 @@ if ($formSave || $_POST['form_cancel'] || $formReopen || $formAddAttachment) {
 
     if ($formReopen) {
         doVoid($patient_id, $encounter_id, true);
+        $encounter_open=true;
     }
 
     if ($formAddAttachment) {
@@ -580,8 +592,7 @@ echo "$patient_id.$encounter_id";
   </td>
 <td <?php if ($denied_state == '1') {
     echo 'bgcolor="#ffcccc"';
-}
-?>>
+} ?>>
      <label><input type="checkbox" name="is_denied" <?php if ($denied_state == '1') {
     echo "checked=true";
 }
@@ -659,9 +670,18 @@ echo "</td>\n";
 ?>
  </tr>
  <tr>
-  <td>
-  </td>
-  <td>
+<td colspan="2" <?php if ($encounter_open) {
+    echo 'bgcolor="#d7f7d2"'; } else 
+{ echo 'bgcolor="#aab4b7"';
+} ?>>
+<?php 
+   if ($encounter_open){
+      echo xl('Encounter is ready to bill');
+   }else{
+      echo xl('Encounter has been billed');
+   }
+?>
+
   </td>
   <td colspan="2">
    <input type="checkbox" name="form_secondary" value="1"> <?php xl('Needs secondary billing', 'e')?>
