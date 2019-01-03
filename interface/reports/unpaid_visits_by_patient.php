@@ -178,7 +178,8 @@ group by fe.encounter ";
 )
 select fe.pid, count(distinct fe.encounter) as visits from form_encounter fe
 left join t_insPayments ip on ip.encounter=fe.encounter
-where ip.payments=0 or ip.payments is null
+where 
+(ip.payments=0 or ip.payments is null) and fe.last_level_closed>0
 group by fe.pid";
       sqlStatement($query);
 
