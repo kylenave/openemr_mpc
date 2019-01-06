@@ -281,6 +281,7 @@ function parse_era($filename, $cb) {
             $out['patient_lname']     = trim($seg[3]);
             $out['patient_fname']     = trim($seg[4]);
             $out['patient_mname']     = trim($seg[5]);
+            if(isset($seg[9])
             $out['patient_member_id'] = trim($seg[9]);
         }
         // IL = Insured or Subscriber
@@ -374,10 +375,10 @@ function parse_era($filename, $cb) {
         $out['svc'][$i]['mod']  = substr($svc[1], 5);
       } else {
         $out['svc'][$i]['code'] = $svc[1];
-        $out['svc'][$i]['mod']  = $svc[2] ? $svc[2] . ':' : '';
-        $out['svc'][$i]['mod']  .= $svc[3] ? $svc[3] . ':' : '';
-        $out['svc'][$i]['mod']  .= $svc[4] ? $svc[4] . ':' : '';
-        $out['svc'][$i]['mod']  .= $svc[5] ? $svc[5] . ':' : '';
+        $out['svc'][$i]['mod']  = isset($svc[2]) ? $svc[2] . ':' : '';
+        $out['svc'][$i]['mod']  .= isset($svc[3]) ? $svc[3] . ':' : '';
+        $out['svc'][$i]['mod']  .= isset($svc[4]) ? $svc[4] . ':' : '';
+        $out['svc'][$i]['mod']  .= isset($svc[5]) ? $svc[5] . ':' : '';
         $out['svc'][$i]['mod'] = preg_replace('/:$/','',$out['svc'][$i]['mod']);
       }
             $out['svc'][$i]['chg']  = $seg[2];
@@ -398,7 +399,7 @@ function parse_era($filename, $cb) {
             $i = count($out['svc']) - 1;
             for ($k = 2; $k < 20; $k += 3) 
 	    {
-                if (!$seg[$k]) break;
+                if (!isset($seg[$k])) break;
                 
                 if ($seg[1] == 'CO' && $seg[$k+1] < 0)
 		{

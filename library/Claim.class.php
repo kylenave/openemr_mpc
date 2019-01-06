@@ -147,7 +147,7 @@ class Claim {
      if($crow)
      {
         $this->dbPayerType=$crow['payer_type'];
-        $this->dbPayerId=$cros['payer_type']; 
+        $this->dbPayerId=$crow['payer_id']; 
      }else{
         $this->dbPayerType='-1';
         $this->dbPayerId='-1'; 
@@ -155,10 +155,10 @@ class Claim {
 
     if($this->dbPayerType!='-1' && $this->dbPayerType!='1')
     {
-       error_log("Setting payer type to: " . $this->dbPayerType);
+       //error_log("Setting payer type to: " . $this->dbPayerType);
        $this->payers[0] = $this->payers[$this->dbPayerType-1];
 
-       error_log("Set default payer to: " . $this->payers[0]['company']['name']);
+       //error_log("Set default payer to: " . $this->payers[0]['company']['name']);
     }
   }
 
@@ -228,6 +228,7 @@ class Claim {
     }
 
       if($row['code']=='80307' || ($row['code'][0]=='L' && $row['code_type']=='CPT4')){
+//error_log("UDS Claim");
           $hasUdsCode=true;
       }
 
@@ -271,7 +272,7 @@ class Claim {
 
     $provider_id = $this->encounter['provider_id'];
     $this->facility = sqlQuery($sql);
-error_log("Selected facility query: " + $sql);
+error_log("Selected facility query: " . $sql);
 
     // 10/14 NO LONGER TRUE: ALL MEDICAID UDS MUST GO OUT UNDER SOTO FOR NOW
     //if($hasUdsCode && $this->payers[0]['company']['cms_id'] == 'MCDIL')
@@ -334,7 +335,7 @@ error_log("Selected facility query: " + $sql);
 
     }
     $this->billing_facility = sqlQuery($sql);
-error_log("Selected billing facility query: " + $sql);
+error_log("Selected billing facility query: " . $sql);
 
     $sql = "SELECT * FROM insurance_numbers WHERE " .
       "(insurance_company_id = '" . $this->procs[0]['payer_id'] .
