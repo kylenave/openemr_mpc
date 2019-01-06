@@ -271,6 +271,7 @@ class Claim {
 
     $provider_id = $this->encounter['provider_id'];
     $this->facility = sqlQuery($sql);
+error_log("Selected facility query: " + $sql);
 
     // 10/14 NO LONGER TRUE: ALL MEDICAID UDS MUST GO OUT UNDER SOTO FOR NOW
     //if($hasUdsCode && $this->payers[0]['company']['cms_id'] == 'MCDIL')
@@ -282,9 +283,12 @@ class Claim {
     $sql = "SELECT count(*) as count from billing b where b.code_type='CPT4' and b.code like 'L%' and b.activity='1' and b.encounter='" . $this->encounter['encounter'] . "'";
     $braces = sqlQuery($sql);
 
-    if($braces['count'] >'0' && $this->payers[0]['company']['id']=='284')
+    //Medicare DME payers to map
+    $dme_payers_source = array('284', '285', '310');
+
+    if($braces['count'] >'0' && in_array($this->payers[0]['company']['id'], $dme_payers_source))
     {
-     $this->mcr_dme_claim='1';
+       $this->mcr_dme_claim='1';
     }
 
     /*****************************************************************
@@ -330,6 +334,7 @@ class Claim {
 
     }
     $this->billing_facility = sqlQuery($sql);
+error_log("Selected billing facility query: " + $sql);
 
     $sql = "SELECT * FROM insurance_numbers WHERE " .
       "(insurance_company_id = '" . $this->procs[0]['payer_id'] .
