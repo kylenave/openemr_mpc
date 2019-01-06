@@ -284,9 +284,12 @@ error_log("Selected facility query: " . $sql);
     $sql = "SELECT count(*) as count from billing b where b.code_type='CPT4' and b.code like 'L%' and b.activity='1' and b.encounter='" . $this->encounter['encounter'] . "'";
     $braces = sqlQuery($sql);
 
-    if($braces['count'] >'0' && $this->payers[0]['company']['id']=='284')
+    //Medicare DME payers to map
+    $dme_payers_source = array('284', '285', '310');
+
+    if($braces['count'] >'0' && in_array($this->payers[0]['company']['id'], $dme_payers_source))
     {
-     $this->mcr_dme_claim='1';
+       $this->mcr_dme_claim='1';
     }
 
     /*****************************************************************

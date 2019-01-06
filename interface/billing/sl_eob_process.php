@@ -475,7 +475,7 @@ foreach ($out['svc'] as $svc)
                       //unset($codes[$codekey]);
                    }
                 }
-                else
+                else //NOT A SECONDARY PAYMENT
                 {
 
                    $codetype = $codes[$codekey]['code_type']; //store code type
@@ -536,7 +536,7 @@ foreach ($out['svc'] as $svc)
                 $allowed_amount = $svc['allowed'];
                 if (!$error && !$debug) 
 		{
-                   arPostPayment($pid, $encounter,$InsertionId[$out['check_number']], 0.0,//$InsertionId[$out['check_number']] gives the session id
+                   arPostPayment($pid, $encounter,"Allowed Amount", 0.0,//$InsertionId[$out['check_number']] gives the session id
                                  $svc['code'], $svc['mod'], substr($inslabel,3), $out['check_number'], $debug,'',$codetype, $group, $billing_id, $allowed_amount);
 		}
 
@@ -573,12 +573,34 @@ foreach ($out['svc'] as $svc)
             // Post and report the payment for this service item from the ERA.
             // By the way a 'Claim' level payment is probably going to be negative,
             // i.e. a payment reversal.
+            $actual_paid_amount = $svc['paid'];
+            $delta_paid_amount = 0;
+
             if ($svc['paid']) 
 	    {
+
+		//Let's see if a payment is being restated...
+
+		//First, let's see if existing payments and adjustments match charge
+		if(abs($svc['chg'] -  ($prev['adj'] + $prev['pay'])) < 0.02){
+		   //This is a restatement so just post the difference	
+		   $actual_paid_amount = $svc['paid'] - $prev['pay'];
+		   $delta_paid_amount = $svc['paid'] - $prev['pay'];
+		}
+		
+
                 if (!$error && !$debug) 
 		{
-                   arPostPayment($pid, $encounter,$InsertionId[$out['check_number']], $svc['paid'],//$InsertionId[$out['check_number']] gives the session id
-                                 $svc['code'], $svc['mod'], substr($inslabel,3), $out['check_number'], $debug,'',$codetype, $group, $billing_id );
+                   arPostPayment($pid, $encounter,$InsertionId[$out['check_number']], $actual_paid_amount,//$InsertionId[$out['check_number']] gives the session id
+                                 $svc['code'], $svc['mod'], substr($inslabel,3), $out['check_number'], $debug,'',$codetype, $group, $billing_id,  $allowed_amount );
+
+		   if($delta_paid_amount){
+                           arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], 
+				-$delta_paid_amount,//$InsertionId[$out['check_number']] gives the session id
+                                $svc['code'], $svc['mod'], substr($inslabel,3), 
+				"Payment offset", $debug, '', $codetype, $group, $billing_id);
+	           }
+
                 }
                 $invoice_total -= $svc['paid'];
                 $description = "$inslabel/" . $out['check_number'] . ' payment';
@@ -705,7 +727,7 @@ $PatientHasNoteMetSpendDownReqt = '178';
 			   $postAdjAmount=0;
 			}
 
-			if($ignoreSvcLine)
+			if($ignoreSvcLine || $delta_paid_amount)
 			{
 			   $postAdjAmount = 0;
 			}

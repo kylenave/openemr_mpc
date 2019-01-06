@@ -138,7 +138,8 @@ function parse_era($filename, $cb) {
             if ($out['loopid']) return 'Unexpected TRN segment';
             $out['check_number'] = trim($seg[2]);
             $out['payer_tax_id'] = substr($seg[3], 1); // 9 digits
-            $out['payer_id'] = trim($seg[4]);
+            $out['payer_id'] = (isset($seg[4]))? trim($seg[4]): 0;
+
             // Note: TRN04 further qualifies the paying entity within the
             // organization identified by TRN03.
         }
@@ -258,7 +259,7 @@ function parse_era($filename, $cb) {
             // parse_era_2100() which will later plug in a payment reversal
             // amount that offsets these adjustments.
             $i = 0; // if present, the dummy service item will be first.
-            if (!$out['svc'][$i]) {
+            if (!isset($out['svc'][$i])) {
                 $out['svc'][$i] = array();
                 $out['svc'][$i]['code'] = 'Claim1';
                 $out['svc'][$i]['mod']  = '';
@@ -267,7 +268,7 @@ function parse_era($filename, $cb) {
                 $out['svc'][$i]['adj']  = array();
             }
             for ($k = 2; $k < 20; $k += 3) {
-                if (!$seg[$k]) break;
+                if (!isset($seg[$k])) break;
                 $j = count($out['svc'][$i]['adj']);
                 $out['svc'][$i]['adj'][$j] = array();
                 $out['svc'][$i]['adj'][$j]['group_code']  = $seg[1];
@@ -325,7 +326,8 @@ function parse_era($filename, $cb) {
         // 232 = claim statement period start
         // 233 = claim statement period end
         else if ($segid == 'DTM' && $out['loopid'] == '2100') {
-            if(!$out['dos'])$out['dos']=trim($seg[2]); // yyyymmdd
+            if(!array_key_exists('dos', $out))
+              $out['dos']=trim($seg[2]); // yyyymmdd
         }
         else if ($segid == 'PER' && $out['loopid'] == '2100') {
         
@@ -351,7 +353,7 @@ function parse_era($filename, $cb) {
         else if ($segid == 'SVC') {
             if (! $out['loopid']) return 'Unexpected SVC segment';
             $out['loopid'] = '2110';
-            if ($seg[6]) {
+            if (isset($seg[6])) {
                 // SVC06 if present is our original procedure code that they are changing.
                 // We will not put their crap in our invoice, but rather log a note and
                 // treat it as adjustments to our originally submitted coding.

@@ -100,8 +100,9 @@ function ProcessUdsData($udsData)
                {
                      echo "<tr bgcolor='#cc8888'><td colspan='3' align='center'>Patient already has a UDS for this date</td></tr>";
                }else
-               { 
-                   $enc = todaysEncounterCheck($pid, $dos, $reason = 'UTOX Screen', '3', '', $provider, 'Office Visit', true, true);
+               {
+		   $BloomingtonFacilityId='3'; 
+                   $enc = todaysEncounterCheck($pid, $dos, $reason = 'UTOX Screen', $BloomingtonFacilityId, '', $provider, 'Office Visit', true, true);
                    addBilling($enc, 'CPT4', '80307', 'UTOX Screening', $pid, '1', $provider, '', '1', '326', '', 'ICD10|Z79.891:ICD10|Z51.81:');
                    echo "<tr bgcolor='#88cc88'><td colspan='3' align='center'>New UDS Encounter Added</td></tr>";
                }

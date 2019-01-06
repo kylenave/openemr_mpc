@@ -291,10 +291,15 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
        {
 	   $codeItem=array();
 	   $codeItem['adj'] = 0;
+	   $codeItem['pay'] = 0;
 	   $codeItem['code'] = 'unknown';
 	   $codeItem['id'] = 0;
 	   $codeItem['chg'] = 0;
 	   $codeItem['bal'] = 0;
+	   $codeItem['pr0'] = 0;
+	   $codeItem['pr1'] = 0;
+	   $codeItem['pr2'] = 0;
+	   $codeItem['pr3'] = 0;
 	   $codeItem['code_type'] = "";
 	   $codeItem['modifier'] = "";
 	   $codeItem['code_text'] = "";
@@ -306,10 +311,13 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
     }
 
     $ins_id = 0 + $arow['payer_id'];
+    $codes[$code]['pay'] += $arow['pay_amount'];
     $codes[$code]['bal'] -= $arow['pay_amount'];
     $codes[$code]['bal'] -= $arow['adj_amount'];
     $codes[$code]['chg'] -= $arow['adj_amount'];
     $codes[$code]['adj'] += $arow['adj_amount'];
+    $pr_key = "pr".$arow['pr_code'];
+    $codes[$code][$pr_key] = $arow['pr_amount'];
 
     if ($ins_id) $codes[$code]['ins'] = $ins_id;
 
