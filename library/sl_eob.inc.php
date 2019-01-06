@@ -64,7 +64,7 @@
     $atmp = preg_split('/[ -]/', $invnumber);
     $acount = count($atmp);
 
-    $currentLog .= $invnumber . "\n";
+    //$currentLog .= $invnumber . "\n";
 
     $pid = 0;
     $encounter = 0;
@@ -93,11 +93,10 @@
       }
     }
 
-    $currentLog .= "SELECT encounter, pid from form_encounter where pid='" . $pid . "' and encounter='" . $encounter . "'\n";
+    //$currentLog .= "SELECT encounter, pid from form_encounter where pid='" . $pid . "' and encounter='" . $encounter . "'\n";
     $testres = sqlStatement("SELECT encounter, pid from form_encounter where pid='" . $pid . "' and encounter='" . $encounter . "'");
     $foundEnc=0;
     while($testrow = sqlFetchArray($testres)){
-       $currentLog .= "Found Encounter: ". $testrow['encounter']. "\n";
        $foundEnc++;
     }
 
@@ -105,33 +104,33 @@
       unset($encounter);
 
     if(!$encounter){
-    $currentLog .= "Trying my logic... using claim date:" . $out['dos'] . " \n";
+    //$currentLog .= "Trying my logic... using claim date:" . $out['dos'] . " \n";
     //Compare date of service... if only one then match. If multiple then check for CPT Code
       $pres = sqlStatement("SELECT pid FROM patient_data WHERE " .
         "lname LIKE '" . addslashes($out['patient_lname']) . "' AND " .
         "fname LIKE '" . addslashes($out['patient_fname']) . "' " .
         "ORDER BY pid DESC");
       while ($prow = sqlFetchArray($pres)) {
-          $currentLog .= $prow['pid'] . "\n";
+          //$currentLog .= $prow['pid'] . "\n";
           $currentLog .= "SELECT date, pid, encounter FROM form_encounter where pid = '" . $prow['pid'] . "' and DATE_FORMAT(date, '%Y%m%d')='" . $out['dos'] . "'\n";   
           $eres = sqlStatement("SELECT date, pid, encounter FROM form_encounter where pid = '" . $prow['pid'] . "' and DATE_FORMAT(date, '%Y%m%d')='" . $out['dos'] . "'");   
           $matchingEncounters=array();
 
           while($erow=sqlFetchArray($eres)) {
              array_push($matchingEncounters, $erow['encounter']);
-             $currentLog .= "Matching Encounter: " . $erow['encounter'] . "\n";
+             //$currentLog .= "Matching Encounter: " . $erow['encounter'] . "\n";
           }
 
           if(sizeof($matchingEncounters) == 0)
           {
-             $currentLog .= "NOT FOUND\n";
+             //$currentLog .= "NOT FOUND\n";
           }
 
           if(sizeof($matchingEncounters) == 1)
           {
              $pid=$prow['pid'];
              $encounter=$matchingEncounters[0];
-             $currentLog .= "Single encounter found so using that: " . $pid . "  -  " . $encounter . "\n";
+             //$currentLog .= "Single encounter found so using that: " . $pid . "  -  " . $encounter . "\n";
 
           }
 
@@ -140,11 +139,11 @@
               $matchingBills = array();
 
               foreach($matchingEncounters as &$mEncounter) {
-                 $currentLog .= "SELECT encounter, code FROM billing where encounter='" . $mEncounter . "' and code='" . $out['svc'][0]['code'] . "'\n" ; 
+                 //$currentLog .= "SELECT encounter, code FROM billing where encounter='" . $mEncounter . "' and code='" . $out['svc'][0]['code'] . "'\n" ; 
                  $bres = sqlStatement("SELECT encounter, code FROM billing where encounter='" . $mEncounter . "' and code='" . $out['svc'][0]['code'] . "'" ); 
                  while($brow=sqlFetchArray($bres))
                  {
-                    $currentLog .= "Matched billing record: " . $brow['encounter'] . "\n";
+                    //$currentLog .= "Matched billing record: " . $brow['encounter'] . "\n";
                     array_push($matchingBills, $brow['encounter']);
                  }
               }
@@ -152,18 +151,14 @@
               {
                  $encounter = $matchingBills[0];
                  $pid = $prow['pid'];
-                 $currentLog .= "Set encounter from billing to: " . $encounter . "\n";
+                 //$currentLog .= "Set encounter from billing to: " . $encounter . "\n";
               }
-              else
-              { $currentLog .= "NOT FOUND\n"; }
           }
       }
     }
 
 
     if ($pid && $encounter) $invnumber = "$pid.$encounter";
-    else
-       $currentLog .= "NOT FOUND\n";
 
     //file_put_contents($logFile, $currentLog);
 

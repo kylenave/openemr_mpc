@@ -281,7 +281,7 @@ function parse_era($filename, $cb) {
             $out['patient_lname']     = trim($seg[3]);
             $out['patient_fname']     = trim($seg[4]);
             $out['patient_mname']     = trim($seg[5]);
-            if(isset($seg[9])
+            if(isset($seg[9]))
             $out['patient_member_id'] = trim($seg[9]);
         }
         // IL = Insured or Subscriber

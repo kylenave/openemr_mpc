@@ -98,12 +98,12 @@ require_once("$srcdir/billing.inc");
         ksort($prev['dtl']);
         foreach ($prev['dtl'] as $dkey => $ddata) {
             $ddate = substr($dkey, 0, 10);
-            $description = $ddata['src'] . $ddata['rsn'];
+            $description = (isset($ddata['src']) && isset($ddata['rsn']))? $ddata['src'] . $ddata['rsn'] : '';
             if ($ddate == '          ') { // this is the service item
                 $ddate = $dos;
                 $description = 'Service Item';
             }
-            $amount = sprintf("%.2f", $ddata['chg'] - $ddata['pmt']);
+            $amount = sprintf("%.2f", (isset($ddata['chg']))?$ddata['chg']:0 - (isset($ddata['pmt']))?$ddata['pmt']:0);
             $invoice_total = sprintf("%.2f", $invoice_total + $amount);
             writeDetailLine($bgcolor, 'olddetail', $ptname, $invnumber,
                 $code, $ddate, $description, $amount, $invoice_total);
@@ -573,6 +573,15 @@ error_log("Reporting Previous Amount");
                 writeMessageLine($bgcolor, 'infdetail', "$rmk: " . $remark_codes[$rmk]);
             }
 
+	    //Get total of adjustments...will need this shortly.
+	    $totalAdjAmount = 0.0;
+            foreach ($svc['adj'] as $adj) 
+	    {
+                if($adj['amount'] > 0)
+                {
+		   $totalAdjAmount += $adj['amount'];
+                }
+	    }
             // Post and report the payment for this service item from the ERA.
             // By the way a 'Claim' level payment is probably going to be negative,
             // i.e. a payment reversal.
@@ -586,19 +595,27 @@ error_log("Reporting Payments");
 		//Let's see if a payment is being restated...
 error_log($svc['code'] . "-  Charge: " . $svc['chg'] . "  Adjustments: " . $prev['adj'] . "   Payments: " . $prev['pay']);
 		//First, let's see if existing payments and adjustments match charge
-		if(abs($svc['chg'] -  ($prev['adj'] + $prev['pay'])) < 0.02){
+		$prev_balance = abs($svc['chg'] -  ($prev['adj'] + $prev['pay']));
+		$new_balance = abs($svc['chg'] -  $svc['paid'] - $totalAdjAmount);
+		if($prev_balance < 0.02 || $new_balance < 0.02){
 		   //This is a restatement so just post the difference	
 		   $actual_paid_amount = $svc['paid'] - $prev['pay'];
-		   $delta_paid_amount = $svc['paid'] - $prev['pay'];
+		   $delta_paid_amount  = $svc['paid'] - $prev['pay'];
+error_log("This is a restatement with a delta of: " . $delta_paid_amount);
 		}
 		
-
+error_log("Error: " . $error . "  and Debug: " . $debug);
                 if (!$error && !$debug) 
 		{
                    arPostPayment($pid, $encounter,$InsertionId[$out['check_number']], $actual_paid_amount,//$InsertionId[$out['check_number']] gives the session id
                                  $svc['code'], $svc['mod'], substr($inslabel,3), $out['check_number'], $debug,'',$codetype, $group, $billing_id,  $allowed_amount );
 
 		   if($delta_paid_amount){
+		       if($new_balance < 0.02){
+			  //In this case we wipe out patient responsibility
+			  $delta_paid_amount = -($svc['chg'] -  $svc['paid'] - $prev['adj']);
+error_log("Updated Delta Amount to : " . $delta_paid_amount);
+			}
                            arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], 
 				-$delta_paid_amount,//$InsertionId[$out['check_number']] gives the session id
                                 $svc['code'], $svc['mod'], substr($inslabel,3), 
@@ -616,7 +633,7 @@ error_log($svc['code'] . "-  Charge: " . $svc['chg'] . "  Adjustments: " . $prev
 
                 writeDetailLine($bgcolor, $class, $patient_name, $invnumber,
                     $svc['code'], $check_date, $description,
-                    0 - $svc['paid'], ($error ? '' : $invoice_total));
+                    0 - $actual_paid_amount, ($error ? '' : $invoice_total));
 
 		//unset($codes[$codekey]);
             }
@@ -638,14 +655,6 @@ error_log($svc['code'] . "-  Charge: " . $svc['chg'] . "  Adjustments: " . $prev
 		$acceptableAdjustCodes[]='77002';
 		$acceptableAdjustCodes[]='77003';
 		$acceptableAdjustCodes[]='Q9966';
-	    $totalAdjAmount = 0.0;
-            foreach ($svc['adj'] as $adj) 
-	    {
-                if($adj['amount'] > 0)
-                {
-		   $totalAdjAmount += $adj['amount'];
-                }
-	    }
 
 /*
                 if($svc['chg'] <= $totalAdjAmount && !in_array($svc['code'], $acceptableAdjustCodes))
