@@ -374,9 +374,10 @@ else if ($csc == '22')
 	$allowToMoveOn=true;
 
         // This loops once for each service item in this claim.
+error_log("Starting to loop through services...");
 foreach ($out['svc'] as $svc) 
 {
-
+error_log("Service: " . $svc['code']);
 	$group += 1;
 
         //Get the billing ID for this line item=====================================================================================
@@ -454,7 +455,7 @@ foreach ($out['svc'] as $svc)
       // This reports detail lines already on file for this service item.
       if ($prev) 
 	{
-
+error_log("Previous adjudications found.");
                 if($csc=='2' or $csc=='20')
                 {
                    //This is a secondary so any adjustment codes are historical and to be ignored
@@ -512,6 +513,7 @@ foreach ($out['svc'] as $svc)
             // If the service item is not in our database...
             else {
 
+error_log("No Previous adjudications found.");
                 // This is not an error. If we are not in error mode and not debugging,
                 // insert the service item into SL.  Then display it (in green if it
                 // was inserted, or in red if we are in error mode).
@@ -531,6 +533,7 @@ foreach ($out['svc'] as $svc)
 
             $class = $error ? 'errdetail' : 'newdetail';
 
+error_log("Reporting Previous Amount");
             // Report Allowed Amount.
             if (array_key_exists('allowed', $svc)) {
                 $allowed_amount = $svc['allowed'];
@@ -565,7 +568,7 @@ foreach ($out['svc'] as $svc)
             }
 
             // Report miscellaneous remarks.
-            if ($svc['remark']) {
+            if (array_key_exists('remark', $svc)) {
                 $rmk = $svc['remark'];
                 writeMessageLine($bgcolor, 'infdetail', "$rmk: " . $remark_codes[$rmk]);
             }
@@ -576,11 +579,12 @@ foreach ($out['svc'] as $svc)
             $actual_paid_amount = $svc['paid'];
             $delta_paid_amount = 0;
 
+error_log("Reporting Payments");
             if ($svc['paid']) 
 	    {
 
 		//Let's see if a payment is being restated...
-
+error_log($svc['code'] . "-  Charge: " . $svc['chg'] . "  Adjustments: " . $prev['adj'] . "   Payments: " . $prev['pay']);
 		//First, let's see if existing payments and adjustments match charge
 		if(abs($svc['chg'] -  ($prev['adj'] + $prev['pay'])) < 0.02){
 		   //This is a restatement so just post the difference	
@@ -653,6 +657,7 @@ foreach ($out['svc'] as $svc)
                     $Denied=true;
                 }
 */	    
+error_log("Reporting Adjustments");
 	    $allowToMoveOn=true;
             foreach ($svc['adj'] as $adj) 
 	    {
