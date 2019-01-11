@@ -89,7 +89,7 @@
 								$where .= " AND i.policy_number not in (".stripslashes($exclude_policy).")";
 							}
 
-	$where .= " AND (i.policy_number is not null and i.policy_number != '') and (fe.date is null or datediff(e.pc_eventDate, fe.date) > 90)";
+	$where .= " AND (i.policy_number is not null and i.policy_number != '') and (fe.date is null or datediff(e.pc_eventDate, fe.date) > 30)";
 
 	$query = sprintf("		SELECT DATE_FORMAT(e.pc_eventDate, '%%Y%%m%%d') as pc_eventDate,
 								   e.pc_facility,
