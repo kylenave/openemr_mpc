@@ -104,6 +104,18 @@ class abService {
          $this->error=true;
 	 $this->errorMessage = "Error - can't find patient: " . $this->lname . ", " . $this->fname . ". Check the spelling.";
       }
+
+      if(!$this->facilityId)
+      {
+         $this->error=true;
+	 $this->errorMessage = "The facility Code: " . $this->facilityCode . " was not found.";
+      }
+
+      if(!$this->providerId)
+      {
+         $this->error=true;
+	 $this->errorMessage = "Error - can't find provider: " . $this->providerLastName . ". Check the spelling.";
+      }
    }
 
    function parseData($svc)
