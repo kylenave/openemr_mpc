@@ -179,7 +179,7 @@ function PrintUdsData($udsData)
     <form method='post' action='auto_uds.php' enctype='multipart/form-data'>
 
       <table border='0' cellpadding='5' cellspacing='0'>
-<?php if(!$_POST['form_uds'] && !$_POST['form_udsprocess'])
+<?php if(!array_key_exists('form_uds', $_POST) && !array_key_exists('form_udsprocess', $_POST))
 {
 ?>
 
@@ -199,7 +199,7 @@ function PrintUdsData($udsData)
 <?php
 }
 
-if ($_POST['form_uds'])
+if (array_key_exists('form_uds', $_POST))
 {
    if($_FILES['form_udsfile']['size'])
    {
@@ -221,7 +221,7 @@ if ($_POST['form_uds'])
 <?php
 }
 
-if ($_POST['form_udsprocess'])
+if (array_key_exists('form_udsprocess', $_POST))
 {
    $tmp_name = $_POST['tmp_uds_file'];
    $udsData = LoadUdsFile($tmp_name);
