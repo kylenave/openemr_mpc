@@ -88,7 +88,7 @@ function CreateNewEncounter($svc, $reason)
    $force_create=true;
 
    return todaysEncounterCheck($svc->pid, $svc->dos, 
-              $reason, $svc->facilityId, $billing_facility, $provider, $category, $return_existing, $force_create);
+              $reason, $svc->facilityId, $billing_facility, $svc->providerId, $category, $return_existing, $force_create);
 }
 
 function AddBillingItem($enc, $svc)
