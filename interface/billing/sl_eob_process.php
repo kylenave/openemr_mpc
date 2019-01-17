@@ -597,9 +597,10 @@ error_log($svc['code'] . "-  Charge: " . $svc['chg'] . "  Adjustments: " . $prev
 		//First, let's see if existing payments and adjustments match charge
 		$prev_balance = abs($svc['chg'] -  ($prev['adj'] + $prev['pay']));
 		$new_balance = abs($svc['chg'] -  $svc['paid'] - $totalAdjAmount);
+error_log("tests: " . $new_balance . "     " . $prev_balance);
 		if($prev_balance < 0.02 || $new_balance < 0.02){
 		   //This is a restatement so just post the difference	
-		   $actual_paid_amount = $svc['paid'] - $prev['pay'];
+		   //$actual_paid_amount = $svc['paid'] - $prev['pay'];
 		   $delta_paid_amount  = $svc['paid'] - $prev['pay'];
 error_log("This is a restatement with a delta of: " . $delta_paid_amount);
 		}
@@ -610,7 +611,7 @@ error_log("Error: " . $error . "  and Debug: " . $debug);
                    arPostPayment($pid, $encounter,$InsertionId[$out['check_number']], $actual_paid_amount,//$InsertionId[$out['check_number']] gives the session id
                                  $svc['code'], $svc['mod'], substr($inslabel,3), $out['check_number'], $debug,'',$codetype, $group, $billing_id,  $allowed_amount );
 
-		   if($delta_paid_amount){
+		   if(false && $delta_paid_amount){
 		       if($new_balance < 0.02){
 			  //In this case we wipe out patient responsibility
 			  $delta_paid_amount = -($svc['chg'] -  $svc['paid'] - $prev['adj']);
