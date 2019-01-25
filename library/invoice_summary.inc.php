@@ -58,11 +58,16 @@ function ar_get_invoice_summary($patient_id, $encounter_id, $with_detail = false
          $code .= ':' . $tmpModifier;
          $row['modifier'] = $tmpModifier;
       }
-      if($codes[$code])
+
+      if(array_key_exists($code, $codes))
       {
-         //This code is duplicated which is allowable
-         //$code.='-2';
+
+         $codes[$code]['pay'] = 0; 
+         $codes[$code]['bal'] = 0; 
+         $codes[$code]['chg'] = 0; 
+         $codes[$code]['adj'] = 0;
       }
+
       $codes[$code]['chg'] += $amount;
       $codes[$code]['bal'] += $amount;
 
@@ -171,6 +176,13 @@ function ar_get_invoice_summary($patient_id, $encounter_id, $with_detail = false
 
 function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = false) {
   $codes = array();
+
+    $codes[0]['pay'] = 0; 
+    $codes[0]['bal'] = 0;
+    $codes[0]['bal'] = 0; 
+    $codes[0]['chg'] = 0; 
+    $codes[0]['adj'] = 0;
+
   $keysuff1 = 1000;
   $keysuff2 = 5000;
 
