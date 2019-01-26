@@ -393,9 +393,6 @@ function parse_era($filename, $cb) {
         else if ($segid == 'DTM' && $out['loopid'] == '2110') {
             $out['dos'] = trim($seg[2]); // yyyymmdd
         }
-        else if ($segid == 'MIA' && $out['loopid'] == '2110') {
-	   //Accept but ignore outpatient adjudication line.
-        }
         else if ($segid == 'CAS' && $out['loopid'] == '2110') 
         {
             $i = count($out['svc']) - 1;
@@ -467,6 +464,9 @@ function parse_era($filename, $cb) {
             if ($out['isa_control_number'] != trim($seg[2])) {
                 //return 'Ending interchange control number mismatch';
             }
+        }
+        else if ($segid == 'MIA') {
+	   //Accept but ignore outpatient adjudication line.
         }
         else {
             if(trim($segid)!='')
