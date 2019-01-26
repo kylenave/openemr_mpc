@@ -279,12 +279,32 @@ function era_callback_check(&$out)
                 $deposit_date = $_REQUEST['deposit_date'] != '' ? $_REQUEST['deposit_date'] : date('Y-m-d');
 logMessage("Posting Session with payer info: " .  $out['payer_name'.$check_count], $out['payer_tax_id'.$check_count]);
 
+                $payerId = $_REQUEST['InsId'];
+
+                if(!$payerId){
+                   $payerId = getPayerIdGuess($out['payer_name'.$check_count]);
+                }       
+
                 $InsertionId[$out['check_number' . $check_count]] = arPostSession($_REQUEST['InsId'], $out['check_number' . $check_count],
                     $out['check_date' . $check_count], $out['check_amount' . $check_count], $post_to_date, $deposit_date, $debug, $out['payer_name'.$check_count], $out['payer_tax_id'.$check_count]);
 
             }
         }
     }
+}
+
+function getPayerIdGuess($name)
+{
+   $sql="select payer_id, count(payer_id) from ar_session where description ='$name' group by payer_id order by count(payer_id) desc limit 1";
+
+   $result = sqlQuery($sql);
+
+   if(empty($result))
+   {
+      return '0';
+   }
+
+   return $result['payer_id'];
 }
 
 function getInsuranceLabel($csc)
