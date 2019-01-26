@@ -415,7 +415,7 @@ function isWriteoffAllowed($code)
     return in_array($code, $acceptableAdjustCodes);
 }
 
-function processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc, $adj)
+function processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc, $adj, &$description)
 {
     global $debug, $InsertionId, $codetype, $inslabel;
 
@@ -429,8 +429,13 @@ function processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc,
         $reason = "$inslabel coins: ";
     } else if ($adj['reason_code'] == '3') {
         $reason = "$inslabel copay: ";
+    } else {
+       //Som other PR situation...
+       $reason .= $reason_code;
+       arSetDeniedFlag($pid, $encounter, "Denied due to unusual PR code");
     }
 
+    $description = $reason . "(" . $postAmount . ")";
     if (!$debug) {
         arPostPatientResponsibility($pid, $encounter, $InsertionId[$out['check_number']], $postAmount, $svc['code'], $svc['mod'],
             substr($inslabel, 3), $reason, $debug, '', $codetype, $reason_code, $billing_id);
@@ -530,9 +535,9 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
 
         //PR Responsibility adjustments should be ignored as should secondary
         if ($patientResponsibility) {
-            processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc, $adj, $inslabel);
+            $description = "";
+            processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc, $adj, $description);
 
-            $description .= sprintf(" ($%.2f)", $adj['amount']);
             writeDetailLine('infdetail', $displayCode, $production_date,
                 $description, 0, ($error ? '' : $invoice_total));
 
