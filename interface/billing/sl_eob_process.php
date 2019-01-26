@@ -430,19 +430,28 @@ function processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc,
     }
 }
 
-function processSecondaryAdjustment($pid, $encounter, $billing_id, $out, $svc, $adj)
+function processSecondaryAdjustment($pid, $encounter, $billing_id, $out, $svc, $adj, &$postAmount, &$description)
 {
     global $debug, $InsertionId, $codetype, $inslabel;
 
+    $postAmount = 0;
+
     if(isset($adj['amount']))
     {
-
+      if(isCO45($adj))
+      {
+         $allowedSI = array("ILLINOIS COMPTROLLER");
+         if(in_array( $out['payer_name'], $allowedSI))
+         {
+            $postAmount=$adj['amount'];
+         } 
+      } 
     }
 
     $reason = "$inslabel note " . $adj['group_code'] . $adj['reason_code'] . ': ';
-    $postAmount = 0;
 
     $reason .= sprintf("(%.2f)", $adj['amount']);
+    $description = $reason;
 
     if (!$debug) {
         arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], $postAmount, $svc['code'], $svc['mod'],
@@ -465,6 +474,16 @@ function isTimelyFiling($adj)
 function isDuplicate($adj)
 {
     return ( ($adj['group_code'] == 'OA') && ($adj['reason_code'] == '18')) ;
+}
+
+function isCO45($adj)
+{
+    return ($adj['group_code']=='CO' && $adj['reason_code'] == '45');
+}
+
+function checkAdjust($adj, $group, $reason)
+{
+    return ($adj['group_code']==$group && $adj['reason_code'] == $reason);
 }
 
 function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
@@ -507,10 +526,9 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
                 $description, 0, ($error ? '' : $invoice_total));
 
         } else if (!$primary) {
-            processSecondaryAdjustment($pid, $encounter, $billing_id, $out, $svc, $adj);
+            processSecondaryAdjustment($pid, $encounter, $billing_id, $out, $svc, $adj, $postAmount, $description);
 
             $postAmount = 0;
-            $description .= sprintf(" ($%.2f)", $adj['amount']);
             writeDetailLine('infdetail', $displayCode, $production_date, $description, $postAmount, $invoice_total);
         }
         // Other group codes for primary insurance are real adjustments.
@@ -815,6 +833,7 @@ function era_callback(&$out)
         processAllowedAmount($pid, $encounter, $billing_id, $svc);
 
         // Report miscellaneous remarks.
+        
         if (array_key_exists('remark', $svc)) {
             $rmk = $svc['remark'];
             writeMessageLine('infdetail', "$rmk: " . $remark_codes[$rmk]);
