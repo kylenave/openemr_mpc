@@ -216,7 +216,7 @@ function getBillingId($pid, $encounter, $code, $modifier, &$billing_ids_handled)
 
 function logMessage($msg)
 {
-    $MessageLoggingOn = false;
+    $MessageLoggingOn = true;
 
     if ($MessageLoggingOn) {
         error_log($msg);
@@ -436,14 +436,18 @@ function processSecondaryAdjustment($pid, $encounter, $billing_id, $out, $svc, $
 
     $postAmount = 0;
 
+    logMessage("Processing secondary adjustment of: " . $adj['amount']);
+
     if(isset($adj['amount']))
     {
       if(isCO45($adj))
       {
+         logMessage("This is a CO 45... checking name: " . $out['payer_name']);
          $allowedSI = array("ILLINOIS COMPTROLLER");
          if(in_array( $out['payer_name'], $allowedSI))
          {
             $postAmount=$adj['amount'];
+            logMessage("Its allowed!");
          } 
       } 
     }
@@ -526,9 +530,12 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
                 $description, 0, ($error ? '' : $invoice_total));
 
         } else if (!$primary) {
+            $postAmount = 0;
+            $description="";
             processSecondaryAdjustment($pid, $encounter, $billing_id, $out, $svc, $adj, $postAmount, $description);
 
-            $postAmount = 0;
+            $invoice_total -= $postAmount;
+
             writeDetailLine('infdetail', $displayCode, $production_date, $description, $postAmount, $invoice_total);
         }
         // Other group codes for primary insurance are real adjustments.
