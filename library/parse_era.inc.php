@@ -353,7 +353,7 @@ function parse_era($filename, $cb) {
         else if ($segid == 'SVC') {
             if (! $out['loopid']) return 'Unexpected SVC segment';
             $out['loopid'] = '2110';
-            if (isset($seg[6]) && len($seg[6]) > 1) {
+            if (isset($seg[6]) && strlen($seg[6]) > 1) {
                 // SVC06 if present is our original procedure code that they are changing.
                 // We will not put their crap in our invoice, but rather log a note and
                 // treat it as adjustments to our originally submitted coding.
