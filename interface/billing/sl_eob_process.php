@@ -455,7 +455,7 @@ function processSecondaryAdjustment($pid, $encounter, $billing_id, $out, $svc, $
       if(isCO45($adj))
       {
          logMessage("This is a CO 45... checking name: " . $out['payer_name']);
-         $allowedSI = array("ILLINOIS COMPTROLLER");
+         $allowedSI = array("ILLINOIS COMPTROLLER", "ILLINOIS MEDICAID");
          if(in_array( $out['payer_name'], $allowedSI))
          {
             $postAmount=$adj['amount'];
@@ -890,6 +890,13 @@ function era_callback(&$out)
     $claimState = '[DEBUG] ' . $inslabel;
 
     $secondaryPayer = arGetPayerID($pid, $service_date, 2);
+
+
+    $claimPaid=false;
+    if(abs($invoice_total) =< 0.02)
+    {
+       $claimPaid = true;
+    }
 
     // Cleanup: If all is well, mark Ins<x> done and check for secondary billing.
     if (!$debug && $insurance_done) {
