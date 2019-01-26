@@ -893,7 +893,7 @@ function era_callback(&$out)
 
 
     $claimPaid=false;
-    if(abs($invoice_total) =< 0.02)
+    if(abs($invoice_total) <= 0.02)
     {
        $claimPaid = true;
     }
