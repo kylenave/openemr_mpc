@@ -162,7 +162,6 @@ function parse_era($filename, $cb) {
         // Loop 1000A is Payer Information.
         //
         else if ($segid == 'N1' && $seg[1] == 'PR') {
-
             if ($out['loopid']) return 'Unexpected N1|PR segment';
             $out['loopid'] = '1000A';
             $out['payer_name'] = trim($seg[2]);
@@ -534,6 +533,7 @@ function parse_era_for_check($filename) {
             
         }
         else if ($segid == 'TRN') {
+
             //if ($out['loopid']) return 'Unexpected TRN segment';
             $out['check_number'.$check_count] = trim($seg[2]);
             $out['payer_tax_id'.$check_count] = substr($seg[3], 1); // 9 digits
@@ -541,11 +541,13 @@ function parse_era_for_check($filename) {
             // Note: TRN04 further qualifies the paying entity within the
             // organization identified by TRN03.
         }
+        else if ($segid == 'N1' && $seg[1] == 'PR') {
+            //if ($out['loopid']) return 'Unexpected N1|PR segment';
+            $out['loopid'] = '1000A';
+            $out['payer_name'.$check_count] = trim($seg[2]);
+        }
         else if ($segid == 'IEA')
         { $continue=false; }
-            
-        
-        
         
         ++$out['st_segment_count'];
     }

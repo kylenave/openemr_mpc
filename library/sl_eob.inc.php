@@ -212,9 +212,9 @@ function arGetAllSessions($encounter)
 }
 
   //writing the check details to Session Table on ERA proxcessing
-function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_date,$deposit_date,$debug) {
+function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_date,$deposit_date,$debug,$description='',$patient_id='0') {
       $query = "INSERT INTO ar_session( " .
-      "payer_id,user_id,closed,reference,check_date,pay_total,post_to_date,deposit_date,patient_id,payment_type,adjustment_code,payment_method " .
+      "payer_id,user_id,closed,reference,check_date,pay_total,post_to_date,deposit_date,patient_id,payment_type,adjustment_code,payment_method,description " .
       ") VALUES ( " .
       "'$payer_id'," .
       $_SESSION['authUserID']."," .
@@ -223,7 +223,7 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
       "'$check_date', " .
       "$pay_total, " .
       "'$post_to_date','$deposit_date', " .
-      "0,'insurance','insurance_payment','electronic'" .
+      "$patient_id,'insurance','insurance_payment','electronic', '$description'" .
         ")";
     if ($debug) {
       echo $query . "<br>\n";

@@ -59,9 +59,8 @@ function ar_get_invoice_summary($patient_id, $encounter_id, $with_detail = false
          $row['modifier'] = $tmpModifier;
       }
 
-      if(array_key_exists($code, $codes))
+      if(!array_key_exists($code, $codes))
       {
-
          $codes[$code]['pay'] = 0; 
          $codes[$code]['bal'] = 0; 
          $codes[$code]['chg'] = 0; 
@@ -201,7 +200,10 @@ function ar_get_invoice_summary2($patient_id, $encounter_id, $with_detail = fals
       $amount = sprintf('%01.2f', $row['fee']);
 
       $codesItem=array();
+      $codesItem['chg']=0;
+      $codesItem['pay']=0;
       $codesItem['adj']=0;
+      $codesItem['bal']=0;
       $code = $row['code'];
 
       if (! $code) $code = "Unknown";

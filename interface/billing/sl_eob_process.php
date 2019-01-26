@@ -216,7 +216,7 @@ function getBillingId($pid, $encounter, $code, $modifier, &$billing_ids_handled)
 
 function logMessage($msg)
 {
-    $MessageLoggingOn = true;
+    $MessageLoggingOn = false;
 
     if ($MessageLoggingOn) {
         error_log($msg);
@@ -252,7 +252,7 @@ function era_callback_check(&$out)
             $StringToEcho .= "<tr bgcolor='$bgcolor'>";
             $StringToEcho .= "<td><input type='checkbox'  name='chk" . $out['check_number' . $check_count] . "' value='" . $out['check_number' . $check_count] . "' checked/></td>";
             $StringToEcho .= "<td>" . htmlspecialchars($out['check_number' . $check_count]) . "</td>";
-            $StringToEcho .= "<td>" . htmlspecialchars($out['payee_name' . $check_count]) . "</td>";
+            $StringToEcho .= "<td>" . htmlspecialchars($out['payer_name' . $check_count] . "(" .  $out['payer_tax_id'.$check_count] . ")") . "</td>";
             $StringToEcho .= "<td align='right'>" . htmlspecialchars(number_format($out['check_amount' . $check_count], 2)) . "</td>";
             $StringToEcho .= "</tr>";
         }
@@ -270,8 +270,10 @@ function era_callback_check(&$out)
                 $check_date = $out['check_date' . $check_count] ? $out['check_date' . $check_count] : $_REQUEST['paydate'];
                 $post_to_date = $_REQUEST['post_to_date'] != '' ? $_REQUEST['post_to_date'] : date('Y-m-d');
                 $deposit_date = $_REQUEST['deposit_date'] != '' ? $_REQUEST['deposit_date'] : date('Y-m-d');
+logMessage("Posting Session with payer info: " .  $out['payer_name'.$check_count], $out['payer_tax_id'.$check_count]);
+
                 $InsertionId[$out['check_number' . $check_count]] = arPostSession($_REQUEST['InsId'], $out['check_number' . $check_count],
-                    $out['check_date' . $check_count], $out['check_amount' . $check_count], $post_to_date, $deposit_date, $debug);
+                    $out['check_date' . $check_count], $out['check_amount' . $check_count], $post_to_date, $deposit_date, $debug, $out['payer_name'.$check_count], $out['payer_tax_id'.$check_count]);
 
             }
         }
