@@ -393,6 +393,9 @@ function parse_era($filename, $cb) {
         else if ($segid == 'DTM' && $out['loopid'] == '2110') {
             $out['dos'] = trim($seg[2]); // yyyymmdd
         }
+        else if ($segid == 'MIA' && $out['loopid'] == '2110') {
+	   //Accept but ignore outpatient adjudication line.
+        }
         else if ($segid == 'CAS' && $out['loopid'] == '2110') 
         {
             $i = count($out['svc']) - 1;
