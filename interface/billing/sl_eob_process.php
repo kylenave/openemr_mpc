@@ -148,6 +148,13 @@ function writeOldDetail(&$prev, $dos, $code)
     }
 }
 
+function writeEncounterNote($encounter_id, $note)
+{
+   $userId = '1';
+   $datetime = date('Y-m-d H:i:s');
+   sqlInsert('INSERT INTO billing_notes (date, encounter, user_id, comments) VALUES (?,?,?,?)', array($datetime, $encounter_id, $userId, $note));
+}
+
 function getBillingId($pid, $encounter, $code, $modifier, &$billing_ids_handled)
 {
 
@@ -840,10 +847,16 @@ function era_callback(&$out)
         processAllowedAmount($pid, $encounter, $billing_id, $svc);
 
         // Report miscellaneous remarks.
-        
         if (array_key_exists('remark', $svc)) {
-            $rmk = $svc['remark'];
-            writeMessageLine('infdetail', "$rmk: " . $remark_codes[$rmk]);
+            $remarks = explode(":",  $svc['remark']);
+            $note="";
+            foreach ($remark as $rmk){
+               $rmk = $svc['remark'];
+               writeMessageLine('infdetail', "$rmk: " . $remark_codes[$rmk]);
+               $note .= $rmk . ": " .  $remark_codes[$rmk] . ". ";
+
+            }
+            writeEncounterNote($encounter, $note);
         }
 
         // Post and report the payment for this service item from the ERA.
