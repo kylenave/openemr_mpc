@@ -570,9 +570,7 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
 
                 $postAdjAmount = $adj['amount'];
 
-                if (isTimelyFiling($adj) ||
-                    ($Denied && $svc['paid'] <= 0)
-                ) {
+                if (isTimelyFiling($adj)) {
                     $postAdjAmount = 0;
                 }
 
