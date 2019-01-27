@@ -531,17 +531,12 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
 
         $displayCode = $svc['code'] . "(" . $svc['mod'] . ")";
 
-        if ($adj['amount'] < 0) {
-            arSetDeniedFlag($pid, $encounter, "Claim set to denied state because there is an adjustment with a negative value");
-            $Denied = true;
-        }
-
-        $PatientHasNoteMetSpendDownReqt = ($adj['reason_code'] == '178');
+        $PatientHasNotMetSpendDownReqt = ($adj['reason_code'] == '178');
         $isAWriteoff = ($adj['amount'] >= $svc['chg']);
         $patientResponsibility = ($adj['group_code'] == 'PR');
 
         if (($isAWriteoff && !isWriteoffAllowed($svc['code']))
-            && !$patientResponsibility && !$PatientHasNoteMetSpendDownReqt) {
+            && !$patientResponsibility && !$PatientHasNotMetSpendDownReqt) {
             arSetDeniedFlag($pid, $encounter,
                 "Claim Set to Denied because there was an adjustment for the full charge amount " .
                 "or more and it was not on the approved code list (i.e. S0020, A4550, etc)");
