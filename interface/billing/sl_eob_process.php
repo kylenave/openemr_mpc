@@ -605,6 +605,18 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
 }
 
 /////////////////////// PAYMENT FUNCTIONS
+
+function prevHasPayment($prev, $amount)
+{
+    if(isset($prev))
+    {
+        if(in_array($prev['payAmounts'], $amount))
+        return true;
+    }
+
+    return false;
+}
+
 function processPayments($pid, $encounter, $billing_id, $out, $svc, $prev)
 {
     global $error, $debug, $InsertionId, $codetype, $allowed_amount, $invoice_total, $inslabel;
@@ -619,6 +631,8 @@ function processPayments($pid, $encounter, $billing_id, $out, $svc, $prev)
             $totalAdjAmount += $adj['amount'];
         }
     }
+
+    //Find out if this exact amout was paid before
 
     logMessage("Previous state of: " . $svc['code'] . "-  Charge: " . $svc['chg'] .
         "  Adjustments: " . $prev['adj'] . "   Payments: " . $prev['pay']);
@@ -637,9 +651,15 @@ function processPayments($pid, $encounter, $billing_id, $out, $svc, $prev)
 
     if (!$error && !$debug) {
 
+        $description = "$inslabel/" . $out['check_number'] . ' payment';
+
+        if ($svc['paid'] < 0) {
+            $description .= ' reversal';
+        }
+
         arPostPayment($pid, $encounter, $InsertionId[$out['check_number']],
             $actual_paid_amount, $svc['code'], $svc['mod'], substr($inslabel, 3),
-            $out['check_number'], $debug, '', $codetype, 0, $billing_id, $allowed_amount);
+            $description, $debug, '', $codetype, 0, $billing_id, $allowed_amount);
 
         if (false && $delta_paid_amount) {
             if ($new_balance < 0.02) {
@@ -647,19 +667,16 @@ function processPayments($pid, $encounter, $billing_id, $out, $svc, $prev)
                 $delta_paid_amount = -($svc['chg'] - $svc['paid'] - $prev['adj']);
                 error_log("Updated Delta Amount to : " . $delta_paid_amount);
             }
-            arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']],
-                -$delta_paid_amount, //$InsertionId[$out['check_number']] gives the session id
+            $sessionId = $InsertionId[$out['check_number']];
+
+            arPostAdjustment($pid, $encounter, $sessionId,
+                -$delta_paid_amount, 
                 $svc['code'], $svc['mod'], substr($inslabel, 3),
                 "Payment offset", $debug, '', $codetype, $group, $billing_id);
         }
 
     }
     $invoice_total -= $svc['paid'];
-    $description = "$inslabel/" . $out['check_number'] . ' payment';
-
-    if ($svc['paid'] < 0) {
-        $description .= ' reversal';
-    }
     return $description;
 }
 
@@ -766,13 +783,9 @@ function era_callback(&$out)
         writeMessageLine('errdetail', "The following claim is not in our database");
     }
 
-    $hasPayment = false;
     $hasAnesthesiaCode = false;
 
     foreach ($out['svc'] as $svc) {
-        if ($svc['paid'] > 0) {
-            $hasPayment = true;
-        }
         $hasAnesthesiaCode |= isAnesthesiaCode($svc['code']);
     }
 
@@ -788,9 +801,9 @@ function era_callback(&$out)
     }
 
     if ($csc == '22') {
-        $error = true;
-        writeMessageLine('errdetail', "Payment reversals are not automated, please enter manually!");
-        updateClaim(true, $pid, $encounter, $_REQUEST['InsId'], substr($inslabel, 3), 22, 0, "Payment Reversal");
+        //$error = true;
+        writeMessageLine('errdetail', "Allowing Payment Reversal...");
+        //updateClaim(true, $pid, $encounter, $_REQUEST['InsId'], substr($inslabel, 3), 22, 0, "Payment Reversal");
     }
 
     if ($out['warnings']) {
