@@ -23,18 +23,18 @@ require_once "$srcdir/formatting.inc.php";
 require_once "$srcdir/billing.inc";
 
 $debug = $_GET['debug'] ? 1 : 0; // set to 1 for debugging mode
-$error=0;
-$primary=0;
+$error = 0;
+$primary = 0;
 $paydate = parse_date($_GET['paydate']);
 $encount = 0;
-$Denied=0;
+$Denied = 0;
 $ignoreSvcLine = 0;
 $codetype = "";
-$bgcolor="";
+$bgcolor = "";
 $patient_name = "";
 $invoice_number = 0;
 
-$inslabel="";
+$inslabel = "";
 $last_ptname = '';
 $last_invnumber = '';
 $last_code = '';
@@ -79,7 +79,8 @@ function writeMessageLine($class, $description)
     echo $dline;
 }
 
-function writeDetailLine($class, $code, $date, $description, $amount, $balance) {
+function writeDetailLine($class, $code, $date, $description, $amount, $balance)
+{
 
     global $bgcolor, $patient_name, $invoice_number, $last_ptname, $last_invnumber, $last_code;
 
@@ -141,8 +142,8 @@ function writeOldDetail(&$prev, $dos, $code)
         if ($ddate == '          ') { // this is the service item
             $ddate = $dos;
             $description = 'Service Item';
-	}
-        $amount = sprintf("%.2f", (isset($ddata['chg']) ? $ddata['chg'] : 0 ) - (isset($ddata['pmt']) ? $ddata['pmt'] : 0));
+        }
+        $amount = sprintf("%.2f", (isset($ddata['chg']) ? $ddata['chg'] : 0) - (isset($ddata['pmt']) ? $ddata['pmt'] : 0));
         $invoice_total = sprintf("%.2f", $invoice_total + $amount);
         writeDetailLine('olddetail', $code, $ddate, $description, $amount, $invoice_total);
     }
@@ -150,9 +151,9 @@ function writeOldDetail(&$prev, $dos, $code)
 
 function writeEncounterNote($encounter_id, $note)
 {
-   $userId = '1';
-   $datetime = date('Y-m-d H:i:s');
-   sqlInsert('INSERT INTO billing_notes (date, encounter, user_id, comments) VALUES (?,?,?,?)', array($datetime, $encounter_id, $userId, $note));
+    $userId = '1';
+    $datetime = date('Y-m-d H:i:s');
+    sqlInsert('INSERT INTO billing_notes (date, encounter, user_id, comments) VALUES (?,?,?,?)', array($datetime, $encounter_id, $userId, $note));
 }
 
 function getBillingId($pid, $encounter, $code, $modifier, &$billing_ids_handled)
@@ -187,8 +188,8 @@ function getBillingId($pid, $encounter, $code, $modifier, &$billing_ids_handled)
 
         $billing_row = sqlStatement($billing_row_sql);
         logMessage("Looking for billing ID with sql: " . $billing_row_sql);
-       
-         while (($billing_data = sqlFetchArray($billing_row)) && $noneFound) {
+
+        while (($billing_data = sqlFetchArray($billing_row)) && $noneFound) {
             logMessage("Looking for BillingID 2: checking billing id - " . $billing_data['id']);
             if (!in_array($billing_data['id'], $billing_ids_handled)) {
                 $billing_id = $billing_data['id'];
@@ -259,7 +260,7 @@ function era_callback_check(&$out)
             $StringToEcho .= "<tr bgcolor='$bgcolor'>";
             $StringToEcho .= "<td><input type='checkbox'  name='chk" . $out['check_number' . $check_count] . "' value='" . $out['check_number' . $check_count] . "' checked/></td>";
             $StringToEcho .= "<td>" . htmlspecialchars($out['check_number' . $check_count]) . "</td>";
-            $StringToEcho .= "<td>" . htmlspecialchars($out['payer_name' . $check_count] . "(" .  $out['payer_tax_id'.$check_count] . ")") . "</td>";
+            $StringToEcho .= "<td>" . htmlspecialchars($out['payer_name' . $check_count] . "(" . $out['payer_tax_id' . $check_count] . ")") . "</td>";
             $StringToEcho .= "<td align='right'>" . htmlspecialchars(number_format($out['check_amount' . $check_count], 2)) . "</td>";
             $StringToEcho .= "</tr>";
         }
@@ -280,12 +281,12 @@ function era_callback_check(&$out)
 
                 $payerId = $_REQUEST['InsId'];
 
-                if(!$payerId){
-                   $payerId = getPayerIdGuess($out['payer_name'.$check_count]);
-                }       
+                if (!$payerId) {
+                    $payerId = getPayerIdGuess($out['payer_name' . $check_count]);
+                }
 
                 $InsertionId[$out['check_number' . $check_count]] = arPostSession($payerId, $out['check_number' . $check_count],
-                    $out['check_date' . $check_count], $out['check_amount' . $check_count], $post_to_date, $deposit_date, $debug, $out['payer_name'.$check_count], $out['payer_tax_id'.$check_count]);
+                    $out['check_date' . $check_count], $out['check_amount' . $check_count], $post_to_date, $deposit_date, $debug, $out['payer_name' . $check_count], $out['payer_tax_id' . $check_count]);
 
             }
         }
@@ -294,16 +295,15 @@ function era_callback_check(&$out)
 
 function getPayerIdGuess($name)
 {
-   $sql="select payer_id, count(payer_id) from ar_session where description ='$name' group by payer_id order by count(payer_id) desc limit 1";
+    $sql = "select payer_id, count(payer_id) from ar_session where description ='$name' group by payer_id order by count(payer_id) desc limit 1";
 
-   $result = sqlQuery($sql);
+    $result = sqlQuery($sql);
 
-   if(empty($result))
-   {
-      return '0';
-   }
+    if (empty($result)) {
+        return '0';
+    }
 
-   return $result['payer_id'];
+    return $result['payer_id'];
 }
 
 function getInsuranceLabel($csc)
@@ -362,7 +362,6 @@ function saveClaimDenials($encounter, $billing_id, $svc)
                 "( '$encounter', '$billing_id','$current_date','" . $remark . "','Remarks')");
         }
     }
-
 
     foreach ($svc['adj'] as $adj) {
         sqlStatement("insert into claim_denials (encounter, billing_id, date, reason, group_code) VALUES " .
@@ -449,9 +448,9 @@ function processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc,
     } else if ($adj['reason_code'] == '3') {
         $reason = "$inslabel copay: ";
     } else {
-       //Som other PR situation...
-       $reason .= $reason_code;
-       arSetDeniedFlag($pid, $encounter, "Denied due to unusual PR code");
+        //Som other PR situation...
+        $reason .= $reason_code;
+        arSetDeniedFlag($pid, $encounter, "Denied due to unusual PR code");
     }
 
     $description = $reason . "(" . $postAmount . ")";
@@ -469,18 +468,15 @@ function processSecondaryAdjustment($pid, $encounter, $billing_id, $out, $svc, $
 
     logMessage("Processing secondary adjustment of: " . $adj['amount']);
 
-    if(isset($adj['amount']))
-    {
-      if(isCO45($adj))
-      {
-         logMessage("This is a CO 45... checking name: " . $out['payer_name']);
-         $allowedSI = array("ILLINOIS COMPTROLLER", "ILLINOIS MEDICAID");
-         if(in_array( $out['payer_name'], $allowedSI))
-         {
-            $postAmount=$adj['amount'];
-            logMessage("Its allowed!");
-         } 
-      } 
+    if (isset($adj['amount'])) {
+        if (isCO45($adj)) {
+            logMessage("This is a CO 45... checking name: " . $out['payer_name']);
+            $allowedSI = array("ILLINOIS COMPTROLLER", "ILLINOIS MEDICAID");
+            if (in_array($out['payer_name'], $allowedSI)) {
+                $postAmount = $adj['amount'];
+                logMessage("Its allowed!");
+            }
+        }
     }
 
     $reason = "$inslabel note " . $adj['group_code'] . $adj['reason_code'] . ': ';
@@ -503,22 +499,22 @@ function getAdjustDescription($adj)
 
 function isTimelyFiling($adj)
 {
-    return ( ($adj['group_code'] == 'CO') && ($adj['reason_code'] == '29')) ;
+    return (($adj['group_code'] == 'CO') && ($adj['reason_code'] == '29'));
 }
 
 function isDuplicate($adj)
 {
-    return ( ($adj['group_code'] == 'OA') && ($adj['reason_code'] == '18')) ;
+    return (($adj['group_code'] == 'OA') && ($adj['reason_code'] == '18'));
 }
 
 function isCO45($adj)
 {
-    return ($adj['group_code']=='CO' && $adj['reason_code'] == '45');
+    return ($adj['group_code'] == 'CO' && $adj['reason_code'] == '45');
 }
 
 function checkAdjust($adj, $group, $reason)
 {
-    return ($adj['group_code']==$group && $adj['reason_code'] == $reason);
+    return ($adj['group_code'] == $group && $adj['reason_code'] == $reason);
 }
 
 function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
@@ -533,7 +529,7 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
         //$postAdjustAmount = $adj['amount'];
         $description = getAdjustDescription($adj);
 
-        $displayCode = $svc['code']."(".$svc['mod'].")";
+        $displayCode = $svc['code'] . "(" . $svc['mod'] . ")";
 
         if ($adj['amount'] < 0) {
             arSetDeniedFlag($pid, $encounter, "Claim set to denied state because there is an adjustment with a negative value");
@@ -562,7 +558,7 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
 
         } else if (!$primary) {
             $postAmount = 0;
-            $description="";
+            $description = "";
             processSecondaryAdjustment($pid, $encounter, $billing_id, $out, $svc, $adj, $postAmount, $description);
 
             $invoice_total -= $postAmount;
@@ -579,19 +575,18 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
 
                 $postAdjAmount = $adj['amount'];
 
-                if (  isTimelyFiling($adj) || 
-                      ($Denied && $svc['paid'] <= 0)
-                   ) {
+                if (isTimelyFiling($adj) ||
+                    ($Denied && $svc['paid'] <= 0)
+                ) {
                     $postAdjAmount = 0;
                 }
 
-                if ($ignoreSvcLine ) {
+                if ($ignoreSvcLine) {
                     $postAdjAmount = 0;
                 }
 
-                if (isDuplicate($adj))
-                {
-                   arClearDeniedFlag($pid, $encounter,'Clear denial for duplicate encounters');
+                if (isDuplicate($adj)) {
+                    arClearDeniedFlag($pid, $encounter, 'Clear denial for duplicate encounters');
                 }
 
                 arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']],
@@ -617,56 +612,55 @@ function processPayments($pid, $encounter, $billing_id, $out, $svc, $prev)
     $actual_paid_amount = $svc['paid'];
     $delta_paid_amount = 0;
 
-        //Get total of adjustments...will need this shortly.
-        $totalAdjAmount = 0.0;
-        foreach ($svc['adj'] as $adj) {
-            if ($adj['amount'] != 0) {
-                $totalAdjAmount += $adj['amount'];
+    //Get total of adjustments...will need this shortly.
+    $totalAdjAmount = 0.0;
+    foreach ($svc['adj'] as $adj) {
+        if ($adj['amount'] != 0) {
+            $totalAdjAmount += $adj['amount'];
+        }
+    }
+
+    logMessage("Previous state of: " . $svc['code'] . "-  Charge: " . $svc['chg'] .
+        "  Adjustments: " . $prev['adj'] . "   Payments: " . $prev['pay']);
+
+    $prevWrittenOff = abs($svc['chg'] - $prev['adj']) < 0.01;
+    $prevPaid = ($prev['pay'] > 0);
+
+    $prev_balance = abs($svc['chg'] - ($prev['adj'] + $prev['pay']));
+    $new_balance = abs($svc['chg'] - $svc['paid'] - $totalAdjAmount);
+    $newBalancePaid = $new_balance < 0.02;
+
+    if ($prevPaid && $newBalancePaid) {
+        $delta_paid_amount = $svc['paid'] - $prev['pay'];
+        logMessage("This is a restatement with a delta of: " . $delta_paid_amount);
+    }
+
+    if (!$error && !$debug) {
+
+        arPostPayment($pid, $encounter, $InsertionId[$out['check_number']],
+            $actual_paid_amount, $svc['code'], $svc['mod'], substr($inslabel, 3),
+            $out['check_number'], $debug, '', $codetype, 0, $billing_id, $allowed_amount);
+
+        if (false && $delta_paid_amount) {
+            if ($new_balance < 0.02) {
+                //In this case we wipe out patient responsibility
+                $delta_paid_amount = -($svc['chg'] - $svc['paid'] - $prev['adj']);
+                error_log("Updated Delta Amount to : " . $delta_paid_amount);
             }
+            arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']],
+                -$delta_paid_amount, //$InsertionId[$out['check_number']] gives the session id
+                $svc['code'], $svc['mod'], substr($inslabel, 3),
+                "Payment offset", $debug, '', $codetype, $group, $billing_id);
         }
 
-        logMessage("Previous state of: " . $svc['code'] . "-  Charge: " . $svc['chg'] . 
-            "  Adjustments: " . $prev['adj'] . "   Payments: " . $prev['pay']);
+    }
+    $invoice_total -= $svc['paid'];
+    $description = "$inslabel/" . $out['check_number'] . ' payment';
 
-        $prevWrittenOff = abs($svc['chg'] - $prev['adj']) < 0.01;
-        $prevPaid = ($prev['pay'] > 0);
-        
-        $prev_balance = abs($svc['chg'] - ($prev['adj'] + $prev['pay']));
-        $new_balance = abs($svc['chg'] - $svc['paid'] - $totalAdjAmount);
-        $newBalancePaid = $new_balance < 0.02;
-
-
-        if ($prevPaid && $newBalancePaid) {
-            $delta_paid_amount = $svc['paid'] - $prev['pay'];
-            logMessage("This is a restatement with a delta of: " . $delta_paid_amount);
-        }
-
-        if (!$error && !$debug) {
-
-            arPostPayment($pid, $encounter, $InsertionId[$out['check_number']], 
-                $actual_paid_amount, $svc['code'], $svc['mod'], substr($inslabel, 3), 
-                $out['check_number'], $debug, '', $codetype, 0, $billing_id, $allowed_amount);
-
-            if (false && $delta_paid_amount) {
-                if ($new_balance < 0.02) {
-                    //In this case we wipe out patient responsibility
-                    $delta_paid_amount = -($svc['chg'] - $svc['paid'] - $prev['adj']);
-                    error_log("Updated Delta Amount to : " . $delta_paid_amount);
-                }
-                arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']],
-                    -$delta_paid_amount, //$InsertionId[$out['check_number']] gives the session id
-                    $svc['code'], $svc['mod'], substr($inslabel, 3),
-                    "Payment offset", $debug, '', $codetype, $group, $billing_id);
-            }
-
-        }
-        $invoice_total -= $svc['paid'];
-        $description = "$inslabel/" . $out['check_number'] . ' payment';
-
-        if ($svc['paid'] < 0) {
-            $description .= ' reversal';
-        }
-   return $description; 
+    if ($svc['paid'] < 0) {
+        $description .= ' reversal';
+    }
+    return $description;
 }
 
 /////////// ALLOWED AMOUNT ///////
@@ -681,10 +675,10 @@ function processAllowedAmount($pid, $encounter, $billing_id, &$svc)
 
         /*
         if (!$error && !$debug) {
-            arPostPayment($pid, $encounter, "Allowed Amount", 0.0, //$InsertionId[$out['check_number']] gives the session id
-                $svc['code'], $svc['mod'], substr($inslabel, 3), $out['check_number'], $debug, '', $codetype, 0, $billing_id, $allowed_amount);
+        arPostPayment($pid, $encounter, "Allowed Amount", 0.0, //$InsertionId[$out['check_number']] gives the session id
+        $svc['code'], $svc['mod'], substr($inslabel, 3), $out['check_number'], $debug, '', $codetype, 0, $billing_id, $allowed_amount);
         }
-        */
+         */
 
         // A problem here is that some payers will include an adjustment
         // reflecting the allowed amount, others not.  So here we need to
@@ -722,7 +716,7 @@ function era_callback(&$out)
 
     $last_code = '';
     $invoice_total = 0.00;
-    $error=0;
+    $error = 0;
 
     // Some heading information.
     $chk_123 = str_replace(' ', '_', $out['check_number']);
@@ -818,15 +812,15 @@ function era_callback(&$out)
 
     foreach ($out['svc'] as $svc) {
 
-        $displayCode = $svc['code']."(".$svc['mod'].")";
+        $displayCode = $svc['code'] . "(" . $svc['mod'] . ")";
 
         $billing_id = getBillingId($pid, $encounter, $svc['code'], $svc['mod'], $billing_ids_handled);
         logMessage("Service: " . $svc['code'] . " found as BillingID: " . $billing_id);
 
-        if($billing_id){
-           $prev = $codes[$billing_id];
-        }else{
-           unset($prev);
+        if ($billing_id) {
+            $prev = $codes[$billing_id];
+        } else {
+            unset($prev);
         }
 
         $ignoreSvcLine = false;
@@ -857,7 +851,7 @@ function era_callback(&$out)
                     abs($svc['chg']) != $prev['chg'] &&
                     $svc['chg'] != ($prev['chg'] - $svc['allowed'])) {
                     writeMessageLine('errdetail',
-                        "EOB charge amount " . $svc['chg'] . " for this code (" . $svc['code'] . ") " . 
+                        "EOB charge amount " . $svc['chg'] . " for this code (" . $svc['code'] . ") " .
                         "does not match our invoice: " . $prev['chg'] . "," . $prev['adj']);
                 }
             }
@@ -872,12 +866,12 @@ function era_callback(&$out)
 
         // Report miscellaneous remarks.
         if (array_key_exists('remark', $svc)) {
-            $remarks = explode(":",  $svc['remark']);
-            $note="";
-            foreach ($remark as $rmk){
-               $rmk = $svc['remark'];
-               writeMessageLine('infdetail', "$rmk: " . $remark_codes[$rmk]);
-               $note .= $rmk . ": " .  $remark_codes[$rmk] . ". ";
+            $remarks = explode(":", $svc['remark']);
+            $note = "";
+            foreach ($remark as $rmk) {
+                $rmk = $svc['remark'];
+                writeMessageLine('infdetail', "$rmk: " . $remark_codes[$rmk]);
+                $note .= $rmk . ": " . $remark_codes[$rmk] . ". ";
 
             }
             writeEncounterNote($encounter, $note);
@@ -890,10 +884,10 @@ function era_callback(&$out)
         ///////// PAYMENTS ////////////
         logMessage("Reporting Payments");
         if ($svc['paid']) {
-            $description = processPayments($pid, $encounter, $billing_id, $out, $svc, isset($prev)?$prev:0);
+            $description = processPayments($pid, $encounter, $billing_id, $out, $svc, isset($prev) ? $prev : 0);
 
             writeDetailLine('infdetail', $displayCode, $check_date, $description,
-            0 - $svc['paid'], $error ? '' : $invoice_total);
+                0 - $svc['paid'], $error ? '' : $invoice_total);
         }
 
         ///////// ADJUSTMENTS ///////////
@@ -910,11 +904,9 @@ function era_callback(&$out)
 
     $secondaryPayer = arGetPayerID($pid, $service_date, 2);
 
-
-    $claimPaid=false;
-    if(abs($invoice_total) <= 0.02)
-    {
-       $claimPaid = true;
+    $claimPaid = false;
+    if (abs($invoice_total) <= 0.02) {
+        $claimPaid = true;
     }
 
     // Cleanup: If all is well, mark Ins<x> done and check for secondary billing.
