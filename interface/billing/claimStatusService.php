@@ -139,7 +139,7 @@ error_log("About to test values: (".$tmpfileId.") (".$tmpcomments.")");
          $this->comments = $tmpcomments;
          $this->done = false;
 
-      }else if (!empty($tmpcomments))
+      }else if ($tmpcomments!=":")
       {
          $this->comments .= " " . $tmpcomments;
          error_log("Found more comments...stand by");
