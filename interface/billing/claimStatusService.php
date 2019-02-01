@@ -148,7 +148,7 @@ class claimStatusService {
 
       $this->claimId = trim(substr($claimStatus, claimStatusService::I_CLAIM_ID_START, claimStatusService::I_CLAIM_ID_LENGTH ));
       $this->invoiceNum = trim(substr($claimStatus, claimStatusService::I_INVOICE_NUMBER_START, claimStatusService::I_INVOICE_NUMBER_LENGTH ));
-      processInvoiceNumber();
+      $this->processInvoiceNumber();
       $this->patientName = trim(substr($claimStatus, claimStatusService::I_PATIENT_NAME_START, claimStatusService::I_PATIENT_NAME_LENGTH ));
       $this->amount = trim(substr($claimStatus,claimStatusService::I_AMOUNT_START ,claimStatusService::I_AMOUNT_LENGTH ));
       $this->practiceId = trim(substr($claimStatus, claimStatusService::I_PRACTICE_ID_START,claimStatusService::I_PRACTICE_ID_LENGTH ));
@@ -164,7 +164,7 @@ class claimStatusService {
       if($this->done && !$this->errors)
       {
          //Insert the status
-         insertStatus();
+         $this->insertStatus();
       }
    }
 
