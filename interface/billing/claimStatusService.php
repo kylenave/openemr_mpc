@@ -132,7 +132,7 @@ class claimStatusService {
       }
 
       $tmpcomments = trim(substr($claimStatus,claimStatusService::I_COMMENTS_START));
-
+error_log("About to test values: (".$tmpfileId.") (".$tmpcomments.")");
       if(!empty($tmpfileId))
       {
          $this->fileId = $tmpfileId;
@@ -142,6 +142,7 @@ class claimStatusService {
       }else if (!empty($tmpcomments))
       {
          $this->comments .= " " . $tmpcomments;
+         error_log("Found more comments...stand by");
       }else{
          $this->done = true;
          error_log("Now we're done so process!");
