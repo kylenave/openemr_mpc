@@ -76,14 +76,14 @@ class claimStatusService {
 
    function processInvoiceNumber()
    {
-      $pid=0;
-      $encounter=0;
+      $this->pid=0;
+      $this->encounter=0;
 
       $data = trim($this->invoiceNum, "-");
       if(sizeof($data) == 2)
       {
-         $pid = $data[0];
-         $encounter=$data[1];
+         $this->pid = $data[0];
+         $this->encounter=$data[1];
       }
    }
 
@@ -91,7 +91,7 @@ class claimStatusService {
    {
       $this->error=false;
 
-      if($pid==0 || $pid=='MPC')
+      if($this->pid==0 || $this->pid=='MPC')
       {
          $this->errorMessage = "PID could not be determined from invoice number";
          $this->error = true;
