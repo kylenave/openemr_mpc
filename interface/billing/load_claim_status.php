@@ -138,24 +138,18 @@ if (array_key_exists('form_auto', $_POST))
       $Data = LoadClaimStatusFile($auto_filename);
       ProcessClaimStatusData($Data);
 
+      echo "<tr><td>Done!</td></tr>";
+
    }else
    {echo "No file found";}
 
 ?>
 <tr><td>
-     <input type='submit' name='form_autoprocess' value='<?php xl("Process Claim Status Data","e"); ?>'>
+     
 </td><tr>
 <?php
 }
 
-if (array_key_exists('form_autoprocess', $_POST))
-{
-   $tmp_name = $_POST['tmp_auto_file'];
-   $Data = LoadAutoBillFile($tmp_name);
-   ProcessClaimStatusData($Data, false);
-
-   echo "<tr><td>Done!</td></tr>";
-}
 ?>
 
 </table>
