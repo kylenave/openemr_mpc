@@ -1157,6 +1157,7 @@ if (!empty($reg)) {
       <?php if ($GLOBALS['enable_edihistory_in_left_menu'] && acl_check('acct', 'eob')) genTreeLink('RTop','edi',xl('EDI History'),false,2);?>
       <?php genMiscLink('RTop','rep','0',xl('Auto UDS '),'billing/auto_uds.php'); ?>
       <?php genMiscLink('RTop','rep','0',xl('Auto Bill'),'billing/auto_bill.php'); ?>
+      <?php genMiscLink('RTop','rep','0',xl('Load Claim Status'),'billing/load_claim_status.php'); ?>
     </ul>
   </li>
   <?php } ?>
