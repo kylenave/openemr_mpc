@@ -55,11 +55,12 @@ function ProcessClaimStatusData($data, $displayOnly = true)
     echo "<table border=1 width='95%' padding='15px'>";
 
     $colors = array('#aaeeee', '#eeaaee');
+    $colorIndex = 0;
+    
 
     DisplayHeader();
 
     $header = true;
-    $colorIndex = 0;
     $enc = 0;
 
     $claimStatus = new claimStatusService();
