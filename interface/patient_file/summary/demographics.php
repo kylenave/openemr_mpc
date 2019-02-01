@@ -843,17 +843,25 @@ if ( $insurance_count > 0 ) {
 					foreach (array('primary','secondary','tertiary') as $instype) {
 
 						$query = "SELECT * FROM insurance_data WHERE " .
-						"pid = ? AND type = ? and (term_date is null or term_date=0 or term_date > now())" .
+						"pid = ? AND type = ? " .
 						"ORDER BY date DESC";
 						$res = sqlStatement($query, array($pid, $instype) );
 
 						$enddate = 'Present';
 
+
 						  while( $row = sqlFetchArray($res) ) {
 							if ($row['provider'] ) {
 
+                $term_date = $row['term_date'];
+
+                if(empty($term_date) || $term_date==0)
+                {
+                    $enddate=$term_date;
+                }
+
 								$ins_description  = ucfirst($instype);
-	                                                        $ins_description = xl($ins_description);
+	              $ins_description = xl($ins_description);
 								$ins_description  .= strcmp($enddate, 'Present') != 0 ? " (".xl('Old').")" : "";
 								?>
 								<li <?php echo $first ? 'class="current"' : '' ?>><a href="#">
@@ -881,12 +889,21 @@ if ( $insurance_count > 0 ) {
 						$query = "SELECT * FROM insurance_data WHERE " .
 						"pid = ? AND type = ?" .
 						"ORDER BY date DESC";
-						$res = sqlStatement($query, array($pid, $instype) );
+            $res = sqlStatement($query, array($pid, $instype) );
+            
 					  while( $row = sqlFetchArray($res) ) {
 						if ($row['provider'] ) {
+              $term_date = $row['term_date'];
+
+              if(empty($term_date) || $term_date==0)
+              {
+                  $enddate=$term_date;
+              }
+
 							?>
 								<div class="tab <?php echo $first ? 'current' : '' ?>">
 								<table border='0' cellpadding='0' width='100%'>
+
 								<?php
 								$icobj = new InsuranceCompany($row['provider']);
 								$adobj = $icobj->get_address();
@@ -895,12 +912,13 @@ if ( $insurance_count > 0 ) {
 								<tr>
 								 <td valign='top' colspan='3'>
 								  <span class='text'>
+
 								  <?php if (strcmp($enddate, 'Present') != 0) echo htmlspecialchars(xl("Old"),ENT_NOQUOTES)." "; ?>
 								  <?php $tempinstype=ucfirst($instype); echo htmlspecialchars(xl($tempinstype.' Insurance'),ENT_NOQUOTES); ?>
 								  <?php if (strcmp($row['date'], '0000-00-00') != 0) { ?>
 								  <?php echo htmlspecialchars(xl('from','',' ',' ').$row['date'],ENT_NOQUOTES); ?>
 								  <?php } ?>
-						                  <?php echo htmlspecialchars(xl('until','',' ',' '),ENT_NOQUOTES);
+						      <?php echo htmlspecialchars(xl('until','',' ',' '),ENT_NOQUOTES);
 								    echo (strcmp($enddate, 'Present') != 0) ? $enddate : htmlspecialchars(xl('Present'),ENT_NOQUOTES); ?>:</span>
 								 </td>
 								</tr>
