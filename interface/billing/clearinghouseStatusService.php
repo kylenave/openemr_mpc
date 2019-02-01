@@ -11,7 +11,7 @@ class clearinghouseStatusService {
    const I_CLAIM_ID_START = 7;
    const I_CLAIM_ID_LENGTH= 10;
 
-   const I_INVOICE_NUMBER_START = 77;
+   const I_INVOICE_NUMBER_START = 121;
    const I_INVOICE_NUMBER_LENGTH = 13;
 
    const I_PATIENT_NAME_START = 37;
@@ -98,7 +98,7 @@ class clearinghouseStatusService {
    function parseProcessDate($processDateLine)
    {
       $query = "Date Processed:";
-      if(substr(trim($claimStatus), 0, strlen($query)) === $query)
+      if(substr(trim($processDateLine), 0, strlen($query)) === $query)
       {
          $dateString = trim(substr($processDateLine, 15, 11));
          $mdy = explode($dateString);
@@ -110,7 +110,7 @@ class clearinghouseStatusService {
    function parseForErrors($line)
    {
       $query ="-------ERROR CLAIM DETAIL";
-      if(substr(trim($claimStatus), 0, strlen($query)) === $query)
+      if(substr(trim($line), 0, strlen($query)) === $query)
       {
          $this->hasRejects = true;
       }
@@ -119,7 +119,7 @@ class clearinghouseStatusService {
    function parseForAccepts($line)
    {
       $query ="-------ACCEPTED CLAIM DETAIL";
-      if(substr(trim($claimStatus), 0, strlen($query)) === $query)
+      if(substr(trim($line), 0, strlen($query)) === $query)
       {
          $this->hasAccepts = true;
       }
@@ -133,37 +133,37 @@ class clearinghouseStatusService {
    function parseData($claimStatus)
    {
 
-      $claimStatus->done = false;
+      $this->done = false;
       if(!$this->hasProcessDate)
       {
-         parseProcessDate($claimStatus);
+         $this->parseProcessDate($claimStatus);
          return;
       }
 
-      parseForErrors($claimStatus);
-      parseForAccepts($claimStatus);
+      $this->parseForErrors($claimStatus);
+      $this->parseForAccepts($claimStatus);
       $this->status = "REJECTED";
       if($this->hasAccepts)
       {
          $this->status = "ACCEPTED";
       }
 
-      if($this->hasAccepts || $this->hasRejects)
+      if($this->isClaimLine($claimStatus) && ($this->hasAccepts || $this->hasRejects))
       {
 
-         $this->claimId = trim(substr($claimStatus, claimStatusService::I_CLAIM_ID_START, claimStatusService::I_CLAIM_ID_LENGTH ));
-         $this->patientName = trim(substr($claimStatus, claimStatusService::I_PATIENT_NAME_START, claimStatusService::I_PATIENT_NAME_LENGTH ));
-         $this->invoiceNum = trim(substr($claimStatus, claimStatusService::I_INVOICE_NUMBER_START, claimStatusService::I_INVOICE_NUMBER_LENGTH ));
+         $this->claimId = trim(substr($claimStatus, clearinghouseStatusService::I_CLAIM_ID_START, clearinghouseStatusService::I_CLAIM_ID_LENGTH ));
+         $this->patientName = trim(substr($claimStatus, clearinghouseStatusService::I_PATIENT_NAME_START, clearinghouseStatusService::I_PATIENT_NAME_LENGTH ));
+         $this->invoiceNum = trim(substr($claimStatus, clearinghouseStatusService::I_INVOICE_NUMBER_START, clearinghouseStatusService::I_INVOICE_NUMBER_LENGTH ));
          $this->processInvoiceNumber();
-         $this->payer = trim(substr($claimStatus, claimStatusService::I_PAYER_ID_START ,claimStatusService::I_PAYER_ID_LENGTH ));
-         $this->comments = trim(substr($claimStatus,claimStatusService::I_COMMENTS_START));
+         $this->payer = trim(substr($claimStatus, clearinghouseStatusService::I_PAYER_ID_START ,clearinghouseStatusService::I_PAYER_ID_LENGTH ));
+         $this->comments = trim(substr($claimStatus,clearinghouseStatusService::I_COMMENTS_START));
 
          $this->CheckForErrors();
 
          if(!$this->error)
          {
             $this->insertStatus();
-            $claimStatus->done = true;
+            $this->done = true;
          }
       }
    }
