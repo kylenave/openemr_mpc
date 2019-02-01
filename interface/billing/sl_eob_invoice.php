@@ -59,6 +59,18 @@ function getAttachmentFiles($encounter)
     //Add it to array output
 }
 
+function getLastClaimStatus($encounter)
+{
+    $result = sqlStatement("SELECT status FROM claim_status WHERE encounter=$encounter order by date desc limit 1");
+
+    if(!empty($result))
+    {
+       return $result['status'];
+    }
+
+    return "Unknown";
+}
+
 function getEobText($pid, $encounter)
 {
     $commandToFindFiles = "find " . $GLOBALS['OE_SITE_DIR'] . "/era -name '*.eob' -exec ";

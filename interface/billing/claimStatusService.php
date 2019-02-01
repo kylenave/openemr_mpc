@@ -78,10 +78,8 @@ class claimStatusService {
    {
       $this->pid=0;
       $this->encounter=0;
-error_log("Parsing: " . $this->invoiceNum);
 
       $data = explode("-", $this->invoiceNum);
-      error_log("Got size of : " . sizeof($data));
       if(sizeof($data) == 2)
       {
          $this->pid = $data[0];
@@ -119,7 +117,6 @@ error_log("Parsing: " . $this->invoiceNum);
          $query = "File ID   Claim ID    Pat. Acct #    Patient";
          if(substr(trim($claimStatus), 0, strlen($query)) === $query)
          {
-            error_log("Found the header row!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             $this->primed = true;
          }
 
@@ -152,16 +149,15 @@ error_log("Parsing: " . $this->invoiceNum);
          $this->taxId = trim(substr($claimStatus,claimStatusService::I_PRACTICE_TAXID_START ,claimStatusService::I_PRACTICE_TAXID_LENGTH ));
          $this->payer = trim(substr($claimStatus, claimStatusService::I_PAYER_ID_START ,claimStatusService::I_PAYER_ID_LENGTH ));
       
-         $this->date = trim(substr($claimStatus, claimStatusService::I_DATE_START, claimStatusService::I_DATE_LENGTH));
+         $tmpdate = trim(substr($claimStatus, claimStatusService::I_DATE_START, claimStatusService::I_DATE_LENGTH));
+         $this->date = substr($tmpdate, 6).substr($tmpdate,0,2).substr($tmpdate,3,2);
          $this->status = trim(substr($claimStatus, claimStatusService::I_STATUS_START, claimStatusService::I_STATUS_LENGTH));
 
       }else if ($tmpcomments!=":")
       {
          $this->comments .= " " . $tmpcomments;
-         error_log("Found more comments...stand by");
       }else{
          $this->done = true;
-         error_log("Now we're done so process!");
       }
 
       $this->CheckForErrors();
