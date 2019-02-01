@@ -77,10 +77,10 @@ function getClaimStatusHistory($encounter)
     "<th>Date</th>" .
     "<th>Payer ID</th>" .
     "<th>Status</th>" .
-    "<th>Comments</th>" .
+    "<th>Claim Processing Comments</th>" .
     "</tr>";
 
-    $result = sqlStatement("SELECT * FROM claim_status WHERE encounter=$encounter order by date desc");
+    $result = sqlStatement("SELECT distinct * FROM claim_status WHERE encounter=$encounter order by date desc");
 
     $colors = array('#aaeeee', '#eeaaee');
     $colorIndex = 0;
@@ -180,12 +180,12 @@ function setins(istr) {
 }
 
 // Compute an adjustment that writes off the balance:
-function writeoff(code) {
+function writeoff(billingID) {
  var f = document.forms[0];
- var belement = f['form_line[' + code + '][bal]'];
- var pelement = f['form_line[' + code + '][pay]'];
- var aelement = f['form_line[' + code + '][adj]'];
- var relement = f['form_line[' + code + '][reason]'];
+ var belement = f['form_line[' + billingID + '][bal]'];
+ var pelement = f['form_line[' + billingID + '][pay]'];
+ var aelement = f['form_line[' + billingID + '][adj]'];
+ var relement = f['form_line[' + billingID + '][reason]'];
  var tmp = belement.value - pelement.value;
  aelement.value = Number(tmp).toFixed(2);
  if (aelement.value && ! relement.value) relement.selectedIndex = 1;
@@ -496,7 +496,7 @@ error_log("Posting payment with bid: " . $bid);
                 }
 error_log("Posting adjustment with bid: " . $bid);
                 arPostAdjustment($patient_id, $encounter_id, $session_id,
-                    $thisadj, $code, '', $payer_type, $reason, $debug, '', $thiscodetype, 0, $bid);
+                    $thisadj, $code, '', $payer_type, $reason, $debug, '', $thiscodetype, '','', 0, $bid);
             }
         }
 

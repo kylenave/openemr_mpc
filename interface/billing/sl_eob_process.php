@@ -545,8 +545,9 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
         $displayCode = $svc['code'] . "(" . $svc['mod'] . ")";
 
         $PatientHasNotMetSpendDownReqt = ($adj['reason_code'] == '178');
-        $isAWriteoff = ($adj['amount'] >= $svc['chg']);
+        $isAWriteoff = ($adj['amount'] = $svc['chg']);
         $patientResponsibility = ($adj['group_code'] == 'PR');
+        $isNegativeWriteoff = ($adj['amount'] = -$svc['chg']);
 
         if (($isAWriteoff && !isWriteoffAllowed($svc['code']))
             && !$patientResponsibility && !$PatientHasNotMetSpendDownReqt) {
@@ -583,7 +584,7 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
 
                 $postAdjAmount = $adj['amount'];
 
-                if (isTimelyFiling($adj)) {
+                if (isTimelyFiling($adj) || $isNegativeWriteoff) {
                     $postAdjAmount = 0;
                 }
 
