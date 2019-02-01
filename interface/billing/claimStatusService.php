@@ -1,6 +1,6 @@
 <?php
 
-class abService {
+class claimStatusService {
    
    const I_FILE_ID_START = 4;
    const I_FILE_ID_LENGTH = 9;
