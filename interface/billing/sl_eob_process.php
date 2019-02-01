@@ -350,22 +350,26 @@ function isDenialException($primaryPayer, $hasAnesthesiaCode)
     return $ignoreDenial;
 }
 
-function saveClaimDenials($encounter, $billing_id, $svc)
+function saveClaimDenials($encounter, $billing_id, $svc, $session_date = 0)
 {
-    $current_date = date("Ymd");
+    if ($session_date == 0) {
+        $denial_date = date("Ymd");
+    } else {
+        $denial_date = $session_date;
+    }
 
     if (isset($svc['remark'])) {
         $remarks = split(":", substr($svc['remark'], 0, -1));
 
         foreach ($remarks as $remark) {
             sqlStatement("insert into claim_denials (encounter, billing_id, date, reason, group_code) VALUES " .
-                "( '$encounter', '$billing_id','$current_date','" . $remark . "','Remarks')");
+                "( '$encounter', '$billing_id','$denial_date','" . $remark . "','Remarks')");
         }
     }
 
     foreach ($svc['adj'] as $adj) {
         sqlStatement("insert into claim_denials (encounter, billing_id, date, reason, group_code) VALUES " .
-            "( '$encounter', '$billing_id','$current_date','" . $adj['reason_code'] . "','" . $adj['group_code'] . "')");
+            "( '$encounter', '$billing_id','$denial_date','" . $adj['reason_code'] . "','" . $adj['group_code'] . "')");
 
     }
 }
@@ -380,9 +384,9 @@ function getDenialReasonCodes($svc)
     return $code_value;
 }
 
-function processDenial($pid, $encounter, $services)
+function processDenial($pid, $encounter, $services, $check_date)
 {
-    global $debug, $inslabel;
+    global $debug, $inslabel, $sessionId, $codetype;
 
     $code_value = "";
 
@@ -396,8 +400,17 @@ function processDenial($pid, $encounter, $services)
 
         foreach ($services as $svc) {
             $billing_id = getBillingId($pid, $encounter, $svc['code'], $svc['mod'], $billing_id_handled);
-            saveClaimDenials($encounter, $billing_id, $svc);
-            $code_value = (isset($code_value) ? $code_value . "," : "") . getDenialReasonCodes($svc);
+            saveClaimDenials($encounter, $billing_id, $svc, $check_date);
+
+            foreach ($svc['adj'] as $adj) {
+                $code_value .= $svc['code'] . '_' . $svc['mod'] . '_' . $adj['group_code'] . '_' . $adj['reason_code'] . ',';
+
+                $postAdjAmount = 0.0;
+
+                arPostAdjustment($pid, $encounter, $sessionId,
+                $postAdjAmount, $svc['code'], $svc['mod'], substr($inslabel, 3),
+                'Posting Denial Adjustments for the record', $debug, '', $codetype, $adj['group_code'], $adj['reason_code'], 0, $billing_id);
+                }
         }
 
         updateClaim(true, $pid, $encounter, $_REQUEST['InsId'], substr($inslabel, 3), 7, 0, $code_value, $out['payer_name'], $out['payer_claim_id']);
@@ -486,7 +499,7 @@ function processSecondaryAdjustment($pid, $encounter, $billing_id, $out, $svc, $
 
     if (!$debug) {
         arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], $postAmount, $svc['code'], $svc['mod'],
-            substr($inslabel, 3), $reason, $debug, '', $codetype, 0, $billing_id);
+            substr($inslabel, 3), $reason, $debug, '', $codetype, $adj['group_code'], $adj['reason_code'], 0, $billing_id);
     }
 }
 
@@ -579,12 +592,13 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
                 }
 
                 if (isDuplicate($adj)) {
-                    arClearDeniedFlag($pid, $encounter, 'Clear denial for duplicate encounters');
+
+                    //arClearDeniedFlag($pid, $encounter, 'Clear denial for duplicate encounters');
                 }
 
                 arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']],
                     $postAdjAmount, $svc['code'], $svc['mod'], substr($inslabel, 3),
-                    $reason, $debug, '', $codetype, 0, $billing_id);
+                    $reason, $debug, '', $codetype, $adj['group_code'], $adj['reason_code'], 0, $billing_id);
             }
 
             if (!$ignoreSvcLine) {
@@ -601,10 +615,11 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
 
 function prevHasPayment($prev, $amount)
 {
-    if(isset($prev))
-    {
-        if(in_array($prev['payAmounts'], $amount))
-        return true;
+    if (isset($prev)) {
+        if (in_array($prev['payAmounts'], $amount)) {
+            return true;
+        }
+
     }
 
     return false;
@@ -663,9 +678,9 @@ function processPayments($pid, $encounter, $billing_id, $out, $svc, $prev)
             $sessionId = $InsertionId[$out['check_number']];
 
             arPostAdjustment($pid, $encounter, $sessionId,
-                -$delta_paid_amount, 
+                -$delta_paid_amount,
                 $svc['code'], $svc['mod'], substr($inslabel, 3),
-                "Payment offset", $debug, '', $codetype, $group, $billing_id);
+                "Payment offset", $debug, '', $codetype, '','', $group, $billing_id);
         }
 
     }
@@ -782,13 +797,20 @@ function era_callback(&$out)
         $hasAnesthesiaCode |= isAnesthesiaCode($svc['code']);
     }
 
+    // Simplify some claim attributes for cleaner code.
+    $service_date = parse_date($out['dos']);
+    $check_date = $paydate ? $paydate : parse_date($out['check_date']);
+    $production_date = $paydate ? $paydate : parse_date($out['production_date']);
+    $insurance_id = arGetPayerID($pid, $service_date, substr($inslabel, 3));
+    $patient_name = _getPatientName($out, $ferow);
+
     $error = false;
     $Denied = false;
     $primaryPayer = $out['payer_id'];
 
     if ($csc == '4') {
         if (!isDenialException($primaryPayer, $hasAnesthesiaCode)) {
-            processDenial($pid, $encounter, $out['svc']);
+            processDenial($pid, $encounter, $out['svc'], $check_date);
             $Denied = true;
         }
     }
@@ -802,13 +824,6 @@ function era_callback(&$out)
     if ($out['warnings']) {
         writeMessageLine('infdetail', nl2br("Warning from claim parser: " . rtrim($out['warnings'])));
     }
-
-    // Simplify some claim attributes for cleaner code.
-    $service_date = parse_date($out['dos']);
-    $check_date = $paydate ? $paydate : parse_date($out['check_date']);
-    $production_date = $paydate ? $paydate : parse_date($out['production_date']);
-    $insurance_id = arGetPayerID($pid, $service_date, substr($inslabel, 3));
-    $patient_name = _getPatientName($out, $ferow);
 
     $billing_ids_handled = array();
     $allowToMoveOn = true;
@@ -989,6 +1004,11 @@ function era_callback(&$out)
         $claimState = 'Patient or Closed';
         if ($Denied) {
             arClearDeniedFlag($pid, $encounter);
+
+            $level_done = 0 + substr($inslabel, 3);
+            sqlStatement("UPDATE form_encounter " .
+                "SET last_level_closed = $level_done WHERE " .
+                "pid = '$pid' AND encounter = '$encounter'");
         }
 
     }
