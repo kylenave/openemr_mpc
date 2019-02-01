@@ -97,7 +97,7 @@ class claimStatusService {
          $this->error = true;
       }
 
-      if($encounter==0)
+      if($this->encounter==0)
       {
          $this->errorMessage = "Encounter could not be determined from invoice number";
          $this->error = true;
@@ -126,7 +126,7 @@ class claimStatusService {
 
       $tmpfileId= trim(substr($claimStatus, claimStatusService::I_FILE_ID_START, claimStatusService::I_FILE_ID_LENGTH ));
       
-      if($tmpfileId[0] == '-')
+      if(substr($tmpfileId,0,1) == '-')
       {
          return;
       }
@@ -144,6 +144,7 @@ class claimStatusService {
          $this->comments .= " " . $tmpcomments;
       }else{
          $this->done = true;
+         error_log("Now we're done so process!");
       }
 
       $this->claimId = trim(substr($claimStatus, claimStatusService::I_CLAIM_ID_START, claimStatusService::I_CLAIM_ID_LENGTH ));
