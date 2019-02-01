@@ -32,7 +32,7 @@ class claimStatusService {
    const I_STATUS_START=143;
    const I_STATUS_LENGTH=8;
 
-   const I_COMMENTS_START=153;
+   const I_COMMENTS_START=152;
 
    public $pid;
    public $encounter;
@@ -78,8 +78,10 @@ class claimStatusService {
    {
       $this->pid=0;
       $this->encounter=0;
+error_log("Parsing: " . $this->invoiceNum);
 
       $data = trim($this->invoiceNum, "-");
+      error_log("Got size of : " . sizeof($data));
       if(sizeof($data) == 2)
       {
          $this->pid = $data[0];
