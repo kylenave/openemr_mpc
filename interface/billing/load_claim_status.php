@@ -79,7 +79,7 @@ function ProcessClaimStatusData($data, $displayOnly=true)
       if($claimStatus->done)
       {
         $colorIndex = -$colorIndex + 1;
-        DisplayServiceLine($colors[$colorIndex], $claimStatus);
+        DisplayStatusLine($colors[$colorIndex], $claimStatus);
         $claimStatus->done = false;
       }else
       {

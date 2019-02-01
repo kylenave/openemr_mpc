@@ -163,7 +163,7 @@ error_log("About to test values: (".$tmpfileId.") (".$tmpcomments.")");
   
       $this->CheckForErrors();
 
-      if($this->done && !$this->errors)
+      if($this->done && !$this->error)
       {
          //Insert the status
          $this->insertStatus();
