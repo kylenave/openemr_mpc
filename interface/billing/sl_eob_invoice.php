@@ -61,7 +61,7 @@ function getAttachmentFiles($encounter)
 
 function getLastClaimStatus($encounter)
 {
-    $result = sqlStatement("SELECT status FROM claim_status WHERE encounter=$encounter order by date desc limit 1");
+    $result = sqlQuery("SELECT status FROM claim_status WHERE encounter=$encounter order by date desc limit 1");
 
     if(!empty($result))
     {
