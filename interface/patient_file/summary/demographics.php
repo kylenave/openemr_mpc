@@ -811,7 +811,7 @@ $insurance_count = 0;
 foreach (array('primary','secondary','tertiary') as $instype) {
   $enddate = 'Present';
   $query = "SELECT * FROM insurance_data WHERE " .
-    "pid = ? AND type = ? and (term_date is null or term_date=0 or term or term_date > now()) " .
+    "pid = ? AND type = ? " .
     "ORDER BY date DESC";
   $res = sqlStatement($query, array($pid, $instype) );
   while( $row = sqlFetchArray($res) ) {
