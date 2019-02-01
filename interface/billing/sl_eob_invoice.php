@@ -71,6 +71,34 @@ function getLastClaimStatus($encounter)
     return "Unknown";
 }
 
+function getClaimStatusHistory($encounter)
+{
+    $html = "<table><tr bgcolor='#aaaadd'>" .
+    "<th>PID</th>" .
+    "<th>Encounter</th>" .
+    "<th>Patient</th>" .
+    "<th>Status</th>" .
+    "<th>Comments</th>" .
+    "</tr>";
+
+    $result = sqlStatement("SELECT * FROM claim_status WHERE encounter=$encounter order by date desc");
+
+    while ($cs = sqlFetchArray($result)) {
+        $html .= "<tr bgcolor='" . $color . "'>" .
+        "<td>$cs->pid</td>" .
+        "<td>$cs->encounter</td>" .
+        "<td>$cs->patientName</td>" .
+        "<td>$cs->status</td>" .
+        "<td>$cs->comments</td>" .
+        "</tr>";
+    }
+
+    $html .= "</table>";
+
+    return $html;
+}
+
+
 function getEobText($pid, $encounter)
 {
     $commandToFindFiles = "find " . $GLOBALS['OE_SITE_DIR'] . "/era -name '*.eob' -exec ";
@@ -691,7 +719,7 @@ echo "</td>\n";
       echo xl('Encounter is ready to bill');
    }else{
     $billingResult = getLastClaimStatus($encounter_id);
-      echo xl('Encounter has been: '. $billingResult);
+    echo  xl('Encounter has been: '. $billingResult);
    }
 ?>
 
@@ -951,10 +979,13 @@ echo "</table>";
 
 //Show EOB INFORMATION HERE
 echo "<pre>";
-$eobText = getEobText($patient_id, $encounter_id);
-echo $eobText;
+echo getEobText($patient_id, $encounter_id);
+echo "</pre>";
+
+echo "<pre>";
+echo getClaimStatusHistory($encounter_id);
+echo "</pre>";
 ?>
-</pre>
 
 </form>
 </center>
