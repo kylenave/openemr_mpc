@@ -5,6 +5,7 @@ $sanitize_all_escapes = true;
 
 require_once '../globals.php';
 require_once 'claimStatusService.php';
+require_once 'clearinghouseStatusService.php';
 require_once $GLOBALS['srcdir'] . '/billing.inc';
 require_once $GLOBALS['srcdir'] . '/patient.inc';
 require_once $GLOBALS['srcdir'] . '/forms.inc';
@@ -64,7 +65,6 @@ function ProcessClaimStatusData($data, $displayOnly = true)
     $claimStatus = new claimStatusService();
 
     foreach ($data as $csData) {
-        error_log("CSS: " . $csData);
         if ($header) {
             $header = false;
             continue;
@@ -76,14 +76,38 @@ function ProcessClaimStatusData($data, $displayOnly = true)
             $colorIndex = -$colorIndex + 1;
             DisplayStatusLine($colors[$colorIndex], $claimStatus);
             $claimStatus->done = false;
-        } else {
-            error_log("Not done...");
         }
 
     }
 
     echo "</table>";
 }
+
+function ProcessClearinghouseStatusData($data, $displayOnly = true)
+{
+    echo "<table border=1 width='95%' padding='15px'>";
+
+    $colors = array('#aaeeee', '#eeaaee');
+    $colorIndex = 0;
+
+    DisplayHeader();
+
+    $clearinghouseStatus = new clearinghouseStatusService();
+
+    foreach ($data as $csData) {
+        $clearinghouseStatus->parseData($csData);
+
+        if ($clearinghouseStatus->done) {
+            $colorIndex = -$colorIndex + 1;
+            DisplayStatusLine($colors[$colorIndex], $clearinghouseStatus);
+            $clearinghouseStatus->done = false;
+        }
+
+    }
+
+    echo "</table>";
+}
+
 ?>
 
   <html>
@@ -106,7 +130,7 @@ if (!array_key_exists('form_auto', $_POST) && !array_key_exists('form_autoproces
 
 <tr>
    <td>
-      <?php xl('Upload Claim Status file:', 'e');?>
+      <?php xl('Upload Claim Status file (Note: Multiple files allowed):', 'e');?>
       <input type="hidden" name="MAX_FILE_SIZE" value="5000000" />
       <input name="form_autofile[]" type="file" multiple="multiple" />
    </td>
@@ -139,19 +163,20 @@ if (array_key_exists('form_auto', $_POST)) {
             //echo "<input type='hidden' name='tmp_auto_file' value='" . $auto_filename . "' />";
 
             $Data = LoadClaimStatusFile($auto_filename);
-            ProcessClaimStatusData($Data);
 
+            if( strpos($files[$i], 'HCFA')!== false)
+            {
+               ProcessClearinghouseStatusData($Data);
+            }else
+            {
+               ProcessClaimStatusData($Data);
+            }
 
         } else {echo "No file found";}
       }
       echo "<tr><td>Done!</td></tr>";
 
-    ?>
-<tr><td>
-
-</td><tr>
-<?php
-}
+   }
 
 ?>
 
