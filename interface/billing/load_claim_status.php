@@ -83,10 +83,11 @@ function ProcessClaimStatusData($data, $displayOnly=true)
 
       $claimStatus->parseData($csData);
 
-      if($claimStatus->Done)
+      if($claimStatus->done)
       {
         $colorIndex = -$colorIndex + 1;
         DisplayServiceLine($colors[$colorIndex], $claimStatus);
+        $claimStatus->done = false;
       }
 
    }
