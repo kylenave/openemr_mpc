@@ -59,7 +59,7 @@ function DisplayError($message)
 }
 
 
-function ProcessClaimSttusData($data, $displayOnly=true)
+function ProcessClaimStatusData($data, $displayOnly=true)
 {
    echo "<table border=1 width='95%' padding='15px'>";
 
