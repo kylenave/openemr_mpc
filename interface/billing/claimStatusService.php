@@ -53,6 +53,7 @@ class abService {
    public $comments;
 
    public $error=false;
+   public $primed = false;
    public $errorMessage;
 
    function insertStatus()
@@ -110,7 +111,25 @@ class abService {
 
    function parseData($claimStatus)
    {
+
+      if(!$this->primed)
+      {
+         $query = "    File ID   Claim ID    Pat. Acct #    Patient ";
+         if(substr($claimStatus, 0, strlen($query) === $query))
+         {
+            $this->primed = true;
+         }
+
+         return;
+      }
+
       $tmpfileId= trim(substr($claimStatus, I_FILE_ID_START, I_FILE_ID_LENGTH ));
+      
+      if($tmpfileId[0] == '-')
+      {
+         return;
+      }
+
       $tmpcomments = trim(substr($claimStatus,I_COMMENTS_START));
 
       if(!empty($tmpfileId))
