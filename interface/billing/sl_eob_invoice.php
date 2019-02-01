@@ -74,9 +74,8 @@ function getLastClaimStatus($encounter)
 function getClaimStatusHistory($encounter)
 {
     $html = "<table><tr bgcolor='#aaaadd'>" .
-    "<th>PID</th>" .
-    "<th>Encounter</th>" .
-    "<th>Patient</th>" .
+    "<th>Date</th>" .
+    "<th>Payer ID</th>" .
     "<th>Status</th>" .
     "<th>Comments</th>" .
     "</tr>";
@@ -85,12 +84,10 @@ function getClaimStatusHistory($encounter)
 
     while ($cs = sqlFetchArray($result)) {
         $html .= "<tr bgcolor='" . $color . "'>" .
-        "<td>$cs->pid</td>" .
-        "<td>$cs->encounter</td>" .
-        "<td>$cs->patientName</td>" .
-        "<td>$cs->status</td>" .
-        "<td>$cs->comments</td>" .
-        "</tr>";
+        "<td>" . $cs['date'] . "</td>" .
+        "<td>" . $cs['payer_id']. "</td>" .
+        "<td>" . $cs['status'] . "</td>" .
+        "<td>" . $cs['comments'] . "</td></tr>";
     }
 
     $html .= "</table>";
