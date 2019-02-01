@@ -855,7 +855,9 @@ if ( $insurance_count > 0 ) {
 
                 $term_date = $row['term_date'];
 
-                if(empty($term_date) || $term_date==0)
+                error_log("Term Date=" . $term_date);
+
+                if(!empty($term_date) && $term_date!='0000-00-00')
                 {
                     $enddate=$term_date;
                 }
@@ -895,7 +897,7 @@ if ( $insurance_count > 0 ) {
 						if ($row['provider'] ) {
               $term_date = $row['term_date'];
 
-              if(empty($term_date) || $term_date==0)
+              if(!empty($term_date) && $term_date!='0000-00-00')
               {
                   $enddate=$term_date;
               }
