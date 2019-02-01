@@ -124,14 +124,14 @@ class claimStatusService {
          return;
       }
 
-      $tmpfileId= trim(substr($claimStatus, I_FILE_ID_START, I_FILE_ID_LENGTH ));
+      $tmpfileId= trim(substr($claimStatus, claimStatusService::I_FILE_ID_START, claimStatusService::I_FILE_ID_LENGTH ));
       
       if($tmpfileId[0] == '-')
       {
          return;
       }
 
-      $tmpcomments = trim(substr($claimStatus,I_COMMENTS_START));
+      $tmpcomments = trim(substr($claimStatus,claimStatusService::I_COMMENTS_START));
 
       if(!empty($tmpfileId))
       {
@@ -146,18 +146,18 @@ class claimStatusService {
          $this->done = true;
       }
 
-      $this->claimId = trim(substr($claimStatus, I_CLAIM_ID_START, I_CLAIM_ID_LENGTH ));
-      $this->invoiceNum = trim(substr($claimStatus, I_INVOICE_NUMBER_START, I_INVOICE_NUMBER_LENGTH ));
+      $this->claimId = trim(substr($claimStatus, claimStatusService::I_CLAIM_ID_START, claimStatusService::I_CLAIM_ID_LENGTH ));
+      $this->invoiceNum = trim(substr($claimStatus, claimStatusService::I_INVOICE_NUMBER_START, claimStatusService::I_INVOICE_NUMBER_LENGTH ));
       processInvoiceNumber();
-      $this->patientName = trim(substr($claimStatus, I_PATIENT_NAME_START, I_PATIENT_NAME_LENGTH ));
-      $this->amount = trim(substr($claimStatus,I_AMOUNT_START ,I_AMOUNT_LENGTH ));
-      $this->practiceId = trim(substr($claimStatus, I_PRACTICE_ID_START,I_PRACTICE_ID_LENGTH ));
+      $this->patientName = trim(substr($claimStatus, claimStatusService::I_PATIENT_NAME_START, claimStatusService::I_PATIENT_NAME_LENGTH ));
+      $this->amount = trim(substr($claimStatus,claimStatusService::I_AMOUNT_START ,claimStatusService::I_AMOUNT_LENGTH ));
+      $this->practiceId = trim(substr($claimStatus, claimStatusService::I_PRACTICE_ID_START,claimStatusService::I_PRACTICE_ID_LENGTH ));
    
-      $this->taxId = trim(substr($claimStatus,I_PRACTICE_TAXID_START ,I_PRACTICE_TAXID_LENGTH ));
-      $this->payer = trim(substr($claimStatus, I_PAYER_ID_START ,I_PAYER_ID_LENGTH ));
+      $this->taxId = trim(substr($claimStatus,claimStatusService::I_PRACTICE_TAXID_START ,claimStatusService::I_PRACTICE_TAXID_LENGTH ));
+      $this->payer = trim(substr($claimStatus, claimStatusService::I_PAYER_ID_START ,claimStatusService::I_PAYER_ID_LENGTH ));
    
-      $this->date = trim(substr($claimStatus, I_DATE_START, I_DATE_LENGTH));
-      $this->status = trim(substr($claimStatus, I_STATUS_START, I_STATUS_LENGTH));
+      $this->date = trim(substr($claimStatus, claimStatusService::I_DATE_START, claimStatusService::I_DATE_LENGTH));
+      $this->status = trim(substr($claimStatus, claimStatusService::I_STATUS_START, claimStatusService::I_STATUS_LENGTH));
   
       $this->CheckForErrors();
 
