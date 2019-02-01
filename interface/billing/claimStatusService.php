@@ -5,31 +5,31 @@ class claimStatusService {
    const I_FILE_ID_START = 4;
    const I_FILE_ID_LENGTH = 9;
 
-   const I_CLAIM_ID_START = 15;
+   const I_CLAIM_ID_START = 14;
    const I_CLAIM_ID_LENGTH= 11;
 
-   const I_INVOICE_NUMBER_START = 27;
+   const I_INVOICE_NUMBER_START = 26;
    const I_INVOICE_NUMBER_LENGTH = 14;
 
-   const I_PATIENT_NAME_START = 42;
+   const I_PATIENT_NAME_START = 41;
    const I_PATIENT_NAME_LENGTH = 20;
    
-   const I_AMOUNT_START = 62;
+   const I_AMOUNT_START = 61;
    const I_AMOUNT_LENGTH = 11;
 
-   const I_PRACTICE_ID_START=74;
+   const I_PRACTICE_ID_START=73;
    const I_PRACTICE_ID_LENGTH=10;
 
-   const I_PRACTICE_TAXID_START=85;
+   const I_PRACTICE_TAXID_START=84;
    const I_PRACTICE_TAXID_LENGTH=9;
 
-   const I_PAYER_ID_START=96;
+   const I_PAYER_ID_START=95;
    const I_PAYER_ID_LENGTH=96;
    
-   const I_DATE_START=106;
+   const I_DATE_START=105;
    const I_DATE_LENGTH=10;
 
-   const I_STATUS_START=143;
+   const I_STATUS_START=142;
    const I_STATUS_LENGTH=8;
 
    const I_COMMENTS_START=152;
@@ -134,12 +134,26 @@ error_log("Parsing: " . $this->invoiceNum);
       }
 
       $tmpcomments = trim(substr($claimStatus,claimStatusService::I_COMMENTS_START));
-error_log("About to test values: (".$tmpfileId.") (".$tmpcomments.")");
+
       if(!empty($tmpfileId))
       {
          $this->fileId = $tmpfileId;
          $this->comments = $tmpcomments;
          $this->done = false;
+
+         $this->claimId = trim(substr($claimStatus, claimStatusService::I_CLAIM_ID_START, claimStatusService::I_CLAIM_ID_LENGTH ));
+         $this->invoiceNum = trim(substr($claimStatus, claimStatusService::I_INVOICE_NUMBER_START, claimStatusService::I_INVOICE_NUMBER_LENGTH ));
+         $this->processInvoiceNumber();
+   
+         $this->patientName = trim(substr($claimStatus, claimStatusService::I_PATIENT_NAME_START, claimStatusService::I_PATIENT_NAME_LENGTH ));
+         $this->amount = trim(substr($claimStatus,claimStatusService::I_AMOUNT_START ,claimStatusService::I_AMOUNT_LENGTH ));
+         $this->practiceId = trim(substr($claimStatus, claimStatusService::I_PRACTICE_ID_START,claimStatusService::I_PRACTICE_ID_LENGTH ));
+      
+         $this->taxId = trim(substr($claimStatus,claimStatusService::I_PRACTICE_TAXID_START ,claimStatusService::I_PRACTICE_TAXID_LENGTH ));
+         $this->payer = trim(substr($claimStatus, claimStatusService::I_PAYER_ID_START ,claimStatusService::I_PAYER_ID_LENGTH ));
+      
+         $this->date = trim(substr($claimStatus, claimStatusService::I_DATE_START, claimStatusService::I_DATE_LENGTH));
+         $this->status = trim(substr($claimStatus, claimStatusService::I_STATUS_START, claimStatusService::I_STATUS_LENGTH));
 
       }else if ($tmpcomments!=":")
       {
@@ -150,19 +164,6 @@ error_log("About to test values: (".$tmpfileId.") (".$tmpcomments.")");
          error_log("Now we're done so process!");
       }
 
-      $this->claimId = trim(substr($claimStatus, claimStatusService::I_CLAIM_ID_START, claimStatusService::I_CLAIM_ID_LENGTH ));
-      $this->invoiceNum = trim(substr($claimStatus, claimStatusService::I_INVOICE_NUMBER_START, claimStatusService::I_INVOICE_NUMBER_LENGTH ));
-      $this->processInvoiceNumber();
-      $this->patientName = trim(substr($claimStatus, claimStatusService::I_PATIENT_NAME_START, claimStatusService::I_PATIENT_NAME_LENGTH ));
-      $this->amount = trim(substr($claimStatus,claimStatusService::I_AMOUNT_START ,claimStatusService::I_AMOUNT_LENGTH ));
-      $this->practiceId = trim(substr($claimStatus, claimStatusService::I_PRACTICE_ID_START,claimStatusService::I_PRACTICE_ID_LENGTH ));
-   
-      $this->taxId = trim(substr($claimStatus,claimStatusService::I_PRACTICE_TAXID_START ,claimStatusService::I_PRACTICE_TAXID_LENGTH ));
-      $this->payer = trim(substr($claimStatus, claimStatusService::I_PAYER_ID_START ,claimStatusService::I_PAYER_ID_LENGTH ));
-   
-      $this->date = trim(substr($claimStatus, claimStatusService::I_DATE_START, claimStatusService::I_DATE_LENGTH));
-      $this->status = trim(substr($claimStatus, claimStatusService::I_STATUS_START, claimStatusService::I_STATUS_LENGTH));
-  
       $this->CheckForErrors();
 
       if($this->done && !$this->error)

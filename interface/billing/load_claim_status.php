@@ -39,7 +39,7 @@ function DisplayStatusLine($color, $cs)
       echo "<tr bgcolor='" . $color . "'>".
          "<td>$cs->pid</td>".
 	 "<td>$cs->encounter</td>".
-	 "<td>$cs->patient</td>".
+	 "<td>$cs->patientName</td>".
 	 "<td>$cs->status</td>".
 	 "<td>$cs->comments</td>".
 	 "</tr>";
