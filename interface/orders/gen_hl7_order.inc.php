@@ -111,8 +111,9 @@ function loadPayerInfo($pid, $date='') {
   if (empty($date)) $date = date('Y-m-d');
   $payers = array();
   $dres = sqlStatement("SELECT * FROM insurance_data WHERE " .
-    "pid = ? AND date <= ? ORDER BY type ASC, date DESC",
-    array($pid, $date));
+    "pid = ? AND date <= ? and (term_date > ? or term_date is null) " .
+    " ORDER BY type ASC, date DESC",
+    array($pid, $date, $date));
   $prevtype = ''; // type is primary, secondary or tertiary
   while ($drow = sqlFetchArray($dres)) {
     if (strcmp($prevtype, $drow['type']) == 0) continue;
