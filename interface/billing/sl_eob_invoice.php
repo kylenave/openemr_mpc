@@ -690,7 +690,8 @@ echo "</td>\n";
    if ($encounter_open){
       echo xl('Encounter is ready to bill');
    }else{
-      echo xl('Encounter has been billed');
+    $billingResult = getLastClaimStatus($encounter_id);
+      echo xl('Encounter has been: '. $billingResult);
    }
 ?>
 
