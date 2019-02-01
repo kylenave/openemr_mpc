@@ -357,8 +357,8 @@ function parse_era($filename, $cb) {
                 // SVC06 if present is our original procedure code that they are changing.
                 // We will not put their crap in our invoice, but rather log a note and
                 // treat it as adjustments to our originally submitted coding.
-                $svc = explode($delimiter3, $seg[6]);
-                $tmp = explode($delimiter3, $seg[1]);
+                $svc = explode($delimiter3, $seg[1]);
+                $tmp = explode($delimiter3, $seg[6]);
                 $out['warnings'] .= "Payer is restating our procedure " . $svc[1] .
                     " as " . $tmp[1] . ".\n";
             } else {
