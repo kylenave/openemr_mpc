@@ -114,8 +114,8 @@ class claimStatusService {
 
       if(!$this->primed)
       {
-         $query = "    File ID   Claim ID    Pat. Acct #    Patient ";
-         if(substr($claimStatus, 0, strlen($query) === $query))
+         $query = "File ID   Claim ID    Pat. Acct #    Patient";
+         if(substr(trim($claimStatus), 0, strlen($query) === $query))
          {
             error_log("Found the header row!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             $this->primed = true;
