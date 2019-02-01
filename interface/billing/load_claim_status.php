@@ -67,6 +67,7 @@ function ProcessClaimStatusData($data, $displayOnly=true)
 
    foreach($data as $csData)
    {
+       error_log("CSS: " . $csData);
       if($header)
       {
          $header=false;
@@ -80,6 +81,9 @@ function ProcessClaimStatusData($data, $displayOnly=true)
         $colorIndex = -$colorIndex + 1;
         DisplayServiceLine($colors[$colorIndex], $claimStatus);
         $claimStatus->done = false;
+      }else
+      {
+          error_log("Not done...");
       }
 
    }
