@@ -403,7 +403,7 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
     $tmp = array(1 => 'primary', 2 => 'secondary', 3 => 'tertiary');
     $value = $tmp[$payer_type];
     $query = "SELECT provider FROM insurance_data WHERE " .
-      "pid = ? AND type = ? AND date <= ? and (term_date is null or term_date > ?)" .
+      "pid = ? AND type = ? AND date <= ? and (term_date is null or term_date=0 or term_date > ?)" .
       "ORDER BY date DESC LIMIT 1";
     $nprow = sqlQuery($query, array($patient_id,$value,$date_of_service, $date_of_service) );
     if (empty($nprow)) return 0;

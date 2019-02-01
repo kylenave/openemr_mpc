@@ -402,7 +402,7 @@ function getInsuranceData($pid, $type = "primary", $given = "insd.*, ic.name as 
 {
   $sql = "select $given from insurance_data as insd " .
     "left join insurance_companies as ic on ic.id = insd.provider " .
-    "where pid = ? and type = ? and (term_date is null or term_date > now()) order by date DESC limit 1";
+    "where pid = ? and type = ? and (term_date is null or term_date=0 or term_date > now()) order by date DESC limit 1";
   return sqlQuery($sql, array($pid, $type) );
 }
 
@@ -414,7 +414,7 @@ function getInsuranceDataByDate($pid, $date, $type,
   // but not records enterred after the given date
   $sql = "select $given from insurance_data as insd " .
     "left join insurance_companies as ic on ic.id = provider " .
-    "where (term_date is null or term_date > date_format(date,'%Y-%m-%d')) and pid = ? and date_format(date,'%Y-%m-%d') <= ? and " .
+    "where (term_date is null or term_date=0 or term_date > date_format(date,'%Y-%m-%d')) and pid = ? and date_format(date,'%Y-%m-%d') <= ? and " .
     "type=? order by date DESC limit 1";
   return sqlQuery($sql, array($pid,$date,$type) );
 }
@@ -1685,7 +1685,7 @@ function getEffectiveInsurances($patient_id, $encdate) {
   foreach (array('primary','secondary','tertiary') as $instype) {
     $tmp = sqlQuery("SELECT * FROM insurance_data " .
       "WHERE pid = ? AND type = ? " .
-      "AND date <= ? and (term_date is null or term_date > ?) ORDER BY date DESC LIMIT 1",
+      "AND date <= ? and (term_date is null or term_date=0 or term_date > ?) ORDER BY date DESC LIMIT 1",
       array($patient_id, $instype, $encdate, $encdate));
     if (empty($tmp['provider'])) break;
     $insarr[] = $tmp;

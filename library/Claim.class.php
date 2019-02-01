@@ -72,7 +72,7 @@ class Claim {
     //$this->payers[0] = array(); //KBN: Fixed the Diane O bug.
     $query = "SELECT * FROM insurance_data WHERE " .
       "pid = '{$this->pid}' AND " .
-      "date <= '$encounter_date' and (term_date is null or term_date > '$encounter_date') " .
+      "date <= '$encounter_date' and (term_date is null or term_date=0 or term_date > '$encounter_date') " .
       "ORDER BY type ASC, date DESC";
     $dres = sqlStatement($query);
     $prevtype = '';
@@ -96,7 +96,7 @@ class Claim {
     //This kludge is specific to Illinois Medicare and DME
       $query = "SELECT * FROM insurance_data WHERE " .
       "pid = '{$this->pid}' AND " .
-      "date <= '$encounter_date' and (term_date is null or term_date > '$encounter_date') " .
+      "date <= '$encounter_date' and (term_date is null or term_date=0 or term_date > '$encounter_date') " .
       "ORDER BY type ASC, date DESC";
       $dres = sqlStatement($query);
       

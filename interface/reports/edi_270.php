@@ -126,7 +126,7 @@
 							LEFT JOIN insurance_data AS i ON (i.id =(
 																	SELECT id
 																	FROM insurance_data AS i
-																	WHERE pid = p.pid AND type = 'primary' and (term_date is null or term_date > now())
+																	WHERE pid = p.pid AND type = 'primary' and (term_date is null or term_date=0 or term_date > now())
 																	ORDER BY date DESC
 																	LIMIT 1
 																	)
