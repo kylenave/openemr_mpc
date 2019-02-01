@@ -82,12 +82,17 @@ function getClaimStatusHistory($encounter)
 
     $result = sqlStatement("SELECT * FROM claim_status WHERE encounter=$encounter order by date desc");
 
+    $colors = array('#aaeeee', '#eeaaee');
+    $colorIndex = 0;
+
     while ($cs = sqlFetchArray($result)) {
-        $html .= "<tr bgcolor='" . $color . "'>" .
+        $html .= "<tr bgcolor='" . $colors[$colorIndex] . "'>" .
         "<td>" . $cs['date'] . "</td>" .
         "<td>" . $cs['payer_id']. "</td>" .
         "<td>" . $cs['status'] . "</td>" .
-        "<td>" . $cs['comments'] . "</td></tr>";
+        "<td>" . $cs['reason'] . "</td></tr>";
+
+        $colorIndex = -$colorIndex + 1;
     }
 
     $html .= "</table>";
