@@ -80,7 +80,7 @@ class claimStatusService {
       $this->encounter=0;
 error_log("Parsing: " . $this->invoiceNum);
 
-      $data = trim($this->invoiceNum, "-");
+      $data = explode("-", $this->invoiceNum);
       error_log("Got size of : " . sizeof($data));
       if(sizeof($data) == 2)
       {
