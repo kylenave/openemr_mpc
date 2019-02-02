@@ -1035,16 +1035,14 @@ function era_callback(&$out)
     //Write out claim summary line
     $openemr_state = ar_responsible_party($pid, $encounter);
 
-    if ($openemr_state == -1) {
+    if ($openemr_state <= 0 && !$Denied) {
         $claimState = 'Patient or Closed';
-        if ($Denied) {
-            arClearDeniedFlag($pid, $encounter);
+        arClearDeniedFlag($pid, $encounter);
 
-            $level_done = 0 + substr($inslabel, 3);
-            sqlStatement("UPDATE form_encounter " .
-                "SET last_level_closed = $level_done WHERE " .
-                "pid = '$pid' AND encounter = '$encounter'");
-        }
+        $level_done = 0 + substr($inslabel, 3);
+        sqlStatement("UPDATE form_encounter " .
+            "SET last_level_closed = $level_done WHERE " .
+            "pid = '$pid' AND encounter = '$encounter'");
 
     }
     writeClaimSummary('summary', 'This claim state is now: ' . $claimState . ' (' . $openemr_state . ')');
