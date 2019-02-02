@@ -44,7 +44,7 @@ $InsertionId; //last inserted ID of
 ///////////////////////// Assorted Functions /////////////////////////
 function logMessage($msg)
 {
-    $MessageLoggingOn = true;
+    $MessageLoggingOn = false;
 
     if ($MessageLoggingOn) {
         error_log($msg);
@@ -472,7 +472,7 @@ function processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc,
     if($Denied)
     {
         //We'll post for the record but not allow an amount
-        $description .= "[Denied]";
+        logMessage("Zero PR because this is in a denied state.");
         $postAmount = 0;
     }
 
@@ -624,7 +624,7 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
                 if($Denied)
                 {
                     //We'll post for the record but not allow an amount
-                    $description .= "[Denied]";
+                    logMessage("Zero out adjustment because Denied flag is set.");
                     $postAdjAmount = 0;
                 }
 
