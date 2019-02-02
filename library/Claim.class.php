@@ -76,17 +76,32 @@ class Claim {
       "ORDER BY type ASC, date DESC";
     $dres = sqlStatement($query);
     $prevtype = '';
+
     while ($drow = sqlFetchArray($dres)) {
+      //first process 'primary' and ignore any future 'primary' then 'secondary', etc...
       if (strcmp($prevtype, $drow['type']) == 0) continue;
+      
+      //Moving on to next type
       $prevtype = $drow['type'];
+      
       // Very important to look at entries with a missing provider because
       // they indicate no insurance as of the given date.
       if (empty($drow['provider'])) continue;
+
+      //This is initialized to '0' and fills in insurance 0, 1 and 2 for primary, secondary and tertiary
       $ins = count($this->payers);
-      if ($drow['provider'] == $billrow['payer_id'] && empty($this->payers[0]['data'])) $ins = 0;
+
+      // This checks to see if it has been billed out yet to this payer...bad logic
+      // KBN: Removed this logic because it breaks when the primary and secondary are the same.
+      //if ($drow['provider'] == $billrow['payer_id'] && 
+      //     empty($this->payers[0]['data'])
+      //    ) $ins = 0;
+            
       $crow = sqlQuery("SELECT * FROM insurance_companies WHERE " .
         "id = '" . $drow['provider'] . "'");
+
       $orow = new InsuranceCompany($drow['provider']);
+      
       $this->payers[$ins] = array();
       $this->payers[$ins]['data']    = $drow;
       $this->payers[$ins]['company'] = $crow;
@@ -114,6 +129,7 @@ class Claim {
     // the primary insurance company is the same as the secondary.  It seems
     // nobody planned for that!
     //
+    /*
     for ($i = 1; $i < count($this->payers); ++$i) {
       if ($billrow['process_date'] &&
         $this->payers[0]['data']['provider'] == $this->payers[$i]['data']['provider'])
@@ -123,6 +139,7 @@ class Claim {
         $this->payers[$i] = $tmp;
       }
     }
+    */
 
     $this->using_modifiers = true;
 
@@ -190,6 +207,7 @@ class Claim {
       "WHERE ct.ct_claim = '1' AND ct.ct_active = '1' AND " .
       "b.encounter = '{$this->encounter_id}' AND b.pid = '{$this->pid}' AND " .
       "b.activity = '1' ORDER BY b.date, b.id";
+
     $res = sqlStatement($sql);
     while ($row = sqlFetchArray($res)) {
       // Save all diagnosis codes.

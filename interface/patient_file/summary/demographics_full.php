@@ -467,11 +467,14 @@ $group_seq=0; // this gives the DIV blocks unique IDs
 <?php
  if (! $GLOBALS['simplified_demographics']) {
 
+	$altInsurance = sqlQuery("select genericname1 from patient_data where pid='" . $pid . "'");
+    $prefix = $altInsurance['genericname1'];
+
 	  $insurance_headings = array(xl("Primary Insurance Provider"), xl("Secondary Insurance Provider"), xl("Tertiary Insurance provider"));
 	  $insurance_info = array();
-	  $insurance_info[1] = getInsuranceData($pid,"primary");
-	  $insurance_info[2] = getInsuranceData($pid,"secondary");
-	  $insurance_info[3] = getInsuranceData($pid,"tertiary");
+	  $insurance_info[1] = getInsuranceData($pid,$prefix."primary");
+	  $insurance_info[2] = getInsuranceData($pid,$prefix."secondary");
+	  $insurance_info[3] = getInsuranceData($pid,$prefix."tertiary");
 
 	?>
      <div class="section-header">

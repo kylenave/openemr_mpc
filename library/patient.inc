@@ -400,13 +400,19 @@ function getHistoryData($pid, $given = "*", $dateStart='',$dateEnd='')
 // function getInsuranceData($pid, $type = "primary", $given = "insd.*, DATE_FORMAT(subscriber_DOB,'%m/%d/%Y') as subscriber_DOB, ic.name as provider_name")
 function getInsuranceData($pid, $type = "primary", $given = "insd.*, ic.name as provider_name")
 {
+    $altInsurance = sqlQuery("select genericname1 from patient_data where pid='" . $pid . "'");
+    $prefix = $altInsurance['genericname1'];
+
   $sql = "select $given from insurance_data as insd " .
     "left join insurance_companies as ic on ic.id = insd.provider " .
     "where pid = ? and type = ? and (term_date is null or term_date=0 or term_date > now()) order by date DESC limit 1";
-  return sqlQuery($sql, array($pid, $type) );
+  return sqlQuery($sql, array($pid, $prefix.$type) );
 }
 
 function getInsuranceDataByDate($pid, $date, $type,
+    $altInsurance = sqlQuery("select genericname1 from patient_data where pid='" . $pid . "'");
+    $prefix = $altInsurance['genericname1'];
+
   $given = "insd.*, DATE_FORMAT(subscriber_DOB,'%m/%d/%Y') as subscriber_DOB, ic.name as provider_name")
 { // this must take the date in the following manner: YYYY-MM-DD
   // this function recalls the insurance value that was most recently enterred from the
@@ -416,7 +422,7 @@ function getInsuranceDataByDate($pid, $date, $type,
     "left join insurance_companies as ic on ic.id = provider " .
     "where (term_date is null or term_date=0 or term_date > date_format(date,'%Y-%m-%d')) and pid = ? and date_format(date,'%Y-%m-%d') <= ? and " .
     "type=? order by date DESC limit 1";
-  return sqlQuery($sql, array($pid,$date,$type) );
+  return sqlQuery($sql, array($pid,$date,$prefix.$type) );
 }
 
 function getEmployerData($pid, $given = "*")
@@ -1107,9 +1113,13 @@ function newInsuranceData(
   $effective_date = "0000-00-00",
   $accept_assignment = "TRUE",
   $policy_type = "",
-  $term_date = NULL)
+  $term_date = "0000-00-00")
 {
   if (strlen($type) <= 0) return FALSE;
+
+	$altInsurance = sqlQuery("select genericname1 from patient_data where pid='" . $pid . "'");
+    $prefix = $altInsurance['genericname1'];
+
 
   // If a bad date was passed, err on the side of caution.
   $effective_date = fixDate($effective_date, date('Y-m-d'));
@@ -1153,7 +1163,7 @@ function newInsuranceData(
       "id != " . $idrow['id']);
 
     $data = array();
-    $data['type'] = $type;
+    $data['type'] = $prefix.$type;
     $data['provider'] = $provider;
     $data['policy_number'] = $policy_number;
     $data['group_number'] = $group_number;
@@ -1188,7 +1198,7 @@ function newInsuranceData(
   }
   else {
     return sqlInsert("INSERT INTO insurance_data SET
-      type = '$type',
+      type = '" . $prefix.$type . "',
       provider = '$provider',
       policy_number = '$policy_number',
       group_number = '$group_number',

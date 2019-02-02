@@ -446,7 +446,7 @@ function isWriteoffAllowed($code)
     return in_array($code, $acceptableAdjustCodes);
 }
 
-function processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc, $adj, &$description)
+    function processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc, $adj, &$description)
 {
     global $debug, $InsertionId, $codetype, $inslabel;
 
