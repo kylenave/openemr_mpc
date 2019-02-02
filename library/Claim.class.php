@@ -173,9 +173,9 @@ class Claim {
     if($this->dbPayerType!='-1' && $this->dbPayerType!='1')
     {
        //error_log("Setting payer type to: " . $this->dbPayerType);
+       $tmp = $this->payers[0];
        $this->payers[0] = $this->payers[$this->dbPayerType-1];
-
-       //error_log("Set default payer to: " . $this->payers[0]['company']['name']);
+       $this->payers[$this->dbPayerType-1] = $tmp;
     }
   }
 
