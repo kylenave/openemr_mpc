@@ -401,7 +401,7 @@ function getHistoryData($pid, $given = "*", $dateStart='',$dateEnd='')
 function getInsuranceData($pid, $type = "primary", $given = "insd.*, ic.name as provider_name")
 {
     $altInsurance = sqlQuery("select genericname1 from patient_data where pid='" . $pid . "'");
-    $prefix = $altInsurance['genericname1'];
+    $prefix = ''; // $altInsurance['genericname1'];
 
   $sql = "select $given from insurance_data as insd " .
     "left join insurance_companies as ic on ic.id = insd.provider " .
@@ -410,14 +410,17 @@ function getInsuranceData($pid, $type = "primary", $given = "insd.*, ic.name as 
 }
 
 function getInsuranceDataByDate($pid, $date, $type,
-    $altInsurance = sqlQuery("select genericname1 from patient_data where pid='" . $pid . "'");
-    $prefix = $altInsurance['genericname1'];
-
   $given = "insd.*, DATE_FORMAT(subscriber_DOB,'%m/%d/%Y') as subscriber_DOB, ic.name as provider_name")
 { // this must take the date in the following manner: YYYY-MM-DD
   // this function recalls the insurance value that was most recently enterred from the
   // given date. it will call up most recent records up to and on the date given,
   // but not records enterred after the given date
+
+    //$altInsurance = sqlQuery("select genericname1 from patient_data where pid='" . $pid . "'");
+    //$prefix = $altInsurance['genericname1'];
+    $prefix='';
+
+
   $sql = "select $given from insurance_data as insd " .
     "left join insurance_companies as ic on ic.id = provider " .
     "where (term_date is null or term_date=0 or term_date > date_format(date,'%Y-%m-%d')) and pid = ? and date_format(date,'%Y-%m-%d') <= ? and " .
@@ -1118,7 +1121,7 @@ function newInsuranceData(
   if (strlen($type) <= 0) return FALSE;
 
 	$altInsurance = sqlQuery("select genericname1 from patient_data where pid='" . $pid . "'");
-    $prefix = $altInsurance['genericname1'];
+    $prefix = ''; //$altInsurance['genericname1'];
 
 
   // If a bad date was passed, err on the side of caution.
