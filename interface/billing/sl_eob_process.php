@@ -545,7 +545,7 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
         $displayCode = $svc['code'] . "(" . $svc['mod'] . ")";
 
         $PatientHasNotMetSpendDownReqt = ($adj['reason_code'] == '178');
-        $isAWriteoff = ($adj['amount'] = $svc['chg']);
+        $isAWriteoff = ($adj['amount'] == $svc['chg']);
         $patientResponsibility = ($adj['group_code'] == 'PR');
         $isNegativeWriteoff = ($adj['amount'] = -$svc['chg']);
 
