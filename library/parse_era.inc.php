@@ -427,7 +427,13 @@ function parse_era($filename, $cb) {
     }
         else if ($segid == 'LQ' && $seg[1] == 'HE' && $out['loopid'] == '2110') {
             $i = count($out['svc']) - 1;
-            $out['svc'][$i]['remark'] .= $seg[2] . ":";
+            if(array_key_exists('remark', $out['svc'][$i]))
+            {
+               $out['svc'][$i]['remark'] .= $seg[2] . ":";
+            }else
+            {
+                $out['svc'][$i]['remark'] = $seg[2] . ":";
+            }
         }
         else if ($segid == 'QTY' && $out['loopid'] == '2110') {
             $out['warnings'] .= "QTY segment at service level ignored.\n";

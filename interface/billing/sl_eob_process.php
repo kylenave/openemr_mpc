@@ -42,6 +42,15 @@ $invoice_total = 0.00;
 $InsertionId; //last inserted ID of
 
 ///////////////////////// Assorted Functions /////////////////////////
+function logMessage($msg)
+{
+    $MessageLoggingOn = true;
+
+    if ($MessageLoggingOn) {
+        error_log($msg);
+    }
+}
+
 
 function parse_date($date)
 {
@@ -220,15 +229,6 @@ function getBillingId($pid, $encounter, $code, $modifier, &$billing_ids_handled)
     }
 
     return $billing_id;
-}
-
-function logMessage($msg)
-{
-    $MessageLoggingOn = true;
-
-    if ($MessageLoggingOn) {
-        error_log($msg);
-    }
 }
 
 // This is called back by parse_era() once per claim.
@@ -461,6 +461,7 @@ function processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc,
     } else if ($adj['reason_code'] == '3') {
         $reason = "$inslabel copay: ";
     } else {
+        logMessage("PR Code is: " . $reason_code . " which is not 1,2 or 3 so denying...");
         //Som other PR situation...
         $reason .= $reason_code;
         arSetDeniedFlag($pid, $encounter, "Denied due to unusual PR code");
@@ -470,6 +471,7 @@ function processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc,
     if (!$debug) {
         arPostPatientResponsibility($pid, $encounter, $InsertionId[$out['check_number']], $postAmount, $svc['code'], $svc['mod'],
             substr($inslabel, 3), $reason, $debug, '', $codetype, $reason_code, $billing_id);
+        logMessage("Posted PR amount: $" . $postAmount);
     }
 }
 
@@ -487,19 +489,17 @@ function processSecondaryAdjustment($pid, $encounter, $billing_id, $out, $svc, $
             $allowedSI = array("ILLINOIS COMPTROLLER", "ILLINOIS MEDICAID");
             if (in_array($out['payer_name'], $allowedSI)) {
                 $postAmount = $adj['amount'];
-                logMessage("Its allowed!");
+                logMessage("Secondary adj is allowed because its MEDICAID");
             }
         }
     }
 
-    $reason = "$inslabel note " . $adj['group_code'] . $adj['reason_code'] . ': ';
-
-    $reason .= sprintf("(%.2f)", $adj['amount']);
-    $description = $reason;
+    $description = "$inslabel note " . $adj['group_code'] . $adj['reason_code'] . ': ';
+    $description .= sprintf("(%.2f)", $adj['amount']);
 
     if (!$debug) {
         arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']], $postAmount, $svc['code'], $svc['mod'],
-            substr($inslabel, 3), $reason, $debug, '', $codetype, $adj['group_code'], $adj['reason_code'], 0, $billing_id);
+            substr($inslabel, 3), $description, $debug, '', $codetype, $adj['group_code'], $adj['reason_code'], 0, $billing_id);
     }
 }
 
@@ -544,13 +544,26 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
 
         $displayCode = $svc['code'] . "(" . $svc['mod'] . ")";
 
+        logMessage("Processing adj: " . $displayCode. ", ". $description . "  for amount: $". adj['amount']);
+
+        $isTimelyFiling = isTimelyFiling($adj);
+        logMessage("Is timely filing: " . $isTimelyFiling);
+
         $PatientHasNotMetSpendDownReqt = ($adj['reason_code'] == '178');
+        logMessage("PatientHasNotMetSpendDown: ". $PatientHasNotMetSpendDownReqt);
+
         $isAWriteoff = ($adj['amount'] == $svc['chg']);
+        logMessage("Is a writeoff: " . $isAWriteoff);
+
         $patientResponsibility = ($adj['group_code'] == 'PR');
+        logMessage("Is patient responsibility: ". $patientResponsibility);
+
         $isNegativeWriteoff = ($adj['amount'] = -$svc['chg']);
+        logMessage("Is a negative writeoff: ". $isNegativeWriteoff);
 
         if (($isAWriteoff && !isWriteoffAllowed($svc['code']))
             && !$patientResponsibility && !$PatientHasNotMetSpendDownReqt) {
+            logMessage("Denied: cause 1");
             arSetDeniedFlag($pid, $encounter,
                 "Claim Set to Denied because there was an adjustment for the full charge amount " .
                 "or more and it was not on the approved code list (i.e. S0020, A4550, etc)");
@@ -559,6 +572,7 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
 
         //PR Responsibility adjustments should be ignored as should secondary
         if ($patientResponsibility) {
+            logMEssage("Processing as PR");
             $description = "";
             processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc, $adj, $description);
 
@@ -566,6 +580,7 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
                 $description, 0, ($error ? '' : $invoice_total));
 
         } else if (!$primary) {
+            logMessage("Processing as NOT primary...");
             $postAmount = 0;
             $description = "";
             processSecondaryAdjustment($pid, $encounter, $billing_id, $out, $svc, $adj, $postAmount, $description);
@@ -576,35 +591,39 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
         }
         // Other group codes for primary insurance are real adjustments.
         else {
+            logMessage("Processing as primary");
             $postAdjAmount = $adj['amount'];
 
             if (!$error && !$debug) {
-                $reason = "$inslabel Note " . $adj['group_code'] . $adj['reason_code'] . ': ';
-                $reason .= sprintf("(%.2f).", $adj['amount']);
+                $description = "$inslabel Note " . $adj['group_code'] . $adj['reason_code'] . ': ';
+                $description .= sprintf("(%.2f).", $adj['amount']);
 
-                $postAdjAmount = $adj['amount'];
-
-                if (isTimelyFiling($adj) || $isNegativeWriteoff) {
+                if ($isTimelyFiling || $isNegativeWriteoff) {
+                    logMessasge("Zero out due to timely or negative writeoff. " .  $isTimelyFiling . " " . $isNegativeWriteoff);
                     $postAdjAmount = 0;
                 }
 
                 if ($ignoreSvcLine) {
+                    logMessage("Ignoring this service line.");
                     $postAdjAmount = 0;
                 }
 
                 if (isDuplicate($adj)) {
-
+                    logMessage("Duplicate but do nothing...");
                     //arClearDeniedFlag($pid, $encounter, 'Clear denial for duplicate encounters');
                 }
 
                 arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']],
                     $postAdjAmount, $svc['code'], $svc['mod'], substr($inslabel, 3),
-                    $reason, $debug, '', $codetype, $adj['group_code'], $adj['reason_code'], 0, $billing_id);
+                    $description, $debug, '', $codetype, $adj['group_code'], $adj['reason_code'], 0, $billing_id);
+                
+                logMessage("Posted with amount: " . $postAdjAmount);
             }
 
             if (!$ignoreSvcLine) {
                 $invoice_total -= $postAdjAmount;
             }
+
             writeDetailLine('infdetail', $displayCode,
                 $production_date, $description, 0 - $postAdjAmount, ($error ? '' : $invoice_total));
         }
@@ -890,7 +909,7 @@ function era_callback(&$out)
         if (array_key_exists('remark', $svc)) {
             $remarks = explode(":", $svc['remark']);
             $note = "";
-            foreach ($remark as $rmk) {
+            foreach ($remarks as $rmk) {
                 $rmk = $svc['remark'];
                 writeMessageLine('infdetail', "$rmk: " . $remark_codes[$rmk]);
                 $note .= $rmk . ": " . $remark_codes[$rmk] . ". ";

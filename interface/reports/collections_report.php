@@ -685,7 +685,7 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
       $svcdate = substr($erow['date'], 0, 10);
 
       if ($_POST['form_refresh'] && ! $is_all) {
-        if ($pt_balance == 0) continue;
+        if ($pt_balance == 0 && !$is_denied) continue;
       }
 
       if ($_POST['form_category'] == 'Credits') {
@@ -737,7 +737,7 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
       if ($is_due_pt  && $duncount <  0) continue;
       if ($form_ar_user != '0' && ( ($form_ar_user != '-' && $form_ar_user != $insArUser) || ($form_ar_user=='-' && !$ar_other))) continue;
       if ($is_denied && !($encounterDenied && !$encounterDeniedAuth)) continue;
-      if ($is_denied_auth && !($encounterDenied && $encounterDeniedAuth)) continue;
+      if ($is_denied_auth && !$encounterDeniedAuth) continue;
 
       // echo "<!-- " . $erow['encounter'] . ': ' . $erow['charges'] . ' + ' . $erow['sales'] . ' + ' . $erow['copays'] . ' - ' . $erow['payments'] . ' - ' . $erow['adjustments'] . "  -->\n"; // debugging
 

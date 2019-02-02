@@ -444,7 +444,7 @@ function arPostSession($payer_id,$check_number,$check_date,$pay_total,$post_to_d
         updateClaim(true, $patient_id, $encounter_id, -1, -1, $status, 0, '','','',$crossover);
     }
 
-    return xl("Encounter ") . $encounter . xl(" is ready for re-billing.");
+    return xl("Encounter ") . $encounter_id . xl(" is ready for re-billing.");
   }
 
 //Clear the denied flag and store the date for tracing purposes
