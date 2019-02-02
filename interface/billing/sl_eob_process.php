@@ -468,9 +468,17 @@ function processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc,
     }
 
     $description = $reason . "(" . $postAmount . ")";
+
+    if($Denied)
+    {
+        //We'll post for the record but not allow an amount
+        $description .= "[Denied]";
+        $postAmount = 0;
+    }
+
     if (!$debug) {
         arPostPatientResponsibility($pid, $encounter, $InsertionId[$out['check_number']], $postAmount, $svc['code'], $svc['mod'],
-            substr($inslabel, 3), $reason, $debug, '', $codetype, $reason_code, $billing_id);
+            substr($inslabel, 3), $description, $debug, '', $codetype, $reason_code, $billing_id);
         logMessage("Posted PR amount: $" . $postAmount);
     }
 }
