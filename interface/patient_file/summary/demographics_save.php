@@ -53,7 +53,7 @@ updateEmployerData($pid, $newdata['employer_data']);
 
 $i1dob = fixDate(formData("i1subscriber_DOB"));
 $i1date = fixDate(formData("i1effective_date"), date('Y-m-d'));
-$i1termDate = fixDate(formData("i1term_date"), date('Y-m-d'));
+$i1termDate = fixDate(formData("i1term_date"));
 
 newInsuranceData(
   $pid,
@@ -90,7 +90,7 @@ newInsuranceData(
 
 $i2dob = fixDate(formData("i2subscriber_DOB"));
 $i2date = fixDate(formData("i2effective_date"), date('Y-m-d'));
-$i2termDate = fixDate(formData("i2term_date"), date('Y-m-d'));
+$i2termDate = fixDate(formData("i2term_date"));
 
 newInsuranceData(
   $pid,
@@ -127,7 +127,7 @@ newInsuranceData(
 
 $i3dob  = fixDate(formData("i3subscriber_DOB"));
 $i3date = fixDate(formData("i3effective_date"), date('Y-m-d'));
-$i3termdate = fixDate(formData("i3term_date"), date('Y-m-d'));
+$i3termdate = fixDate(formData("i3term_date"));
 
 newInsuranceData(
   $pid,
