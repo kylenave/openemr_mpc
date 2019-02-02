@@ -613,6 +613,13 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
                     //arClearDeniedFlag($pid, $encounter, 'Clear denial for duplicate encounters');
                 }
 
+                if($Denied)
+                {
+                    //We'll post for the record but not allow an amount
+                    $description .= "[Denied]";
+                    $postAdjAmount = 0;
+                }
+
                 arPostAdjustment($pid, $encounter, $InsertionId[$out['check_number']],
                     $postAdjAmount, $svc['code'], $svc['mod'], substr($inslabel, 3),
                     $description, $debug, '', $codetype, $adj['group_code'], $adj['reason_code'], 0, $billing_id);
@@ -647,7 +654,7 @@ function prevHasPayment($prev, $amount)
 
 function processPayments($pid, $encounter, $billing_id, $out, $svc, $prev)
 {
-    global $error, $debug, $InsertionId, $codetype, $allowed_amount, $invoice_total, $inslabel;
+    global $error, $debug, $Denied, $InsertionId, $codetype, $allowed_amount, $invoice_total, $inslabel;
 
     $actual_paid_amount = $svc['paid'];
     $delta_paid_amount = 0;
