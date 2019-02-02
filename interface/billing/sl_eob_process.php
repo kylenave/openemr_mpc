@@ -494,7 +494,7 @@ function processSecondaryAdjustment($pid, $encounter, $billing_id, $out, $svc, $
     if (isset($adj['amount'])) {
         if (isCO45($adj)) {
             logMessage("This is a CO 45... checking name: " . $out['payer_name']);
-            $allowedSI = array("ILLINOIS COMPTROLLER", "ILLINOIS MEDICAID");
+            $allowedSI = array("ILLINOIS COMPTROLLER", "ILLINOIS MEDICAID", "TRICARE EAST");
             if (in_array($out['payer_name'], $allowedSI)) {
                 $postAmount = $adj['amount'];
                 logMessage("Secondary adj is allowed because its MEDICAID");
