@@ -544,7 +544,7 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
 
         $displayCode = $svc['code'] . "(" . $svc['mod'] . ")";
 
-        logMessage("Processing adj: " . $displayCode. ", ". $description . "  for amount: $". adj['amount']);
+        logMessage("Processing adj: " . $displayCode. ", ". $description . "  for amount: $". $adj['amount']);
 
         $isTimelyFiling = isTimelyFiling($adj);
         logMessage("Is timely filing: " . $isTimelyFiling);
@@ -558,7 +558,7 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
         $patientResponsibility = ($adj['group_code'] == 'PR');
         logMessage("Is patient responsibility: ". $patientResponsibility);
 
-        $isNegativeWriteoff = ($adj['amount'] = -$svc['chg']);
+        $isNegativeWriteoff = ($adj['amount'] == -$svc['chg']);
         logMessage("Is a negative writeoff: ". $isNegativeWriteoff);
 
         if (($isAWriteoff && !isWriteoffAllowed($svc['code']))
@@ -599,7 +599,7 @@ function processAdjustments($pid, $encounter, $billing_id, $out, $svc)
                 $description .= sprintf("(%.2f).", $adj['amount']);
 
                 if ($isTimelyFiling || $isNegativeWriteoff) {
-                    logMessasge("Zero out due to timely or negative writeoff. " .  $isTimelyFiling . " " . $isNegativeWriteoff);
+                    logMessage("Zero out due to timely or negative writeoff. " .  $isTimelyFiling . " " . $isNegativeWriteoff);
                     $postAdjAmount = 0;
                 }
 
