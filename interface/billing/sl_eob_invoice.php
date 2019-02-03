@@ -385,6 +385,7 @@ if ($formSave || $_POST['form_cancel'] || $formReopen || $formAddAttachment) {
 
     if ($formReopen) {
         doVoid($patient_id, $encounter_id, true);
+        arClearAuthFlag($patient_id, $encounter_id, "Clearing denial to rework encounter", $_SESSION['authUser']);
         $encounter_open=true;
     }
 
