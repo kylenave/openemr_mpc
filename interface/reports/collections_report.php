@@ -817,9 +817,13 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
         $row['charges'] += $value['chg'] + $value['adj'];
         $row['adjustments'] += 0 - $value['adj'];
         $row['paid'] += $value['chg'] - $value['bal'];
-        foreach ($value['dtl'] as $dkey => $dvalue) {
-          $dtldate = trim(substr($dkey, 0, 10));
-          if ($dtldate && $dtldate > $ladate) $ladate = $dtldate;
+
+        if(array_key_exists('dtl', $value))
+        {
+          foreach ($value['dtl'] as $dkey => $dvalue) {
+            $dtldate = trim(substr($dkey, 0, 10));
+            if ($dtldate && $dtldate > $ladate) $ladate = $dtldate;
+          }
         }
         $lckey = strtolower($key);
         if ($lckey == 'co-pay' || $lckey == 'claim') continue;
