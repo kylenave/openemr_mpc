@@ -753,7 +753,7 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
       if ($form_ar_user != '0' && ( ($form_ar_user != '-' && $form_ar_user != $insArUser) || ($form_ar_user=='-' && !$ar_other))) continue;
       if ($is_denied && !($encounterDenied && !$encounterDeniedAuth)) continue;
       if ($is_denied_auth && !$encounterDeniedAuth) continue;
-      if ($is_rejected && !$encounterIsRejected) continue;
+      if ($is_rejected && !$encounterRejected) continue;
 
       // echo "<!-- " . $erow['encounter'] . ': ' . $erow['charges'] . ' + ' . $erow['sales'] . ' + ' . $erow['copays'] . ' - ' . $erow['payments'] . ' - ' . $erow['adjustments'] . "  -->\n"; // debugging
 
