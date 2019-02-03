@@ -53,6 +53,7 @@ $is_due_pt      = $_POST['form_category'] == 'Due Pt';
 $is_all         = $_POST['form_category'] == 'All';
 $is_denied      = $_POST['form_category'] == 'Denied';
 $is_denied_auth = $_POST['form_category'] == 'Denied Auth';
+$is_rejected    = $_POST['form_category'] == 'Rejected';
 $is_ageby_lad   = strpos($_POST['form_ageby'], 'Last') !== false;
 $form_facility  = $_POST['form_facility'];
 $form_provider  = $_POST['form_provider'];
@@ -436,7 +437,18 @@ function checkAll(checked) {
 						<td>
 						   <select name='form_category'>
 						<?php
-						 foreach (array('Open' => xl('Open'),'Due Pt' => xl('Due Pt'),'Due Ins' => xl('Due Ins'),'Ins Summary' => xl('Ins Summary'),'Credits' => xl('Credits'),'Denied' => xl('Denied'),'Denied Auth' => xl('Denied Auth'), 'All' => xl('All')) as $key => $value) {
+						 foreach (
+                array(
+                  'Open' => xl('Open'),
+                  'Due Pt' => xl('Due Pt'),
+                  'Due Ins' => xl('Due Ins'),
+                  'Ins Summary' => xl('Ins Summary'),
+                  'Credits' => xl('Credits'),
+                  'Denied' => xl('Denied'),
+                  'Denied Auth' => xl('Denied Auth'), 
+                  'Rejected' => xl('Rejected'),
+                  'All' => xl('All')
+                  ) as $key => $value) {
 						  echo "    <option value='" . attr($key) . "'";
 						  if ($_POST['form_category'] == $key) echo " selected";
 						  echo ">" . text($value) . "</option>\n";
@@ -664,12 +676,14 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
       "( SELECT SUM(a.pay_amount) FROM ar_activity AS a WHERE " .
       "a.pid = f.pid AND a.encounter = f.encounter ) AS payments, " .
       "( SELECT SUM(a.adj_amount) FROM ar_activity AS a WHERE " .
-      "a.pid = f.pid AND a.encounter = f.encounter ) AS adjustments " .
+      "a.pid = f.pid AND a.encounter = f.encounter ) AS adjustments, " .
+      "cs.status " .
       "FROM form_encounter AS f " .
       "JOIN patient_data AS p ON p.pid = f.pid " .
       "LEFT OUTER JOIN users AS u ON u.id = p.ref_providerID " .
       "LEFT OUTER JOIN users AS w ON w.id = f.provider_id " .
       "LEFT JOIN facility fac on fac.id=f.facility_id " .
+      "LEFT join claim_status cs on cs.id = (select id from claim_status where encounter=f.encounter order by date desc limit 1) " .
       "WHERE $where " .
       "ORDER BY f.pid, f.encounter";
  
@@ -678,6 +692,7 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
     while ($erow = sqlFetchArray($eres)) {
       $encounterDenied = ($erow['external_id']=='1');
       $encounterDeniedAuth = ($erow['denial_auth']=='1');
+      $encounterRejected = ($erow['status']=='REJECTED');
       $patient_id = $erow['pid'];
       $encounter_id = $erow['encounter'];
       $pt_balance = $erow['charges'] + $erow['sales'] + $erow['copays'] - $erow['payments'] - $erow['adjustments'];
@@ -738,6 +753,7 @@ if ($_POST['form_refresh'] || $_POST['form_export'] || $_POST['form_csvexport'])
       if ($form_ar_user != '0' && ( ($form_ar_user != '-' && $form_ar_user != $insArUser) || ($form_ar_user=='-' && !$ar_other))) continue;
       if ($is_denied && !($encounterDenied && !$encounterDeniedAuth)) continue;
       if ($is_denied_auth && !$encounterDeniedAuth) continue;
+      if ($is_rejected && !$encounterIsRejected) continue;
 
       // echo "<!-- " . $erow['encounter'] . ': ' . $erow['charges'] . ' + ' . $erow['sales'] . ' + ' . $erow['copays'] . ' - ' . $erow['payments'] . ' - ' . $erow['adjustments'] . "  -->\n"; // debugging
 
