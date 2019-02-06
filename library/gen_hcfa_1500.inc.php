@@ -309,7 +309,7 @@ function gen_hcfa_1500_page($pid, $encounter, &$log, &$claim) {
   }
   else {
     if ($claim->payerCount() > 1) {
-      put_hcfa(26, 1, 28, $claim->planName(1));
+      put_hcfa(26, 1, 28, $claim->payerName(1));
     }
   }
   
