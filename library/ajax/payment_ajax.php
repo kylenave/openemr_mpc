@@ -130,10 +130,27 @@ function AjaxDropDownCode()
 			<td colspan='5' align='center'><a id='anchor_insurance_code_$CountIndex' href='#'></a></td>
 	  </tr>
 
-	  ";
-	$res = sqlStatement("SELECT pid as id,fname,lname,mname,DOB FROM patient_data
-			 where  fname like '$patient_code%' or lname like '$patient_code%' or mname like '$patient_code%' or 
-			 CONCAT(lname,' ',fname,' ',mname) like '$patient_code%' or pid like '$patient_code%' ORDER BY lname");
+		";
+	
+		$pc = str_replace ( "," , " " , $patient_code);
+		$p = explode(" ",$pc);
+
+		if(count($p) > 1)
+		{
+			$res = sqlStatement("SELECT pid as id,fname,lname,mname,DOB FROM patient_data
+			where  fname like '$patient_code%' or lname like '$patient_code%' or mname like '$patient_code%' or 
+			CONCAT(lname,' ',fname,' ',mname) like '$patient_code%' 
+			of ( lname like '$p[0]%' and fname like '$p[1]%' )
+			of ( lname like '$p[1]%' and fname like '$p[0]%' )
+			or pid like '$patient_code%' ORDER BY lname");
+
+		}else
+		{
+			$res = sqlStatement("SELECT pid as id,fname,lname,mname,DOB FROM patient_data
+			where  fname like '$patient_code%' or lname like '$patient_code%' or mname like '$patient_code%' or 
+			CONCAT(lname,' ',fname,' ',mname) like '$patient_code%' or pid like '$patient_code%' ORDER BY lname");
+	 }
+	
 	while ($row = sqlFetchArray($res))
 	 {
 		if($CountIndex%2==1)
