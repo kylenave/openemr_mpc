@@ -133,6 +133,7 @@ function AjaxDropDownCode()
 		";
 	
 		$pc = str_replace ( "," , " " , $patient_code);
+		$pc = str_replace ( "  " , " " , $pc);
 		$p = explode(" ",$pc);
 
 		if(count($p) > 1)
