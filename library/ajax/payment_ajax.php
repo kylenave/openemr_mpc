@@ -138,10 +138,9 @@ function AjaxDropDownCode()
 		if(count($p) > 1)
 		{
 			$res = sqlStatement("SELECT pid as id,fname,lname,mname,DOB FROM patient_data
-			where  fname like '$patient_code%' or lname like '$patient_code%' or mname like '$patient_code%' or 
-			CONCAT(lname,' ',fname,' ',mname) like '$patient_code%' 
-			of ( lname like '$p[0]%' and fname like '$p[1]%' )
-			of ( lname like '$p[1]%' and fname like '$p[0]%' )
+			where   
+			( lname like '$p[0]%' and fname like '$p[1]%' )
+			or ( lname like '$p[1]%' and fname like '$p[0]%' )
 			or pid like '$patient_code%' ORDER BY lname");
 
 		}else
