@@ -44,7 +44,7 @@ $InsertionId; //last inserted ID of
 ///////////////////////// Assorted Functions /////////////////////////
 function logMessage($msg)
 {
-    $MessageLoggingOn = false;
+    $MessageLoggingOn = true;
 
     if ($MessageLoggingOn) {
         error_log($msg);
@@ -448,10 +448,13 @@ function isWriteoffAllowed($code)
 
     function processPatientResponsibility($pid, $encounter, $billing_id, $out, $svc, $adj, &$description)
 {
-    global $debug, $InsertionId, $codetype, $inslabel;
+    global $Denied, $debug, $InsertionId, $codetype, $inslabel;
+
 
     $postAmount = $adj['amount'];
     $reason_code = $adj['reason_code'];
+
+logMessage("Processing PR type of: " . $reason_code);
 
     $reason = "$inslabel ptresp: "; // Reasons should be 25 chars or less.
     if ($adj['reason_code'] == '1') {
@@ -462,12 +465,14 @@ function isWriteoffAllowed($code)
         $reason = "$inslabel copay: ";
     } else {
 
-        $allowablePRCodes = array('187');
+        $allowablePRCodes = array('187', '119');
 
+logMessage("Not in 1,2 or 3 so checking other allowables...");
         if(!in_array($reason_code, $allowablePRCodes))
         {
             logMessage("PR Code is: " . $reason_code . " which is not an allowable code so denying...");
             //Som other PR situation...
+            $Denied = true;
             $reason .= $reason_code;
             arSetDeniedFlag($pid, $encounter, "Denied due to unusual PR code: PR" . $reason_code);
         }
@@ -773,6 +778,7 @@ function processAllowedAmount($pid, $encounter, $billing_id, &$svc)
 
 function patientDiscountAmount($pid)
 {
+logMessage("Checking for discountProgram for pid=" . $pid);
     $discountProgramField = "homeless";
 
     $result = sqlQuery("SELECT " . $discountProgramField . " from patient_data where pid=" . $pid);
@@ -780,8 +786,8 @@ function patientDiscountAmount($pid)
     if (empty($result)) {
         return '0';
     }
-
-    return ($result['payer_id'] * 1);
+logMessage("This person has a discount of: " . $result[$discountProgramField] * 1 );
+    return ($result[$discountProgramField] * 0.01);
 }
 
 function applyDiscountProgram($pid, $encounter, &$out)
@@ -792,6 +798,7 @@ function applyDiscountProgram($pid, $encounter, &$out)
 
     if($discountRate > 0)
     {
+logMessage("Applying discount of: " . $discountRate);
         $codes = ar_get_invoice_summary2($pid, $encounter, true);
 
         foreach ($out['svc'] as $svc) {
