@@ -461,10 +461,16 @@ function isWriteoffAllowed($code)
     } else if ($adj['reason_code'] == '3') {
         $reason = "$inslabel copay: ";
     } else {
-        logMessage("PR Code is: " . $reason_code . " which is not 1,2 or 3 so denying...");
-        //Som other PR situation...
-        $reason .= $reason_code;
-        arSetDeniedFlag($pid, $encounter, "Denied due to unusual PR code");
+
+        $allowablePRCodes = array('187');
+
+        if(!in_array($reason_code, $allowablePRCodes))
+        {
+            logMessage("PR Code is: " . $reason_code . " which is not an allowable code so denying...");
+            //Som other PR situation...
+            $reason .= $reason_code;
+            arSetDeniedFlag($pid, $encounter, "Denied due to unusual PR code: PR" . $reason_code);
+        }
     }
 
     $description = $reason . "(" . $postAmount . ")";
@@ -765,6 +771,55 @@ function processAllowedAmount($pid, $encounter, $billing_id, &$svc)
 
 }
 
+function patientDiscountAmount($pid)
+{
+    $discountProgramField = "homeless";
+
+    $result = sqlQuery("SELECT " . $discountProgramField . " from patient_data where pid=" . $pid);
+    
+    if (empty($result)) {
+        return '0';
+    }
+
+    return ($result['payer_id'] * 1);
+}
+
+function applyDiscountProgram($pid, $encounter, &$out)
+{
+    global $sessionId, $debug, $codetype;
+
+    $discountRate = patientDiscountAmount($pid);
+
+    if($discountRate > 0)
+    {
+        $codes = ar_get_invoice_summary2($pid, $encounter, true);
+
+        foreach ($out['svc'] as $svc) {
+            //Compute balance on this line item
+            $billing_id = getBillingId($pid, $encounter, $svc['code'], $svc['mod'], $billing_ids_handled);
+    
+            if ($billing_id) {
+                $prev = $codes[$billing_id];
+            } else {
+                unset($prev);
+            }
+
+            if(isset($prev))
+            {
+                $prev_balance = abs($svc['chg'] - ($prev['adj'] + $prev['pay']));
+                $discount = $prev_balance * $discountRate;
+
+                if($discount > 0)
+                {
+                    arPostAdjustment($pid, $encounter, $sessionId,
+                    $discount, $svc['code'], $svc['mod'], 0,
+                    'Discount Program', $debug, '', $codetype, 0, 'DSC', 0, $billing_id);
+                    }
+            }
+        }
+    }
+}
+
 function era_callback(&$out)
 {
     global $encount, $debug, $error, $claim_status_codes, $adjustment_reasons, $remark_codes;
@@ -1005,6 +1060,8 @@ function era_callback(&$out)
                     "SET last_level_closed = $level_done WHERE " .
                     "pid = '$pid' AND encounter = '$encounter'");
                 $claimState = 'Patient or Closed';
+
+                applyDiscountProgram($pid, $encounter, $out);
             }
         }
 
