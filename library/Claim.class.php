@@ -944,7 +944,7 @@ error_log("Selected billing facility query: " . $sql);
   // ZZ Mutually Defined
   //
   function claimType($ins=0) {
-    if (empty($this->payers[$ins]['object'])) return '';
+    if (empty($this->payers[$ins]['object'])) return '09';
     return $this->payers[$ins]['object']->get_ins_claim_type();
   }
 
