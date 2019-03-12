@@ -461,6 +461,7 @@ error_log("Claim type: " . $claim->claimType());
 //    April 1, 2013-September 30, 2013 - Testing
  //   October 1, 2013 - Implementation
 
+ error_log("837: Payer:" .  $claim->payerID() . " " . $claim->payerName() );
     "*PI" .
     // Zirmed ignores this if using payer name matching:
     "*" . ($encounter_claim ? $claim->payerAltID() : $claim->payerID()) .

@@ -172,11 +172,12 @@ class Claim {
 
     if($this->dbPayerType!='-1' && $this->dbPayerType!='1')
     {
-       //error_log("Setting payer type to: " . $this->dbPayerType);
        $tmp = $this->payers[0];
        $this->payers[0] = $this->payers[$this->dbPayerType-1];
        $this->payers[$this->dbPayerType-1] = $tmp;
     }
+    error_log("Set payer type to: " . $this->payers[0]['payer_type']);
+    error_log("Set payer ID to: " . $this->payers[0]['payer_id']);
   }
 
   // Constructor. Loads relevant database information.
