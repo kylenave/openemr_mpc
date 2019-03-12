@@ -1222,7 +1222,7 @@ error_log("Claim type: " . $claim->claimType());
     // Segment PS1 (Purchased Service Information) omitted.
     // Segment HCP (Line Pricing/Repricing Information) omitted.
 
-    if (!$CMS_5010) {
+    //if (!$CMS_5010) {
       // This segment was deleted for 5010.
       //
       // AMT*AAE segment for Approved Amount from previous payer.
@@ -1231,6 +1231,7 @@ error_log("Claim type: " . $claim->claimType());
       for ($ins = $claim->payerCount() - 1; $ins > 0; --$ins) {
         if ($claim->payerSequence($ins) > $claim->payerSequence())
           continue; // payer is future, not previous
+        
         $payerpaid = $claim->payerTotals($ins, $claim->cptKey($prockey));
         ++$edicount;
         $out .= "AMT" . // Approved amount per previous payer. Page 485.
@@ -1239,7 +1240,7 @@ error_log("Claim type: " . $claim->claimType());
           "~\n";
         break;
       }
-    }
+    //}
 
     // Loop 2410, Drug Information. Medicaid insurers seem to want this
     // with HCPCS codes.
