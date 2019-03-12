@@ -1348,11 +1348,14 @@ error_log("Claim type: " . $claim->claimType());
       $codeAdjustments = ar_get_adjustments($claim->encounter_id, $claim->cptKey($prockey));
       $codePr = ar_get_pr($claim->encounter_id, $claim->cptKey($prockey));
 
+      /*
       if ($payerpaid[1] == 0 && !count($aarr)) {
         $log .= "*** Procedure '" . $claim->cptKey($prockey) .
           "' has no payments or adjustments from previous payer!\n";
         continue;
-      }
+      }*/
+
+      if(count($codeAdjustments) < 1) continue;
 
       ++$edicount;
       $out .= "SVD" . // Service line adjudication. Page 554.

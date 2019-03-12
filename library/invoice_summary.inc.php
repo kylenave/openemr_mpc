@@ -92,7 +92,7 @@ function ar_get_adjustments($encounter, $code)
 
       error_log("837: Found adjustment for $" . $row['adj_amount'] . "  " . $adjGroup . $adjReason);
 
-      $tmp['date'] = substr($row['date'], 0, 10);
+      $tmp['date'] = substr($row['check_date'], 0, 10);
       $tmp['amount'] = $row['adj_amount'];
       $tmp['group'] = $adjGroup;
       $tmp['reason'] = $adjReason;
