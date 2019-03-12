@@ -1365,6 +1365,8 @@ error_log("Claim type: " . $claim->claimType());
 
       //$tmpdate = $payerpaid[0];
       
+      error_log("837: Found adjustments " . count($codeAdjustments));
+
       foreach ($codeAdjustments as $a) {
         ++$edicount;
         $out .= "CAS" . // Previous payer's line level adjustments. Page 558.

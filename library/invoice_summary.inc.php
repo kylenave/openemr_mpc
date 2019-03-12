@@ -90,6 +90,8 @@ function ar_get_adjustments($encounter, $code)
 
       ar_decode_adjustment($row['memo'], $row['reason_code'], $row['account_code'], $adjGroup, $adjReason);
 
+      error_log("837: Found adjustment for $" . $row['adj_amount'] . "  " . $adjGroup . $adjReason);
+
       $tmp['date'] = substr($row['date'], 0, 10);
       $tmp['amount'] = $row['adj_amount'];
       $tmp['group'] = $adjGroup;
