@@ -78,7 +78,7 @@ function ar_get_adjustments($encounter, $code)
 {
     $sql = sqlStatement("select  ss.check_date, ar.code, memo, adj_amount, reason_code, account_code
     from ar_activity ar left join ar_session ss on ss.session_id = ar.session_id
-    where adj_amount > 0 and ar.encounter='?' and ar.code='?'",array($encounter,$code) );;
+    where adj_amount > 0 and ar.encounter=? and ar.code=?",array($encounter,$code) );;
 
     $adj = array();
 
@@ -107,7 +107,7 @@ function ar_get_pr($encounter, $code)
 {
     $sql = sqlStatement("select  ss.check_date, ar.code, memo, pr_amount, pr_code
     from ar_activity ar left join ar_session ss on ss.session_id = ar.session_id
-    where pr_amount > 0 and ar.encounter='?' and ar.code='?'",array($encounter,$code) );;
+    where pr_amount > 0 and ar.encounter=? and ar.code=?",array($encounter,$code) );;
 
     $pr = array();
 
