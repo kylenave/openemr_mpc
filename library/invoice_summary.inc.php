@@ -33,6 +33,97 @@ require_once("sl_eob.inc.php");
 require_once(dirname(__FILE__) . "/../custom/code_types.inc.php");
 
 
+function ar_decode_adjustment($memo, $group, $reason, &$outGroup, &$outReason)
+{
+
+  if($group == 'PR')
+  {
+    $outGroup = $group;
+    $outReason = $reason;
+  }else if($group == 'CO' || $group == 'OA' || $group == 'CR')
+  {
+    $outGroup = $group;
+    $outReason = $reason;
+  }else
+  {
+    if (strpos($memo, 'Adjust code ') !== false)
+    {
+      $outReason = trim(substr($memo, 12, 3));
+      $outGroup = 'CO';
+    }else if (strpos(strtoupper($memo), 'INS1 NOTE ') !== false)
+    {
+      $outReason = trim(substr($memo, 12, 3));
+      if($outReason[2] == ':')
+      {
+        $outReason = substr($outReason, 0, 2);
+      }
+      $outGroup = trim(substr($memo, 10, 2));;
+    }else if (strpos(strtoupper($memo), 'INS2 NOTE ') !== false)
+    {
+      $outReason = trim(substr($memo, 12, 3));
+      if($outReason[2] == ':')
+      {
+        $outReason = substr($outReason, 0, 2);
+      }
+      $outGroup = trim(substr($memo, 10, 2));;
+    }else{
+        $outReason = '';
+        $outGroup = 'XX';
+    }
+  }
+
+}
+
+function ar_get_adjustments($encounter, $code)
+{
+    $sql = sqlStatement("select  ss.check_date, ar.code, memo, adj_amount, reason_code, account_code
+    from ar_activity ar left join ar_session ss on ss.session_id = ar.session_id
+    where adj_amount > 0 and ar.encounter='?' and ar.code='?'",array($encounter,$code) );;
+
+    $adj = array();
+
+    while ($row = sqlFetchArray($sql)) {
+      $tmp = array();
+
+      $adjReason = '';
+      $adjGroup = '';
+
+      ar_decode_adjustment($row['memo'], $row['reason_code'], $row['account_code'], $adjGroup, $adjReason);
+
+      $tmp['date'] = substr($row['date'], 0, 10);
+      $tmp['amount'] = $row['adj_amount'];
+      $tmp['group'] = $adjGroup;
+      $tmp['reason'] = $adjReason;
+
+      if($adjGroup != 'XX'){
+        $adj[] = $tmp;
+      }
+    }
+
+    return $adj;
+}
+
+function ar_get_pr($encounter, $code)
+{
+    $sql = sqlStatement("select  ss.check_date, ar.code, memo, pr_amount, pr_code
+    from ar_activity ar left join ar_session ss on ss.session_id = ar.session_id
+    where pr_amount > 0 and ar.encounter='?' and ar.code='?'",array($encounter,$code) );;
+
+    $pr = array();
+
+    while ($row = sqlFetchArray($sql)) {
+      $tmp = array();
+
+      $tmp['amount'] = $row['pr_amount'];
+      $tmp['pr_code'] = $row['pr_code'];
+
+      $pr[] = $tmp;
+    }
+
+    return $pr;
+}
+
+
 // for Integrated A/R.
 //
 function ar_get_invoice_summary($patient_id, $encounter_id, $with_detail = false) {
@@ -112,7 +203,7 @@ function ar_get_invoice_summary($patient_id, $encounter_id, $with_detail = false
 
   // Get payments and adjustments. (includes copays)
   $res = sqlStatement("SELECT " .
-    "a.code_type, a.code, a.modifier, a.memo, a.payer_type, a.adj_amount, a.pay_amount, a.reason_code, " .
+    "a.code_type, a.code, a.modifier, a.memo, a.payer_type, a.adj_amount, a.pay_amount, a.reason_code, a.account_code, " .
     "a.post_time, a.session_id, a.sequence_no, a.account_code, a.follow_up, a.follow_up_note, " .
     "s.payer_id, s.reference, s.check_date, s.deposit_date " .
     ",i.name " .

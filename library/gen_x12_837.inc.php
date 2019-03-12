@@ -1345,6 +1345,9 @@ error_log("Claim type: " . $claim->claimType());
       $payerpaid = $claim->payerTotals($ins, $claim->cptKey($prockey));
       $aarr = $claim->payerAdjustments($ins, $claim->cptKey($prockey));
 
+      $codeAdjustments = ar_get_adjustments($claim->encounter_id, $claim->cptKey($prockey));
+      $codePr = ar_get_pr($claim->encounter_id, $claim->cptKey($prockey));
+
       if ($payerpaid[1] == 0 && !count($aarr)) {
         $log .= "*** Procedure '" . $claim->cptKey($prockey) .
           "' has no payments or adjustments from previous payer!\n";
@@ -1360,8 +1363,28 @@ error_log("Claim type: " . $claim->claimType());
         "*" . $claim->cptUnits($prockey) .
         "~\n";
 
-      $tmpdate = $payerpaid[0];
-      foreach ($aarr as $a) {
+      //$tmpdate = $payerpaid[0];
+      
+      foreach ($codeAdjustments as $a) {
+        ++$edicount;
+        $out .= "CAS" . // Previous payer's line level adjustments. Page 558.
+          "*" . $a['group'] .
+          "*" . $a['reason'] .
+          "*" . $a['amount'] .
+          "~\n";
+
+          $tmpdate = str_replace("-","",$a['date']);
+      }
+
+      foreach ($codePr as $a) {
+        ++$edicount;
+        $out .= "CAS" . // Previous payer's line level adjustments. Page 558.
+          "*PR*" . $a['pr_code'] .
+          "*" . $a['amount'] .
+          "~\n";
+      }
+
+      /*foreach ($aarr as $a) {
         ++$edicount;
         $out .= "CAS" . // Previous payer's line level adjustments. Page 558.
           "*" . $a[1] .
@@ -1371,15 +1394,13 @@ error_log("Claim type: " . $claim->claimType());
         if (!$tmpdate) $tmpdate = $a[0];
 
         // WTH is this??
-        /*************************************************************
         if ( isset($a[4]) &&
         	$a[4] != null ) {
         	$out .= "CAS02" . // Previous payer's adjustment reason
 	          "*" . $a[4] .
 	          "~\n";
         }
-        *************************************************************/
-      }
+    } */
 
       if ($tmpdate) {
         ++$edicount;
