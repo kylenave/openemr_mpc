@@ -127,6 +127,32 @@ function select_all() {
   set_button_states();
 }
 
+function select_all_primary() {
+  last_type_primary = false;
+  for($i=0;$i < document.update_form.length;$i++) {
+    $name = document.update_form[$i].name;
+
+    if ($name.substring(0,7) == "claims[" && $name.substring($name.length -7) == "[payer]") {
+      if(document.update_form[$i].innerText.includes("primary"))
+      {
+        last_type_primary = true;
+      }else
+      {
+        last_type_primary = false;
+      }
+    }
+
+    if ($name.substring(0,7) == "claims[" && $name.substring($name.length -6) == "[bill]") {
+      if(last_type_primary)
+      {
+        document.update_form[$i].checked = true;
+      }
+    }
+  }
+  set_button_states();
+}
+
+
 function set_button_states() {
   var f = document.update_form;
   var count0 = 0; // selected and not billed or queued
@@ -541,6 +567,10 @@ if(!isset($_REQUEST['mode']))//default case
           <tr>
             <td>&nbsp;</td>
             <td><a href="javascript:select_all()" class="link_submit"><?php  echo '['. xlt('Select All') .']'?></a></td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td><a href="javascript:select_all_primary()" class="link_submit"><?php  echo '['. xlt('Select Primaries') .']'?></a></td>
           </tr>
       </table>
 
