@@ -986,7 +986,7 @@ error_log("Claim type: " . $claim->claimType());
       ++$edicount;
       $out .= "AMT" . // Previous payer's paid amount. Page 307/332.
         "*D" .
-        "*" . $payerpaid[1] .
+        "*" . $payerpaid .
         "~\n";
 
       // Segment AMT*A8 (COB Total Non-Covered Amount) omitted.
