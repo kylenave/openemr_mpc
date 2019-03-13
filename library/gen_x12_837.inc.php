@@ -982,11 +982,12 @@ error_log("Claim type: " . $claim->claimType());
           "~\n";
       }
 
-      $payerpaid = ar_get_paid($claim->encounter_id); //$claim->payerTotals($ins);
+      $payerpaid = $claim->payerTotals($ins);
+      $prevPaidAmount = ar_get_paid($claim->encounter_id);
       ++$edicount;
       $out .= "AMT" . // Previous payer's paid amount. Page 307/332.
         "*D" .
-        "*" . $payerpaid .
+        "*" . $prevPaidAmount .
         "~\n";
 
       // Segment AMT*A8 (COB Total Non-Covered Amount) omitted.
@@ -1362,7 +1363,7 @@ error_log("Claim type: " . $claim->claimType());
       ++$edicount;
       $out .= "SVD" . // Service line adjudication. Page 554.
         "*" . $claim->payerID($ins) .
-        "*" . $payerpaid[1] .
+        "*" . $prevPaidAmount .
         "*HC:" . $claim->cptKey($prockey) .
         "*" .
         "*" . $claim->cptUnits($prockey) .
