@@ -128,12 +128,12 @@ function select_all() {
 }
 
 function select_all_primary() {
-  last_type_primary = false;
+  var last_type_primary = false;
   for($i=0;$i < document.update_form.length;$i++) {
     $name = document.update_form[$i].name;
-
+    $innterText = document.update_form[$i].innerText;
     if ($name.substring(0,7) == "claims[" && $name.substring($name.length -7) == "[payer]") {
-      if(document.update_form[$i].innerText.includes("primary"))
+      if($innerText.substring(0, 7) == "primary")
       {
         last_type_primary = true;
       }else
