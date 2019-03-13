@@ -982,7 +982,7 @@ error_log("Claim type: " . $claim->claimType());
           "~\n";
       }
 
-      $payerpaid = $claim->payerTotals($ins);
+      $payerpaid = ar_get_paid($claim->encounter_id); //$claim->payerTotals($ins);
       ++$edicount;
       $out .= "AMT" . // Previous payer's paid amount. Page 307/332.
         "*D" .
@@ -1233,11 +1233,13 @@ error_log("Claim type: " . $claim->claimType());
           continue; // payer is future, not previous
         
         $payerpaid = $claim->payerTotals($ins, $claim->cptKey($prockey));
+        /*
         ++$edicount;
         $out .= "AMT" . // Approved amount per previous payer. Page 485.
           "*AAE" .
           "*" . sprintf('%.2f', $claim->cptCharges($prockey) - $payerpaid[2]) .
           "~\n";
+          */
         break;
       }
     //}
@@ -1368,8 +1370,6 @@ error_log("Claim type: " . $claim->claimType());
 
       //$tmpdate = $payerpaid[0];
       
-      error_log("837: Found adjustments " . count($codeAdjustments));
-
       foreach ($codeAdjustments as $a) {
         ++$edicount;
         $out .= "CAS" . // Previous payer's line level adjustments. Page 558.

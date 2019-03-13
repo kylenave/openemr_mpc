@@ -125,6 +125,22 @@ function ar_get_pr($encounter, $code)
     return $pr;
 }
 
+function ar_get_paid($encounter)
+{
+  $sql = sqlStatement("select sum(pay_amount) as amount from ar_activity ar where ar.payer_type>0 and pay_amount > 0 and encounter=?", array($encounter));
+
+  $row = sqlFetchArray($sql);
+
+  $amount = 0;
+
+  if(isset($row['amount']))
+  {
+     $amount = $row['amount'];
+  }
+  return $amount;
+  
+}
+
 
 // for Integrated A/R.
 //
