@@ -450,18 +450,6 @@ error_log("Claim type: " . $claim->claimType());
     "*" .
     "*" .
     "*" .
-    // The 5010 spec says:
-    // "On or after the mandated implementation date for the HIPAA
-    // National Plan Identifier (National Plan ID), XV must be sent.
-    // Prior to the mandated implementation date and prior to any phase-
-    // in period identified by Federal regulation, PI must be sent."
-    // *************** Anybody know what that date is? ***************
-	//    August 2011 - Publish interim final rule
-//    October 1, 2012-March 31, 2013 - Enumeration
-//    April 1, 2013-September 30, 2013 - Testing
- //   October 1, 2013 - Implementation
-
- error_log("837: Payer:" .  $claim->payerID() . " " . $claim->payerName() );
     "*PI" .
     // Zirmed ignores this if using payer name matching:
     "*" . ($encounter_claim ? $claim->payerAltID() : $claim->payerID()) .
